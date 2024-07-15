@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label Hub</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+
+<body>
+    <main class="container mx-auto my-8 p-4 bg-white rounded shadow">
+        <h2 class="text-2xl mb-4">Welcome to Label Hub</h2>
+
+        <div x-data="toolbox">
+            <template x-for="control in controls" :key="control.id">
+                <button 
+                    :id="control.id"
+                    @click="control.onClick"
+                    class="px-4 py-2 text-black bg-white rounded hover:bg-gray-100 transition">
+                    <svg class="h-5 w-5 inline">
+                        <use :href="`/svg/toolbox.svg#${control.icon}`"></use>
+                    </svg>
+                </button>
+            </template>
+        </div>
+
+        <canvas id="canvas" class="border border-gray-300" width="600" height="400"></canvas>
+        
+        <script type="module" src="/dist/index.js"></script>
+    </main>
+
+</body>
+
+</html>
