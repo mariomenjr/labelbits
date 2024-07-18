@@ -33,6 +33,8 @@ module.exports = {
         '@snowpack/plugin-optimize',
         // Use PostCSS for CSS processing
         ['@snowpack/plugin-postcss', { plugins }],
+        // Using typescript
+        '@snowpack/plugin-typescript',
     ],
     
     // Set the build options
