@@ -15,9 +15,7 @@
 
         <div x-data="toolbox">
             <template x-for="control in controls" :key="control.id">
-                <button 
-                    :id="control.id"
-                    @click="control.onClick"
+                <button :id="control.id" @click="control.onClick"
                     class="px-4 py-2 text-black bg-white rounded hover:bg-gray-100 transition">
                     <svg class="h-5 w-5 inline">
                         <use :href="`/svg/toolbox.svg#${control.icon}`"></use>
@@ -27,7 +25,37 @@
         </div>
 
         <canvas id="canvas" class="border border-gray-300" width="600" height="400"></canvas>
-        
+
+        <table class="divide-y divide-gray-200" x-data="settings">
+            <!-- <table class="min-w-full divide-y divide-gray-200"> -->
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-1 px-2 text-left text-gray-600 font-medium text-xs uppercase tracking-wider">Setting
+                    </th>
+                    <th class="py-1 px-2 text-left text-gray-600 font-medium text-xs uppercase tracking-wider">Value
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <template x-for="control in controls" :key="control.id">
+                    <tr>
+                        <td class="py-1 px-2 text-sm">
+                            <label :for="control.id" x-text="control.label"
+                                class="block text-gray-700 text-xs font-medium mb-1"></label>
+                        </td>
+                        <td class="py-1 px-2 text-sm">
+                            <input :type="control.type" :id="control.id" :name="control.propName"
+                                :placeholder="`Enter ${control.label}`"
+                                class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
+        <!-- <pre x-text="JSON.stringify(controls)"></pre> -->
+
+
         <script type="module" src="/dist/index.js"></script>
     </main>
 

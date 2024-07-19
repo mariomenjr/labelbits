@@ -1,18 +1,16 @@
 import Alpine from "alpinejs";
 import LabelDesigner from '../core/LabelDesigner';
-import { Toolbox } from "../models/Toolbox";
+import Toolbox from "../ui/Toolbox";
+import Settings from "../ui/Settings";
 
-/**
- * Creates a new instance of the LabelDesigner class.
- */
-const ld: LabelDesigner = new LabelDesigner();
+// Instantiate LabelDesigner
+const ld: LabelDesigner = new LabelDesigner(); 
 
-/**
- * Creates a new instance of the Toolbox class, passing the LabelDesigner instance as an argument.
- *
- * @type {Toolbox}
- */
+// Create a new Toolbox instance associated with the LabelDesigner
 const tb: Toolbox = new Toolbox(ld);
+
+// Create a new Settings instance associated with the LabelDesigner
+const sg: Settings = new Settings(ld);
 
 /**
  * The main application object.
@@ -33,11 +31,16 @@ export default class App {
         Alpine.data(`toolbox`, () => tb);
 
         /**
+         * Registers the Settings instance as an Alpine.js component.
+         * This makes the Settings instance available to all components in the application.
+         */
+        Alpine.data(`settings`, () => sg);
+
+        /**
          * Starts the Alpine.js application.
          * This function is called when the application starts.
          */
         Alpine.start();
     }
 };
-
 
