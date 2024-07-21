@@ -18,10 +18,27 @@ export default class LabelDesigner {
      */
     constructor() {
         this.canvas = new fabric.Canvas(`canvas`);
-        this.canvas.backgroundColor = `white`;
+
+        this.styleCanvas();
+        this.resizeCanvas();
+
         this.canvas.renderAll();
 
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => this.resizeCanvas());
+
         console.log(`Canvas started.`);
+    }
+
+    private styleCanvas() {
+        this.canvas.backgroundColor = `white`;
+    }
+
+    private resizeCanvas() {
+        this.canvas.setDimensions({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
     }
 
     /**
