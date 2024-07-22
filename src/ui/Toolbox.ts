@@ -72,6 +72,6 @@ export default class Toolbox extends Designee implements Options<Tool> {
             },
         ].map((ctrl) => createToolboxButton(ctrl.label, ctrl.onClick));
 
-        console.log(`Toolbox started.`);
+        console.log(`Toolbox initialized.`);
     }
 }

@@ -1,5 +1,11 @@
 import * as fabric from 'fabric';
 
+export const colors = {
+    selectionColor: `gray`,
+    labelBackground: `white`,
+    rectangleBackground: `red`,
+};
+
 /**
  * The default style for the selection controls of newly created objects.
  */
@@ -7,20 +13,34 @@ const selectionStyle = {
     /**
      * The color of the selection border.
      */
-    borderColor: 'gray',
+    borderColor: colors.selectionColor,
     /**
      * The color of the selection corners.
      */
-    cornerColor: 'gray',
+    cornerColor: colors.selectionColor,
     /**
      * The size of the selection corners.
      */
-    cornerSize: 8,
+    cornerSize: 6,
     /**
      * Whether the selection corners are transparent.
      */
     transparentCorners: true
 };
+
+/**
+ * Creates a new fabric.Rect object with default properties.
+ *
+ * @return {fabric.Rect} The created rectangle object.
+ */
+export function createClipPath(): fabric.Rect {
+    return new fabric.Rect({
+
+        fill: colors.labelBackground,
+        selectable: false,
+        hoverCursor: 'default',
+    });
+}
 
 /**
  * Creates a new fabric Rectangle object with default properties.
@@ -30,25 +50,17 @@ const selectionStyle = {
 export function createRectangle(): fabric.Rect {
     return new fabric.Rect({
         /**
-         * The x-coordinate of the rectangle's leftmost point.
-         */
-        left: 100,
-        /**
-         * The y-coordinate of the rectangle's topmost point.
-         */
-        top: 100,
-        /**
          * The color of the rectangle.
          */
-        fill: 'red',
+        fill: colors.rectangleBackground,
         /**
          * The width of the rectangle.
          */
-        width: 20,
+        width: 125,
         /**
          * The height of the rectangle.
          */
-        height: 20,
+        height: 125,
 
         ...selectionStyle
     });
@@ -77,7 +89,7 @@ export function createTextbox(text: string = `New Text`): fabric.Textbox {
         /**
          * The font size of the textbox.
          */
-        fontSize: 20,
+        fontSize: 16,
 
         ...selectionStyle,
     });
