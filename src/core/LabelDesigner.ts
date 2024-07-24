@@ -1,5 +1,3 @@
-import * as fabric from 'fabric';
-
 import ZoomableSpace from './bases/ZoomableSpace';
 import { createRectangle, createTextbox } from './utils/default';
 
@@ -29,20 +27,6 @@ export default class LabelDesigner extends ZoomableSpace {
      */
     addRectangle(): void {
         this.addObject(createRectangle());
-    }
-
-    /**
-     * Adds an object to the canvas and sets it as the active object.
-     * 
-     * @param {fabric.Object} object - The object to be added to the canvas.
-     */
-    addObject(object: fabric.Object): void {
-        object.clipPath = this.clipPath;
-
-        this.centerObject(object);
-
-        this.canvas.add(object);
-        this.canvas.setActiveObject(object);
     }
 }
 

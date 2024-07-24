@@ -18,9 +18,9 @@ export default abstract class ZoomableSpace extends Space {
     /**
      * Registers event listeners for the canvas.
      */
-    protected registerEvents(): void {
+    protected registerCanvasEvents(): void {
 
-        super.registerEvents();
+        super.registerCanvasEvents();
         
         this.registerOnScroll();
         this.registerOnDrag();
