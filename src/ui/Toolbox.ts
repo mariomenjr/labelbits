@@ -1,12 +1,8 @@
-import Options from "../models/Options";
 import LabelDesigner from "../core/LabelDesigner";
+import { VoidHandler } from "../core/utils/events";
+import Options from "../models/Options";
 import Designee from "../models/Designee";
 import Element from "../models/Element";
-
-/**
- * Represents a click handler function for a toolbox button.
- */
-type EventHandler = () => void;
 
 /**
  * Represents a control button that can be used in the toolbox.
@@ -19,7 +15,7 @@ interface Tool extends Element {
     /**
      * The click handler function for the button.
      */
-    onClick: EventHandler;
+    onClick: VoidHandler;
 }
 
 /**
@@ -30,7 +26,7 @@ interface Tool extends Element {
  *
  * @return {Tool} The newly created ToolboxButton instance.
  */
-export function createToolboxButton(name: string, onClick: EventHandler): Tool {
+export function createToolboxButton(name: string, onClick: VoidHandler): Tool {
     return {
         id: `btn-${name}`,
         icon: `icon-${name}`,

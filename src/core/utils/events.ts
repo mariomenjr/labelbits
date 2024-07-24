@@ -1,0 +1,1 @@
+export type VoidHandler = () => void;
