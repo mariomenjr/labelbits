@@ -2,19 +2,9 @@ import * as fabric from 'fabric';
 import { createClipPath } from '../utils/default';
 import { calculateCenter, getViewportSize, Size } from '../utils/elements';
 
-export type TransformingObject = fabric.Object & {
-    relationship: fabric.TMat2D
-};
-
 /**
  * The Space class is an abstract base class for label design spaces.
- * It provides methods to interact with the Fabric.js canvas and the
- * Alpine.js application.
- */
-/**
- * The Space class is an abstract base class for label design spaces.
- * It provides methods to interact with the Fabric.js canvas and the
- * Alpine.js application.
+ * It provides methods to interact with the Fabric.js canvas.
  */
 export default abstract class Space {
     /**
@@ -55,53 +45,6 @@ export default abstract class Space {
     }
 
     /**
-     * Centers the specified object on the canvas.
-     * 
-     * @param {fabric.Object} object - The object to center.
-     */
-    private centerObject(object: fabric.Object): void {
-        // Calculate the center of the object based on its size and canvas size
-        const center = calculateCenter(object, this.canvasSize);
-
-        // Set the object's position and coordinates
-        object.set({ ...center }).setCoords();
-    }
-
-    /**
-     * Sets the transform of the specified object relative to the label area.
-     * 
-     * @param {TransformingObject} to - The object to set the transform for.
-     */
-    private setObjectTransform(to: TransformingObject): void {
-        // Calculate the transform matrix of the label area
-        const labelTransform = this.labelArea.calcTransformMatrix();
-
-        // Invert the transform matrix
-        const invertedTransform = fabric.util.invertTransform(labelTransform);
-
-        // Calculate the relationship transform matrix
-        to.relationship = fabric.util.multiplyTransformMatrices(invertedTransform, to.calcTransformMatrix());
-    }
-
-    /**
-     * Registers event listeners for the specified object.
-     * 
-     * @param {fabric.Object} object - The object to register events for.
-     */
-    private registertObjectEvents(object: fabric.Object): void {
-        // Register a modified event listener for the object
-        object.on('modified', () => this.setObjectTransform(object as TransformingObject));
-    }
-
-    /**
-     * Registers event listeners for the canvas.
-     */
-    protected registerCanvasEvents(): void {
-        // Register a resize event listener for the window
-        window.addEventListener('resize', () => this.resizeCanvas());
-    }
-
-    /**
      * Returns the size of the canvas.
      * @returns {Size} The size of the canvas.
      */
@@ -110,28 +53,6 @@ export default abstract class Space {
             width: this.canvas.width,
             height: this.canvas.height
         };
-    }
-
-    /**
-     * Styles the canvas.
-     */
-    protected styleCanvas(): void {
-        // Set the background color of the canvas
-        this.canvas.backgroundColor = `rgb(209 213 219)`;
-    }
-
-    /**
-     * Resizes the canvas to fit the viewport.
-     */
-    protected resizeCanvas(): void {
-        // Resize the canvas to fit the viewport
-        this.canvas.setDimensions(getViewportSize());
-
-        // Recenter the clip path
-        this.centerClip();
-
-        // Relocate objects based on their relationships to the label area
-        this.relocateObjects();
     }
 
     /**
@@ -148,55 +69,42 @@ export default abstract class Space {
     }
 
     /**
-     * Adds an object to the canvas and sets it as the active object.
+     * Centers the specified object on the canvas.
      * 
-     * @param {fabric.Object} object - The object to be added to the canvas.
+     * @param {fabric.Object} object - The object to center.
      */
-    protected addObject(object: fabric.Object): void {
-        // Set the clip path of the object
-        object.clipPath = this.labelArea;
+    protected centerObject(object: fabric.Object): void {
+        // Calculate the center of the object based on its size and canvas size
+        const center = calculateCenter(object, this.canvasSize);
 
-        // Center the object
-        this.centerObject(object);
-
-        // Set the transform of the object relative to the label area
-        this.setObjectTransform(object as TransformingObject);
-
-        // Add the object to the canvas
-        this.canvas.add(object);
-
-        // Set the object as the active object
-        this.canvas.setActiveObject(object);
-
-        // Register object events
-        this.registertObjectEvents(object);
+        // Set the object's position and coordinates
+        object.set({ ...center }).setCoords();
     }
 
     /**
-     * Relocates objects based on their relationships to the label area.
+     * Registers event listeners for the canvas.
      */
-    public relocateObjects() {
-        // Get all objects on the canvas excluding the label area
-        const objects = this.canvas.getObjects().filter(f => f !== this.labelArea);
+    protected registerCanvasEvents(): void {
+        // Register a resize event listener for the window
+        window.addEventListener('resize', () => this.resizeCanvas());
+    }
 
-        // Relocate each object
-        objects.forEach(o => {
-            const to = o as TransformingObject;
+    /**
+     * Resizes the canvas to fit the viewport.
+     */
+    protected resizeCanvas(): void {
+        // Resize the canvas to fit the viewport
+        this.canvas.setDimensions(getViewportSize());
 
-            if (!to.relationship) return;
+        // Recenter the clip path
+        this.centerClip();
+    }
 
-            const newTransform = fabric.util.multiplyTransformMatrices(
-                this.labelArea.calcTransformMatrix(),
-                to.relationship
-            );
-
-            const opt = fabric.util.qrDecompose(newTransform);
-            const point = new fabric.Point(opt.translateX, opt.translateY);
-
-            o.set({ flipX: false, flipY: false });
-            o.setPositionByOrigin(point, 'center', 'center');
-            o.set(opt);
-            o.setCoords();
-        });
+    /**
+     * Styles the canvas.
+     */
+    protected styleCanvas(): void {
+        // Set the background color of the canvas
+        this.canvas.backgroundColor = `rgb(209 213 219)`;
     }
 }

@@ -1,31 +1,67 @@
 import * as fabric from 'fabric';
 
-import Space from "./Space";
+import ChildfulSpace from './ChildfulSpace';
 
+/**
+ * The DraggableCanvas class is an abstract base class for fabric.Canvas objects
+ * that support dragging. It adds properties and methods to track the state of
+ * dragging and the last position of the pointer.
+ */
 abstract class DraggableCanvas extends fabric.Canvas {
+    /**
+     * Indicates whether a drag operation is currently in progress.
+     */
     isDragging: boolean = false;
+
+    /**
+     * The x-coordinate of the pointer's last position during a drag operation.
+     */
     lastPosX: number = 0;
+
+    /**
+     * The y-coordinate of the pointer's last position during a drag operation.
+     */
     lastPosY: number = 0;
 }
 
+/**
+ * Defines a custom pointer event for the canvas.
+ */
 type CanvasPointerEvent = fabric.TPointerEvent & {
     clientX: number;
     clientY: number;
 }
 
-export default abstract class ZoomableSpace extends Space {
+/**
+ * The ZoomableSpace class extends the ChildfulSpace class and provides zoom functionality.
+ * It allows the user to zoom in and out of the canvas by holding the Ctrl key and scrolling
+ * up or down.
+ * 
+ * It also allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
+ * the mouse.
+ */
+export default abstract class ZoomableSpace extends ChildfulSpace {
 
     /**
-     * Registers event listeners for the canvas.
+     * Registers canvas events for the ZoomableSpace class.
+     * This method overrides the base class method to include scroll and drag events.
      */
     protected registerCanvasEvents(): void {
 
         super.registerCanvasEvents();
         
+        // Register scroll event
         this.registerOnScroll();
+
+        // Register drag event
         this.registerOnDrag();
     }
 
+    /**
+     * Registers a scroll event listener for the canvas.
+     * This method listens for the 'mouse:wheel' event and zooms the canvas in or out
+     * depending on the scroll direction and the Ctrl key being held down.
+     */
     private registerOnScroll(): void {
         
 
@@ -44,6 +80,12 @@ export default abstract class ZoomableSpace extends Space {
         });
     }
 
+    /**
+     * Registers a drag event listener for the canvas.
+     * This method listens for the 'mouse:down', 'mouse:move', and 'mouse:up' events
+     * and allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
+     * the mouse.
+     */
     private registerOnDrag(): void {
         const draggableCanvas = this.canvas as DraggableCanvas;
 
@@ -77,11 +119,21 @@ export default abstract class ZoomableSpace extends Space {
         });
     }
 
+    /**
+     * Calculates the zoom factor based on the scroll direction and the Ctrl key being held down.
+     * @param delta - The scroll direction.
+     * @returns The zoom factor.
+     */
     protected calculateZoom(delta: number): number {
         const zoom = this.canvas.getZoom() * (1 - 0.001 * delta);
         return Math.max(0.01, Math.min(20, zoom));
     }
 
+    /**
+     * Sets the zoom point and zoom factor for the canvas.
+     * @param point - The point to zoom to.
+     * @param zoom - The zoom factor.
+     */
     protected setZoom(point: fabric.Point, zoom: number): void {
         this.canvas.zoomToPoint(point, zoom);
     }
