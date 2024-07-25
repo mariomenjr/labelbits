@@ -1,5 +1,5 @@
 import ZoomableSpace from './bases/ZoomableSpace';
-import { createRectangle, createTextbox } from './utils/default';
+import { createBarcodeAsync, createRectangle, createTextbox } from './utils/default';
 
 /**
  * The LabelDesigner class is the main class for the label designer.
@@ -27,6 +27,15 @@ export default class LabelDesigner extends ZoomableSpace {
      */
     addRectangle(): void {
         this.addObject(createRectangle());
+    }
+
+    /**
+     * Adds a barcode object to the canvas asynchronously.
+     *
+     * @return {Promise<void>} A promise that resolves when the barcode is added.
+     */
+    async addBarcodeAsync(): Promise<void> {
+        this.addObject(await createBarcodeAsync());
     }
 }
 

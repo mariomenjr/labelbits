@@ -22,7 +22,7 @@ interface Tool extends Element {
  * Creates a new ToolboxButton instance.
  *
  * @param {string} name - The name of the control. This is used to generate the id and icon class names.
- * @param {() => void} [onClick] - The click handler function for the control. If not provided, a default error message will be logged.
+ * @param {VoidHandler} [onClick] - The click handler function for the control. If not provided, a default error message will be logged.
  *
  * @return {Tool} The newly created ToolboxButton instance.
  */
@@ -61,6 +61,10 @@ export default class Toolbox extends Designee implements Options<Tool> {
             {
                 label: `rectangle-plus`,
                 onClick: () => this.designer.addRectangle(), // Adds a new rectangle object to the canvas
+            },
+            {
+                label: `barcode`,
+                onClick: () => this.designer.addBarcodeAsync(), // Adds a new barcode object to the canvas
             },
             {
                 label: `export-json`,

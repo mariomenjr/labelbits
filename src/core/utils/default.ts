@@ -1,4 +1,5 @@
 import * as fabric from 'fabric';
+import JsBarcode from 'jsbarcode';
 
 export const colors = {
     selectionColor: `gray`,
@@ -95,3 +96,22 @@ export function createTextbox(text: string = `New Text`): fabric.Textbox {
     });
 }
 
+/**
+ * Asynchronously creates a barcode and returns it as a Promise of a fabric.Object.
+ *
+ * @return {Promise<fabric.Object>} A Promise that resolves to a fabric.Object representing the barcode.
+ */
+export async function createBarcodeAsync(): Promise<fabric.Object> {
+
+    // Generate the barcode
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    JsBarcode(svg, "barcode", { format: "CODE128", displayValue: true });
+
+    // Convert the SVG node to a string
+    const serializer = new XMLSerializer();
+    const barcodeSVG = serializer.serializeToString(svg);
+
+    const svgOutput = await fabric.loadSVGFromString(barcodeSVG);
+
+    return fabric.util.groupSVGElements(svgOutput.objects as fabric.Object[], svgOutput.options);
+}
