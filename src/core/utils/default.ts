@@ -76,14 +76,6 @@ export function createRectangle(): fabric.Rect {
 export function createTextbox(text: string = `New Text`): fabric.Textbox {
     return new fabric.Textbox(text, {
         /**
-         * The x-coordinate of the textbox's leftmost point.
-         */
-        left: 50,
-        /**
-         * The y-coordinate of the textbox's topmost point.
-         */
-        top: 50,
-        /**
          * The width of the textbox.
          */
         width: 150,
