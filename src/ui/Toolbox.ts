@@ -67,6 +67,10 @@ export default class Toolbox extends Designee implements Options<Tool> {
                 onClick: () => this.designer.addBarcodeAsync(), // Adds a new barcode object to the canvas
             },
             {
+                label: `qrcode-plus`,
+                onClick: () => this.designer.addQrcodeAsync(), // Adds a new barcode object to the canvas
+            },
+            {
                 label: `export-json`,
                 onClick: () => this.designer.toJson(), // Exports the JSON representation of the canvas
             },

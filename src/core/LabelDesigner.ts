@@ -1,5 +1,5 @@
 import ZoomableSpace from './bases/ZoomableSpace';
-import { createBarcodeAsync, createRectangle, createTextbox } from './utils/default';
+import { createBarcodeAsync, createQrcodeAsync, createRectangle, createTextbox } from './utils/default';
 
 /**
  * The LabelDesigner class is the main class for the label designer.
@@ -36,6 +36,10 @@ export default class LabelDesigner extends ZoomableSpace {
      */
     async addBarcodeAsync(): Promise<void> {
         this.addObject(await createBarcodeAsync());
+    }
+
+    async addQrcodeAsync(): Promise<void> {
+        this.addObject(await createQrcodeAsync());
     }
 }
 

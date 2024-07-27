@@ -1,5 +1,6 @@
 import * as fabric from 'fabric';
 import JsBarcode from 'jsbarcode';
+import QRCode from 'qrcode';
 
 export const colors = {
     selectionColor: `gray`,
@@ -106,4 +107,17 @@ export async function createBarcodeAsync(): Promise<fabric.Object> {
     const svgOutput = await fabric.loadSVGFromString(barcodeSVG);
 
     return fabric.util.groupSVGElements(svgOutput.objects as fabric.Object[], svgOutput.options);
+}
+
+export async function createQrcodeAsync(): Promise<fabric.Object> {
+
+    const svgStr = await QRCode.toString("https://mariomenjr.com", { type: "svg" });
+    const svgObject = await fabric.loadSVGFromString(svgStr);
+
+    const o = fabric.util.groupSVGElements(svgObject.objects as fabric.Object[], svgObject.options);
+    
+    o.scaleToHeight(125);
+    o.scaleToWidth(125);
+
+    return o;
 }
