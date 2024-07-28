@@ -1,6 +1,7 @@
 import * as fabric from 'fabric';
 
 import Space from "./Space";
+import { selectionStyle } from '../../utils/default';
 
 /**
  * Represents a fabric object that can have a relationship transform matrix.
@@ -17,7 +18,11 @@ export type TransformingObject = fabric.Object & {
     relationship: fabric.TMat2D;
 };
 
-export default abstract class ChildfulSpace extends Space {
+/**
+ * The Relationship class represents a space that allows objects to be positioned relative to a label area.
+ * It provides methods to add objects to the canvas, relocate objects based on their relationships, and resize the canvas.
+ */
+export default abstract class Relationship extends Space {
 
     /**
      * Adds an object to the canvas and sets it as the active object.
@@ -25,7 +30,10 @@ export default abstract class ChildfulSpace extends Space {
      * @param {fabric.Object} object - The object to be added to the canvas.
      */
     protected addObject(object: fabric.Object): void {
-        // Set the clip path of the object
+        // Set the selection style of the object
+        object.set({ ...selectionStyle });
+
+        // Set the clip path of the object to the label area
         object.clipPath = this.labelArea;
 
         // Center the object
@@ -41,13 +49,13 @@ export default abstract class ChildfulSpace extends Space {
         this.canvas.setActiveObject(object);
 
         // Register object events
-        this.registertObjectEvents(object);
+        this.registerObjectEvents(object);
     }
 
     /**
      * Relocates objects based on their relationships to the label area.
      */
-    protected relocateObjects() {
+    protected relocateObjects(): void {
         // Get all objects on the canvas excluding the label area
         const objects = this.canvas.getObjects().filter(f => f !== this.labelArea);
 
@@ -57,14 +65,19 @@ export default abstract class ChildfulSpace extends Space {
 
             if (!to.relationship) return;
 
+            // Calculate the new transform matrix of the object based on its relationship
             const newTransform = fabric.util.multiplyTransformMatrices(
                 this.labelArea.calcTransformMatrix(),
                 to.relationship
             );
 
+            // Decompose the new transform matrix into its parts
             const opt = fabric.util.qrDecompose(newTransform);
+
+            // Calculate the new position of the object based on its origin
             const point = new fabric.Point(opt.translateX, opt.translateY);
 
+            // Set the properties of the object based on the new transform matrix
             o.set({ flipX: false, flipY: false });
             o.setPositionByOrigin(point, 'center', 'center');
             o.set(opt);
@@ -103,8 +116,9 @@ export default abstract class ChildfulSpace extends Space {
      * 
      * @param {fabric.Object} object - The object to register events for.
      */
-    private registertObjectEvents(object: fabric.Object): void {
+    private registerObjectEvents(object: fabric.Object): void {
         // Register a modified event listener for the object
         object.on('modified', () => this.setObjectTransform(object as TransformingObject));
     }
 }
+

@@ -1,46 +1,63 @@
+import Zoom from '../controllers/canvas/Zoom';
+import FabricObjectPlugin from '../controllers/plugins/FabricObjectPlugin';
 
-import ZoomableSpace from '../bases/ZoomableSpace';
-import { createBarcodeAsync, createQrcodeAsync, createRectangle, createTextbox } from '../utils/default';
+import { getPlugins } from '../plugins';
+
+import Settings from './Settings';
+import Toolbox from './Toolbox';
 
 /**
- * The LabelDesigner class is the main class for the label designer.
- * It provides methods to interact with the Fabric.js canvas and the Alpine.js
- * application.
+ * The LabelDesigner class represents the main label designer application.
+ * It provides methods to register plugins, start the application, get settings, and get the toolbox.
  */
-export default class LabelDesigner extends ZoomableSpace {
+export default class LabelDesigner extends Zoom {
+
     /**
-     * Exports the JSON representation of the canvas.
+     * The list of plugins registered in the label designer.
      */
-    toJson(): void {
-        const json = this.canvas.toJSON();
-        console.debug({ json });
+    protected plugins: FabricObjectPlugin[] = [];
+
+    /**
+     * Registers the plugins in the label designer.
+     */
+    protected _registerPlugins() {
+        this.plugins.push(...getPlugins());
     }
 
     /**
-     * Adds a textbox object to the canvas.
+     * Starts the label designer application.
+     * It registers the plugins.
      */
-    addTextbox(): void {
-        this.addObject(createTextbox());
+    start(): void {
+        this._registerPlugins();
     }
 
     /**
-     * Adds a rectangle object to the canvas.
+     * Retrieves the settings of the label designer.
+     * It returns the active objects from the canvas.
+     * @returns The settings of the label designer.
      */
-    addRectangle(): void {
-        this.addObject(createRectangle());
+    getSettings(): Settings {
+        const os = this.canvas.getActiveObjects();
+        console.debug(os);
+        return new Settings();
     }
 
     /**
-     * Adds a barcode object to the canvas asynchronously.
-     *
-     * @return {Promise<void>} A promise that resolves when the barcode is added.
+     * Retrieves the toolbox of the label designer.
+     * It returns a promise that resolves to a Toolbox object.
+     * @returns A promise that resolves to a Toolbox object.
      */
-    async addBarcodeAsync(): Promise<void> {
-        this.addObject(await createBarcodeAsync());
-    }
+    async getToolboxAsync(): Promise<Toolbox> {
 
-    async addQrcodeAsync(): Promise<void> {
-        this.addObject(await createQrcodeAsync());
+        // Get the actions from the plugins
+        const actionsAsync = this.plugins.map((p) => p.getActionAsync((o) => this.addObject(o)));
+
+        // Wait for all the actions to be retrieved
+        const actions = await Promise.all(actionsAsync);
+
+        // Create a new Toolbox object with the retrieved actions
+        return new Toolbox(...actions);
     }
 }
 

@@ -1,7 +1,7 @@
 import * as fabric from 'fabric';
 
-import { calculateCenter, getViewportSize, Size } from '../utils/elements';
-import { createClipPath } from '../utils/default';
+import { calculateCenter, getViewportSize, Size } from '../../utils/elements';
+import { createClipPath } from '../../utils/default';
 
 /**
  * The Space class is an abstract base class for label design spaces.
@@ -50,6 +50,7 @@ export default abstract class Space {
      * @returns {Size} The size of the canvas.
      */
     protected get canvasSize(): Size {
+        // Get the width and height of the canvas
         return {
             width: this.canvas.width,
             height: this.canvas.height
@@ -60,7 +61,8 @@ export default abstract class Space {
      * Renders the clip path on the canvas.
      */
     protected centerClip(): void {
-        const elementSize: Size = { width: 500, height: 250 }; // TODO: Get label size.
+        // TODO: Get label size
+        const elementSize: Size = { width: 500, height: 250 };
 
         // Set the size and position of the clip path
         this.centerObject(this.labelArea.set({
@@ -109,3 +111,4 @@ export default abstract class Space {
         this.canvas.backgroundColor = `rgb(209 213 219)`;
     }
 }
+

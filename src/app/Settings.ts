@@ -1,8 +1,7 @@
-import LabelDesigner from "../app/LabelDesigner";
 import { camelToKebabCase, camelToTitleCase } from "../utils/strings";
-import Designee from "../models/Designee";
-import Element from "../models/Element";
-import Options from "../models/Options";
+
+import Element from "../interfaces/Element";
+import Collection from "../interfaces/Collection";
 
 /**
  * Represents the type of a setting value.
@@ -51,30 +50,5 @@ function createSetting(propName: string, value: SettingType): Setting {
     };
 }
 
-/**
- * The Settings class represents the settings panel for the label designer.
- * It extends the Designee class and implements the Options interface.
- */
-export default class Settings extends Designee implements Options<Setting> {
-    /**
-     * The controls array contains the settings for the label designer.
-     * Each setting is an object with label, value, and type properties.
-     */
-    controls: Setting[];
-
-    /**
-     * Constructs a new Settings instance.
-     *
-     * @param {LabelDesigner} designer - The label designer instance that the settings panel is associated with.
-     */
-    constructor(designer: LabelDesigner) {
-        super(designer);
-
-        // Initialize the controls array with default settings
-        this.controls = [
-            createSetting(`charSpacing`, 0),
-            createSetting(`fontSize`, 0),
-        ];
-    }
-}
+export default class Settings extends Collection<Setting> {}
 

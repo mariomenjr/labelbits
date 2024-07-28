@@ -1,6 +1,6 @@
 import * as fabric from 'fabric';
 
-import ChildfulSpace from './ChildfulSpace';
+import Relationship from './Relationship';
 
 /**
  * The DraggableCanvas class is an abstract base class for fabric.Canvas objects
@@ -40,16 +40,15 @@ type CanvasPointerEvent = fabric.TPointerEvent & {
  * It also allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
  * the mouse.
  */
-export default abstract class ZoomableSpace extends ChildfulSpace {
-
+export default abstract class Zoom extends Relationship {
     /**
      * Registers canvas events for the ZoomableSpace class.
      * This method overrides the base class method to include scroll and drag events.
      */
     protected registerCanvasEvents(): void {
-
+        // Register base class events
         super.registerCanvasEvents();
-        
+
         // Register scroll event
         this.registerOnScroll();
 
@@ -63,19 +62,23 @@ export default abstract class ZoomableSpace extends ChildfulSpace {
      * depending on the scroll direction and the Ctrl key being held down.
      */
     private registerOnScroll(): void {
-        
-
+        // Register scroll event handler
         this.canvas.on('mouse:wheel', (opt) => {
+            // Check if Ctrl key is pressed
             if (!opt.e.ctrlKey) return;
 
+            // Calculate zoom factor
             const zoom = this.calculateZoom(opt.e.deltaY);
-            const point = new fabric.Point(opt.e.offsetX, opt.e.offsetY);
 
+            // Set zoom point and zoom factor
+            const point = new fabric.Point(opt.e.offsetX, opt.e.offsetY);
             this.setZoom(point, zoom);
 
+            // Prevent default scroll behavior and stop propagation
             opt.e.preventDefault();
             opt.e.stopPropagation();
 
+            // Request render all objects
             this.canvas.requestRenderAll();
         });
     }
@@ -89,6 +92,7 @@ export default abstract class ZoomableSpace extends ChildfulSpace {
     private registerOnDrag(): void {
         const draggableCanvas = this.canvas as DraggableCanvas;
 
+        // Register mouse down event handler
         draggableCanvas.on('mouse:down', (opt) => {
             const evt = opt.e as CanvasPointerEvent;
             if (evt.ctrlKey === true) {
@@ -98,11 +102,14 @@ export default abstract class ZoomableSpace extends ChildfulSpace {
                 draggableCanvas.lastPosY = evt.clientY;
             }
         });
+
+        // Register mouse move event handler
         draggableCanvas.on('mouse:move', (opt) => {
             if (draggableCanvas.isDragging) {
                 const e = opt.e as CanvasPointerEvent;
                 const vpt = draggableCanvas.viewportTransform;
 
+                // Calculate translation and apply it to viewport transform
                 vpt[4] += e.clientX - draggableCanvas.lastPosX;
                 vpt[5] += e.clientY - draggableCanvas.lastPosY;
                 draggableCanvas.requestRenderAll();
@@ -110,9 +117,10 @@ export default abstract class ZoomableSpace extends ChildfulSpace {
                 draggableCanvas.lastPosY = e.clientY;
             }
         });
+
+        // Register mouse up event handler
         draggableCanvas.on('mouse:up', (opt) => {
-            // // on mouse up we want to recalculate new interaction
-            // // for all objects, so we call setViewportTransform
+            // Set viewport transform and restore selection state
             draggableCanvas.setViewportTransform(draggableCanvas.viewportTransform);
             draggableCanvas.isDragging = false;
             draggableCanvas.selection = true;
@@ -138,3 +146,4 @@ export default abstract class ZoomableSpace extends ChildfulSpace {
         this.canvas.zoomToPoint(point, zoom);
     }
 }
+
