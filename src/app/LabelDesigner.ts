@@ -1,5 +1,6 @@
-import ZoomableSpace from './bases/ZoomableSpace';
-import { createBarcodeAsync, createQrcodeAsync, createRectangle, createTextbox } from './utils/default';
+
+import ZoomableSpace from '../bases/ZoomableSpace';
+import { createBarcodeAsync, createQrcodeAsync, createRectangle, createTextbox } from '../utils/default';
 
 /**
  * The LabelDesigner class is the main class for the label designer.

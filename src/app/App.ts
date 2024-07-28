@@ -1,5 +1,5 @@
 import Alpine from "alpinejs";
-import LabelDesigner from '../core/LabelDesigner';
+import LabelDesigner from './LabelDesigner';
 import Toolbox from "../ui/Toolbox";
 import Settings from "../ui/Settings";
 

@@ -1,4 +1,4 @@
-import LabelDesigner from "../core/LabelDesigner";
+import LabelDesigner from "../app/LabelDesigner";
 
 /**
  * Represents an object that is responsible for designing labels.

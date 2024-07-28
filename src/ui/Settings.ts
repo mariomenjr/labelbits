@@ -1,5 +1,5 @@
-import LabelDesigner from "../core/LabelDesigner";
-import { camelToKebabCase, camelToTitleCase } from "../core/utils/strings";
+import LabelDesigner from "../app/LabelDesigner";
+import { camelToKebabCase, camelToTitleCase } from "../utils/strings";
 import Designee from "../models/Designee";
 import Element from "../models/Element";
 import Options from "../models/Options";

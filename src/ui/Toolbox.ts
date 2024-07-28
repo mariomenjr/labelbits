@@ -1,5 +1,5 @@
-import LabelDesigner from "../core/LabelDesigner";
-import { VoidHandler } from "../core/utils/events";
+import LabelDesigner from "../app/LabelDesigner";
+import { VoidHandler } from "../utils/events";
 import Options from "../models/Options";
 import Designee from "../models/Designee";
 import Element from "../models/Element";

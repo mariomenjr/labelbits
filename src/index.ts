@@ -1,8 +1,5 @@
 import htmx from 'htmx.org';
-import App from "./app/index";
+import App from "./app/App";
 
-htmx.on(`htmx:load`, function (evt) {
-
-    App.start();
-});
+htmx.on(`htmx:load`, (_) => App.start());
 
