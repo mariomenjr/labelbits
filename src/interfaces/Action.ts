@@ -1,4 +1,4 @@
-import { VoidHandler } from "../utils/handlers";
+import { VoidHandler, VoidHandlerAsync } from "../utils/handlers";
 import Element from "./Element";
 
 /**
@@ -19,5 +19,5 @@ export default interface Action extends Element {
      * The click handler function for the button.
      * This property specifies the function that will be called when the button is clicked.
      */
-    onClick: VoidHandler;
+    onClick: VoidHandler | VoidHandlerAsync;
 }

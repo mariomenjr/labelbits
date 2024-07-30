@@ -28,22 +28,20 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
      * @returns A promise that resolves to the created object.
      */
     abstract createObjectAsync(): Promise<fabric.Object>;
-    
+
     /**
      * Retrieves the action for the plugin asynchronously.
      * @param handler The handler function for the plugin.
      * @returns A promise that resolves to the action.
      */
     async getActionAsync(handler: FabricObjectHandler): Promise<Action> {
-        // Create a new Fabric.js object
-        const object = await this.createObjectAsync();
         return {
             // The id of the action
             id: `btn-${this.name}`,
             // The icon of the action
             icon: `icon-${this.name}`,
             // The onClick event handler for the action
-            onClick: () => handler(object)
+            onClick: async () => handler(await this.createObjectAsync())
         };
     }
 }
