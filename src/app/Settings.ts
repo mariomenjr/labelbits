@@ -1,3 +1,5 @@
+import * as fabric from "fabric";
+
 import { FabricSelectionEventCallback } from "../utils/handlers";
 import { camelToKebabCase, camelToTitleCase } from "../utils/strings";
 
@@ -55,11 +57,20 @@ function createSetting(propName: string, value: SettingType): Setting {
  * Represents a collection of settings for the label designer.
  * The settings are derived from the properties of the selected fabric object.
  */
+/**
+ * Represents a collection of settings for the label designer.
+ * The settings are derived from the properties of the selected fabric object.
+ */
 export default class Settings extends Collection<Setting> {
     /**
-     * The number of settings in the collection.
+     * Indicates whether there is a selection.
      */
-    public count: number = 0;
+    hasSelection: boolean = false;
+
+    /**
+     * The selected fabric object.
+     */
+    selectedObject: fabric.Object | null = null;
 
     /**
      * The callback function for the fabric selection event.
@@ -84,24 +95,32 @@ export default class Settings extends Collection<Setting> {
      * The created settings are added to the collection.
      */
     public registerSelectionEvents(): void {
+        /**
+         * A callback function that is called when a selection event occurs.
+         *
+         * @param {SelectionEvent} e - The selection event object.
+         */
         this.selectionEventCallback(e => {
 
-            this.length = 0; // Clear this collection
-            const selected = e.selected ?? [];
+            // Clear the collection
+            this.length = 0; 
+            
+            // Set the selection state based on the number of selected objects
+            this.hasSelection = e.selected?.length === 1;
+            
+            // Reset the selected object
+            this.selectedObject = this.hasSelection ? e.selected[0] : null;
 
-            if (selected.length > 1 || selected.length === 0) return;
+            // If there is no selection, return
+            if (!this.selectedObject) return;
 
-            const so = selected[0];
-            const props = Object.keys(so);
+            // Get the keys of the selected object's properties
+            const props = Object.keys(this.selectedObject);
 
-            this.count = props.length;
-
+            // Create settings from the properties and add them to the collection
             props.forEach(prop => {
-
-                this.push(createSetting(prop, so?.get(prop) ?? ``));
+                this.push(createSetting(prop, this.selectedObject?.get(prop) ?? ``));
             });
         });
     }
-
 }
-
