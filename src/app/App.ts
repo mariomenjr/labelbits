@@ -22,8 +22,34 @@ export default class App {
         /**
          * Registers the Settings instance as an Alpine.js component.
          * This makes the Settings instance available to all components in the application.
+         *
+         * @returns {Object} The Alpine.js component data object.
          */
-        Alpine.data(`settings`, () => labelDesigner.getSettings());
+        Alpine.data(`settings`, () => {
+            /**
+             * Represents the Settings instance as an Alpine.js component data object.
+             *
+             * @type {Object}
+             * @property {Settings} data - The Settings instance.
+             */
+            return {
+                /**
+                 * The Settings instance.
+                 *
+                 * @type {Settings}
+                 */
+                data: labelDesigner.getSettings(),
+                /**
+                 * Initializes the component data.
+                 *
+                 * @returns {void}
+                 */
+                init() {
+                    // Register the selection event handler with the Settings instance.
+                    this.data.registerSelectionEvents();
+                }
+            };
+        });
 
         /**
          * Starts the Alpine.js application.
