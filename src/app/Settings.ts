@@ -86,7 +86,7 @@ export default class Settings extends Collection<Setting> {
         super();
 
         this.selectionEventCallback = selectionEventCallback;
-        console.debug(`Settings initialized.`);
+        console.log(`Settings initialized.`);
     }
 
     /**
