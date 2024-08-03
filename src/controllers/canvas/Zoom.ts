@@ -119,7 +119,7 @@ export default abstract class Zoom extends Relationship {
         });
 
         // Register mouse up event handler
-        draggableCanvas.on('mouse:up', (opt) => {
+        draggableCanvas.on('mouse:up', (_) => {
             // Set viewport transform and restore selection state
             draggableCanvas.setViewportTransform(draggableCanvas.viewportTransform);
             draggableCanvas.isDragging = false;
