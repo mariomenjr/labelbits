@@ -8,10 +8,11 @@ export function camelToTitleCase(input: string): string {
     // Insert a space before capital letters
     // Replace the first letter to uppercase
     // Capitalize the letters after spaces
+    const tuc = (s: string) => s.toUpperCase();
     return input
         .replace(/([a-z])([A-Z])/g, '$1 $2')
-        .replace(/^./, str => str.toUpperCase())
-        .replace(/\s+[a-z]/g, str => str.toUpperCase());
+        .replace(/^./, tuc)
+        .replace(/\s+[a-z]/g, tuc);
 }
 
 /**

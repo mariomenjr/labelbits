@@ -17,7 +17,6 @@ export default [
     ignores: [
       "**/*.config.js", // Ignore specific files
       "build/",           // Ignore the build directory
-      "tests/**/*.test.js", // Ignore all test files
     ],
   },
   ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"),
