@@ -16,6 +16,7 @@ export default [
   {
     ignores: [
       "**/*.config.js", // Ignore specific files
+      "**/*.setup.js", // Ignore specific files
       "build/",           // Ignore the build directory
     ],
   },
