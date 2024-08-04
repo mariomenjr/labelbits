@@ -7,10 +7,14 @@
         "sourceMap": true,
         "outDir": "dist",
         "strict": true,
-        "jsx": "react",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "types": [
+            "jest"
+        ]
     },
     "include": [
-        "src"
+        "src",
+        "tests"
     ]
 }
