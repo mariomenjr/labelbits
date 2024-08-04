@@ -1,4 +1,4 @@
-import * as fabric from 'fabric';
+import * as fabric from "fabric";
 
 /**
  * Represents a size with width and height properties.
