@@ -1,4 +1,4 @@
-import * as fabric from 'fabric';
+import * as fabric from "fabric";
 
 import Space from "./Space";
 import { selectionStyle } from '../../utils/default';
@@ -63,25 +63,26 @@ export default abstract class Relationship extends Space {
         objects.forEach(o => {
             const to = o as TransformingObject;
 
-            if (!to.relationship) return;
+            if (to.relationship) {
 
-            // Calculate the new transform matrix of the object based on its relationship
-            const newTransform = fabric.util.multiplyTransformMatrices(
-                this.labelArea.calcTransformMatrix(),
-                to.relationship
-            );
+                // Calculate the new transform matrix of the object based on its relationship
+                const newTransform = fabric.util.multiplyTransformMatrices(
+                    this.labelArea.calcTransformMatrix(),
+                    to.relationship
+                );
 
-            // Decompose the new transform matrix into its parts
-            const opt = fabric.util.qrDecompose(newTransform);
+                // Decompose the new transform matrix into its parts
+                const opt = fabric.util.qrDecompose(newTransform);
 
-            // Calculate the new position of the object based on its origin
-            const point = new fabric.Point(opt.translateX, opt.translateY);
+                // Calculate the new position of the object based on its origin
+                const point = new fabric.Point(opt.translateX, opt.translateY);
 
-            // Set the properties of the object based on the new transform matrix
-            o.set({ flipX: false, flipY: false });
-            o.setPositionByOrigin(point, 'center', 'center');
-            o.set(opt);
-            o.setCoords();
+                // Set the properties of the object based on the new transform matrix
+                o.set({ flipX: false, flipY: false });
+                o.setPositionByOrigin(point, 'center', 'center');
+                o.set(opt);
+                o.setCoords();
+            }
         });
     }
 

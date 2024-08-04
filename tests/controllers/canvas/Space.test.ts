@@ -2,6 +2,7 @@ import * as fabric from "fabric";
 
 import Space from "../../../src/controllers/canvas/Space";
 import { Size } from "../../../src/utils/elements";
+import { resizeWindow } from "../../window.helper";
 
 describe("Space", () => {
     let space: MockSpace;
@@ -25,20 +26,8 @@ describe("Space", () => {
             const oldWidth = space._canvas_.getWidth();
             const oldHeight = space._canvas_.getHeight();
 
-            Object.defineProperty(window, 'innerWidth', {
-                writable: true,
-                configurable: true,
-                value: oldWidth + 50,
-            });
-
-            Object.defineProperty(window, 'innerHeight', {
-                writable: true,
-                configurable: true,
-                value: oldHeight + 50,
-            });
-
-            window.dispatchEvent(new Event('resize'));
-
+            resizeWindow(50);
+            
             space._resizeCanvas_();
 
             expect(space._canvas_.getWidth()).toBeGreaterThan(oldWidth);
