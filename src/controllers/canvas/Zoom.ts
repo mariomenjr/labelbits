@@ -1,6 +1,6 @@
-import * as fabric from 'fabric';
+import * as fabric from "fabric";
 
-import Relationship from './Relationship';
+import Relationship from "./Relationship";
 
 /**
  * The DraggableCanvas class is an abstract base class for fabric.Canvas objects

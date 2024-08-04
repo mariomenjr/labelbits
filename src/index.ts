@@ -1,4 +1,4 @@
-import htmx from 'htmx.org'; // Import the htmx library
+import htmx from "htmx.org"; // Import the htmx library
 import App from "./app/App"; // Import the App class from the app module
 
 /**
@@ -9,4 +9,3 @@ htmx.on(`htmx:load`, _ => {
     // Start the application when the htmx library is loaded
     App.start();
 });
-

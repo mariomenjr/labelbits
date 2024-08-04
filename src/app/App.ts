@@ -1,6 +1,6 @@
 import Alpine from "alpinejs";
 
-import LabelDesigner from './LabelDesigner';
+import LabelDesigner from "./LabelDesigner";
 
 export default class App {
     /**

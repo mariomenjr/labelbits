@@ -1,12 +1,12 @@
-import Zoom from '../controllers/canvas/Zoom';
-import FabricObjectPlugin from '../controllers/plugins/FabricObjectPlugin';
+import Zoom from "../controllers/canvas/Zoom";
+import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
 
-import { getPlugins } from '../plugins';
+import { getPlugins } from "../plugins";
 
-import Settings from './Settings';
-import Toolbox from './Toolbox';
+import Settings from "./Settings";
+import Toolbox from "./Toolbox";
 
-import { FabricSelectionEventHandler } from '../utils/handlers';
+import { FabricSelectionEventHandler } from "../utils/handlers";
 
 /**
  * The LabelDesigner class represents the main label designer application.

@@ -1,5 +1,5 @@
 import * as fabric from "fabric";
-import QRCode from 'qrcode';
+import QRCode from "qrcode";
 
 import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
 

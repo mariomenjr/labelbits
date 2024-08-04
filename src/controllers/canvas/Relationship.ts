@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 
 import Space from "./Space";
-import { selectionStyle } from '../../utils/default';
+import { selectionStyle } from "../../utils/default";
 
 /**
  * Represents a fabric object that can have a relationship transform matrix.
