@@ -44,7 +44,7 @@ export default class App {
                  *
                  * @returns {void}
                  */
-                init() {
+                init(): void {
                     // Register the selection event handler with the Settings instance.
                     this.data.registerSelectionEvents();
                 }

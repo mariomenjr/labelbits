@@ -4,6 +4,11 @@ import { FabricObjectHandler } from "../../utils/handlers";
 
 import Plugin from "../../interfaces/Plugin";
 import Action from "../../interfaces/Action";
+import { createSetting, Setting, SettingBinder, SettingType } from "../../app/Settings";
+
+export type PluginObject = fabric.Object & {
+    getSettings: (object: fabric.Object) => Setting[];
+};
 
 /**
  * Represents a plugin for objects in the Fabric.js library.
@@ -29,6 +34,30 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
      */
     abstract createObjectAsync(): Promise<fabric.Object>;
 
+    protected getPropertiesNames(): string[] {
+        return [`left`, `top`];
+    }
+
+    protected getSettings(object: fabric.Object): Setting[] {
+        return this.getPropertiesNames().map(propName => createSetting(propName, this.bindProperty(object, propName)));
+    }
+
+    protected bindProperty(object: fabric.Object, propName: string): SettingBinder {
+        return {
+            getValue(): SettingType {
+                return object.get(propName);
+            },
+
+            setValue(v: SettingType) {
+                object.set(propName, v);
+
+                object.setCoords();
+                object.canvas?.requestRenderAll();
+                object.fire('modified');
+            }
+        };
+    }
+
     /**
      * Retrieves the action for the plugin asynchronously.
      * @param handler The handler function for the plugin.
@@ -41,7 +70,17 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
             // The icon of the action
             icon: `icon-${this.name}`,
             // The onClick event handler for the action
-            onClick: async () => handler(await this.createObjectAsync())
+            onClick: async () => {
+                const o = await this.createObjectAsync();
+                const e = o as PluginObject;
+
+                e.getSettings = this.getSettings.bind(this);
+                // o.on('selected', (e) => console.debug(`Selected 1 ${this.name}`, {e}));
+                // o.on('selected', (e) => console.debug(`Selected 2 ${this.name}`, {e}));
+                // o.on('moving', (e) => console.debug(`Moving ${this.name}`, {e}));
+
+                handler(o);
+            }
         };
     }
 }

@@ -1,20 +1,31 @@
-import * as fabric from "fabric";
+// import * as fabric from "fabric";
 
 import { FabricSelectionEventCallback } from "../utils/handlers";
 import { camelToKebabCase, camelToTitleCase } from "../utils/strings";
 
 import Element from "../interfaces/Element";
 import Collection from "../interfaces/Collection";
+import { PluginObject } from "../controllers/plugins/FabricObjectPlugin";
 
 /**
  * Represents the type of a setting value.
  */
-type SettingType = number | string;
+export type SettingType = number | string;
+
+export interface SettingBinder {
+
+    /**
+     * The value of the setting.
+     */
+    setValue(value: SettingType): void;
+
+    getValue(): SettingType;
+}
 
 /**
  * Represents a setting for the label designer.
  */
-interface Setting extends Element {
+export interface Setting extends Element {
     /**
      * The label of the setting.
      */
@@ -26,14 +37,14 @@ interface Setting extends Element {
     propName: string;
 
     /**
-     * The value of the setting.
-     */
-    value: SettingType;
-
-    /**
      * The type of the setting value.
      */
     type: string;
+
+    /**
+     * The value of the setting.
+     */
+    value: SettingType;
 }
 
 /**
@@ -43,13 +54,21 @@ interface Setting extends Element {
  * @param {SettingType} value - The value of the setting.
  * @returns {Setting} The created setting object.
  */
-function createSetting(propName: string, value: SettingType): Setting {
+export function createSetting(propName: string, settingBinder: SettingBinder): Setting {
     return {
-        id: `sg-` + camelToKebabCase(propName),
+        propName,
+
         label: camelToTitleCase(propName),
-        propName: propName,
-        value: value,
-        type: value.constructor.name.toLowerCase(),
+        id: `sg-${camelToKebabCase(propName)}`,
+        type: settingBinder.getValue().constructor.name.toLowerCase(),
+
+        get value() {
+            return settingBinder.getValue();
+        },
+
+        set value(v) {
+            settingBinder.setValue(v);
+        }
     };
 }
 
@@ -70,7 +89,7 @@ export default class Settings extends Collection<Setting> {
     /**
      * The selected fabric object.
      */
-    selectedObject: fabric.Object | null = null;
+    selectedObject: PluginObject | null = null;
 
     /**
      * The callback function for the fabric selection event.
@@ -103,24 +122,19 @@ export default class Settings extends Collection<Setting> {
         this.selectionEventCallback(e => {
 
             // Clear the collection
-            this.length = 0; 
-            
+            this.length = 0;
+
             // Set the selection state based on the number of selected objects
             this.hasSelection = e.selected?.length === 1;
-            
+
             // Reset the selected object
-            this.selectedObject = this.hasSelection ? e.selected[0] : null;
+            this.selectedObject = this.hasSelection ? e.selected[0] as PluginObject : null;
 
             // If there is no selection, return
             if (!this.selectedObject) return;
 
-            // Get the keys of the selected object's properties
-            const props = Object.keys(this.selectedObject);
-
-            // Create settings from the properties and add them to the collection
-            props.forEach(prop => {
-                this.push(createSetting(prop, this.selectedObject?.get(prop) ?? ``));
-            });
+            // Get the properties of the selected object
+            this.push(...this.selectedObject.getSettings(this.selectedObject));
         });
     }
 }
