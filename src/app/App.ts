@@ -2,15 +2,18 @@ import Alpine from "alpinejs";
 
 import LabelDesigner from "./LabelDesigner";
 
+/**
+ * Represents the main application class.
+ * It provides a static method to start the Alpine.js application.
+ */
 export default class App {
     /**
      * Starts the Alpine.js application.
-     * It registers the Toolbox instance as an Alpine.js component and starts the application.
+     * It registers the Toolbox instance and the Settings instance as Alpine.js components,
+     * and starts the application.
      */
     static async start(): Promise<void> {
-
         const labelDesigner = new LabelDesigner();
-        labelDesigner.start();
 
         /**
          * Registers the Toolbox instance as an Alpine.js component.
@@ -41,21 +44,23 @@ export default class App {
                 data: labelDesigner.getSettings(),
                 /**
                  * Initializes the component data.
+                 * This function is called when the application starts,
+                 * and it starts the Settings instance.
                  *
                  * @returns {void}
                  */
                 init(): void {
-                    // Register the selection event handler with the Settings instance.
-                    this.data.registerSelectionEvents();
-                }
+                    this.data.start();
+                },
             };
         });
 
         /**
          * Starts the Alpine.js application.
-         * This function is called when the application starts.
+         * This function is called when the application starts,
+         * and it starts the Alpine.js application.
          */
         Alpine.start();
     }
-};
+}
 

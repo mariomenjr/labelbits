@@ -5,10 +5,10 @@ import { FabricObjectHandler } from "../../utils/handlers";
 import Plugin from "../../interfaces/Plugin";
 import Action from "../../interfaces/Action";
 import { createSetting, Setting, SettingBinder, SettingType } from "../../app/Settings";
+import { PluginObject } from "../../utils/fabric";
 
-export type PluginObject = fabric.Object & {
-    getSettings: (object: fabric.Object) => Setting[];
-};
+
+export type SettingsSource = () => Setting[];
 
 /**
  * Represents a plugin for objects in the Fabric.js library.
@@ -34,20 +34,43 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
      */
     abstract createObjectAsync(): Promise<fabric.Object>;
 
+    /**
+     * Retrieves the names of the properties of the fabric object that should be represented as settings.
+     * @returns An array of property names.
+     */
     protected getPropertiesNames(): string[] {
         return [`left`, `top`];
     }
 
-    protected getSettings(object: fabric.Object): Setting[] {
-        return this.getPropertiesNames().map(propName => createSetting(propName, this.bindProperty(object, propName)));
+    /**
+     * Retrieves the settings source for the fabric object.
+     * @param object The fabric object.
+     * @returns A function that returns an array of settings.
+     */
+    protected getSettingsSource(object: fabric.Object): SettingsSource {
+        return () => this.getPropertiesNames().map(propName => createSetting(propName, this.bindProperty(object, propName)));
     }
 
+    /**
+     * Binds a property of the fabric object to a setting.
+     * @param object The fabric object.
+     * @param propName The name of the property.
+     * @returns A setting binder object.
+     */
     protected bindProperty(object: fabric.Object, propName: string): SettingBinder {
         return {
+            /**
+             * Retrieves the value of the property.
+             * @returns The value of the property.
+             */
             getValue(): SettingType {
                 return object.get(propName);
             },
 
+            /**
+             * Sets the value of the property.
+             * @param v The new value of the property.
+             */
             setValue(v: SettingType) {
                 object.set(propName, v);
 
@@ -72,15 +95,13 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
             // The onClick event handler for the action
             onClick: async () => {
                 const o = await this.createObjectAsync();
-                const e = o as PluginObject;
+                const p = o as PluginObject;
 
-                e.getSettings = this.getSettings.bind(this);
-                // o.on('selected', (e) => console.debug(`Selected 1 ${this.name}`, {e}));
-                // o.on('selected', (e) => console.debug(`Selected 2 ${this.name}`, {e}));
-                // o.on('moving', (e) => console.debug(`Moving ${this.name}`, {e}));
+                p.getSettings = this.getSettingsSource(p);
 
                 handler(o);
             }
         };
     }
 }
+

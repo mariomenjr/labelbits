@@ -2,28 +2,13 @@ import * as fabric from "fabric";
 
 import Space from "./Space";
 import { selectionStyle } from "../../utils/default";
-
-/**
- * Represents a fabric object that can have a relationship transform matrix.
- * 
- * This type extends the fabric.Object type and adds the `relationship` property.
- * The `relationship` property is a transform matrix that describes the relationship of the object
- * to the label area.
- */
-export type TransformingObject = fabric.Object & {
-    /**
-     * The relationship transform matrix of the object.
-     * This matrix describes the relationship of the object to the label area.
-     */
-    relationship: fabric.TMat2D;
-};
+import { TransformingObject } from "../../utils/fabric";
 
 /**
  * The Relationship class represents a space that allows objects to be positioned relative to a label area.
  * It provides methods to add objects to the canvas, relocate objects based on their relationships, and resize the canvas.
  */
 export default abstract class Relationship extends Space {
-
     /**
      * Adds an object to the canvas and sets it as the active object.
      * 
@@ -64,7 +49,6 @@ export default abstract class Relationship extends Space {
             const to = o as TransformingObject;
 
             if (to.relationship) {
-
                 // Calculate the new transform matrix of the object based on its relationship
                 const newTransform = fabric.util.multiplyTransformMatrices(
                     this.labelArea.calcTransformMatrix(),
@@ -84,6 +68,16 @@ export default abstract class Relationship extends Space {
                 o.setCoords();
             }
         });
+    }
+
+    /**
+     * Registers event listeners for the specified object.
+     * 
+     * @param {fabric.Object} object - The object to register events for.
+     */
+    protected registerObjectEvents(object: fabric.Object): void {
+        // Register a modified event listener for the object
+        object.on('modified', () => this.setObjectTransform(object as TransformingObject));
     }
 
     /**
@@ -110,16 +104,6 @@ export default abstract class Relationship extends Space {
 
         // Calculate the relationship transform matrix
         to.relationship = fabric.util.multiplyTransformMatrices(invertedTransform, to.calcTransformMatrix());
-    }
-
-    /**
-     * Registers event listeners for the specified object.
-     * 
-     * @param {fabric.Object} object - The object to register events for.
-     */
-    private registerObjectEvents(object: fabric.Object): void {
-        // Register a modified event listener for the object
-        object.on('modified', () => this.setObjectTransform(object as TransformingObject));
     }
 }
 
