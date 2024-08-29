@@ -61,6 +61,7 @@ export interface Setting extends Element {
  * @returns The new setting object.
  */
 export function createSetting(propName: string, settingBinder: SettingBinder): Setting {
+    console.debug({propName, settingBinder});
     return {
         propName,
 

@@ -8,6 +8,9 @@ import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
  * It extends the FabricObjectPlugin class and provides an implementation for the createObjectAsync method.
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
+    updateObjectAsync(_: fabric.FabricObject): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
     /**
      * Creates a new QR code object asynchronously.
      * @returns A promise that resolves to the created object.

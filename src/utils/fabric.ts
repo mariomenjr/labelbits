@@ -13,6 +13,7 @@ export type PluginObject = fabric.Object & {
      * This function is used to retrieve settings from the object.
      */
     getSettings: SettingsSource;
+    content: string;
 };
 
 /**
