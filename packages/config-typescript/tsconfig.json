@@ -14,10 +14,11 @@
         ]
     },
     "include": [
-        "../../apps/**/*",
-        "../../packages/**/*"
+        "../../designer/**/src",
+        "../../designer/**/tests",
     ],
     "exclude": [
-        "**/node_modules"
+        "../../node_modules",
+        "../../**/node_modules",
     ]
 }

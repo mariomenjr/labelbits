@@ -1,0 +1,3 @@
+{
+    "extends": "@labelbits/config-typescript/tsconfig.json",
+}

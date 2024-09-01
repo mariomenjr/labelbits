@@ -5,6 +5,8 @@ import Element from "../interfaces/Element";
 import Collection from "../interfaces/Collection";
 import { PluginObject } from "../utils/fabric";
 
+export type SettingsSource = () => Setting[];
+
 /**
  * Represents the type of a setting value.
  */

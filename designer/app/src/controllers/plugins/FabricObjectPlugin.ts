@@ -4,11 +4,8 @@ import { FabricObjectHandler } from "../../utils/handlers";
 
 import Plugin from "../../interfaces/Plugin";
 import Action from "../../interfaces/Action";
-import { createSetting, Setting, SettingBinder, SettingType } from "../../app/Settings";
+import { createSetting, SettingsSource, SettingBinder, SettingType } from "../../app/Settings";
 import { PluginObject } from "../../utils/fabric";
-
-
-export type SettingsSource = () => Setting[];
 
 /**
  * Represents a plugin for objects in the Fabric.js library.

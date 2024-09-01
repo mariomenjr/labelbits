@@ -1,6 +1,5 @@
 import * as fabric from "fabric";
-
-import { SettingsSource } from "../controllers/plugins/FabricObjectPlugin";
+import { SettingsSource } from "../app/Settings";
 
 /**
  * Represents a fabric object that can be used in the label designer.

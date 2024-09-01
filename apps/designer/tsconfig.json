@@ -1,7 +1,0 @@
-{
-    "extends": "@labelbits/config/tsconfig.json",
-    "include": [
-        "src",
-        "tests"
-    ]
-}
