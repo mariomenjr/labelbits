@@ -93,7 +93,7 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
+# Comment in the public line if your project uses Gatsby and not Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
@@ -129,4 +129,52 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Build directories
 build/
+
+# Ignore node_modules in all packages
+**/node_modules
+
+# Ignore lock files for different package managers
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Ignore build output directories (common in many JS/TS projects)
+**/dist
+**/build
+
+# Ignore temporary files created by npm or yarn
+**/.turbo
+
+# Ignore Turbo cache files
+**/.turbo/cache
+
+# Ignore output from Turbo commands
+**/.turbo/output
+
+# Ignore editor and OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables
+**/.env
+**/.env.*
+
+# Ignore Jest or other test coverage output
+**/coverage
+
+# Ignore TypeScript build outputs
+**/.tsbuildinfo
+
+# Ignore Webpack or other bundler outputs
+**/.parcel-cache
+**/.next
+**/out
+
+# Ignore VSCode settings (if not shared by team)
+.vscode/
+
+# Ignore ESLint and Prettier cache
+**/.eslintcache
+**/.prettiercache

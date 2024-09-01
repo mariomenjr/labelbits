@@ -14,7 +14,10 @@
         ]
     },
     "include": [
-        "src",
-        "tests"
+        "../../apps/**/*",
+        "../../packages/**/*"
+    ],
+    "exclude": [
+        "**/node_modules"
     ]
 }

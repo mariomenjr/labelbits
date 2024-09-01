@@ -19,7 +19,6 @@ module.exports = {
     
     // Set the development server options
     devOptions: {
-        // Set the port for the development server
         port: 1993,
         // Enable Hot Module Replacement
         hmr: true,
