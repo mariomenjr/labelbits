@@ -1,5 +1,5 @@
 {
-    "name": "@labelbits/designer-utils",
+    "name": "@labelbits/designer-shared",
     "version": "0.0.0",
     "private": true,
     "main": "dist/index.js",
@@ -8,9 +8,17 @@
             "types": "./dist/index.d.ts",
             "import": "./dist/index.js"
         },
-        "./math": {
-            "types": "./dist/math/index.d.ts",
-            "import": "./dist/math/index.js"
+        "./interfaces": {
+            "types": "./dist/interfaces/index.d.ts",
+            "import": "./dist/interfaces/index.js"
+        },
+        "./types": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/types/index.js"
+        },
+        "./utils": {
+            "types": "./dist/utils/index.d.ts",
+            "import": "./dist/utils/index.js"
         }
     },
     "scripts": {

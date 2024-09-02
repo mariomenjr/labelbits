@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import { calculateCenter, getViewportSize } from "../../src/utils/elements";
+import { calculateCenter, getViewportSize } from "@labelbits/designer-shared/utils";
 
 describe("calculateCenter", () => {
     it("should calculate the center point of a rectangle", () => {

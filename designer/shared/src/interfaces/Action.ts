@@ -1,4 +1,4 @@
-import { VoidHandler, VoidHandlerAsync } from "../utils/handlers";
+import { VoidHandler, VoidHandlerAsync } from "../types/handlers";
 import Element from "./Element";
 
 /**

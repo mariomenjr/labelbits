@@ -6,7 +6,7 @@ import { getPlugins } from "../plugins";
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
 
-import { FabricSelectionEventHandler } from "../utils/handlers";
+import { FabricSelectionEventHandler } from "@labelbits/designer-shared/types";
 
 /**
  * The LabelDesigner class represents the main label designer application.

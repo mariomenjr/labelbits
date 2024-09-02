@@ -1,8 +1,9 @@
 import * as fabric from "fabric";
 
 import Space from "../../../src/controllers/canvas/Space";
-import { Size } from "../../../src/utils/elements";
+
 import { resizeWindow } from "../../window.helper";
+import { Size } from "@labelbits/designer-shared/utils";
 
 describe("Space", () => {
     let space: MockSpace;

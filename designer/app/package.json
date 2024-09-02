@@ -35,10 +35,9 @@
     
   },
   "dependencies": {
-    "@labelbits/designer-utils": "workspace:*",
+    "@labelbits/designer-shared": "workspace:*",
 
     "alpinejs": "^3.14.1",
-    "fabric": "^6.0.2",
     "htmx.org": "^1.9.12",
     "jsbarcode": "^3.11.6",
     "qrcode": "^1.5.3"

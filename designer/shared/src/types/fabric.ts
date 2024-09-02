@@ -1,5 +1,5 @@
 import * as fabric from "fabric";
-import { SettingsSource } from "../app/Settings";
+import { SettingsSource } from "./settings";
 
 /**
  * Represents a fabric object that can be used in the label designer.

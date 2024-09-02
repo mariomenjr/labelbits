@@ -2,12 +2,6 @@ import Alpine from "alpinejs";
 
 import LabelDesigner from "./LabelDesigner";
 
-import { sayHello } from "@labelbits/designer-utils";
-sayHello();
-
-import { multiply } from "@labelbits/designer-utils/math";
-const _ = multiply(7, 1);
-
 /**
  * Represents the main application class.
  * It provides a static method to start the Alpine.js application.

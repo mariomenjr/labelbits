@@ -1,4 +1,5 @@
-import { camelToTitleCase, camelToKebabCase } from "../../src/utils/strings";
+import { camelToKebabCase, camelToTitleCase } from "@labelbits/designer-shared/utils";
+
 
 describe("camelToTitleCase", () => {
     it("should convert a camel case string to title case", () => {

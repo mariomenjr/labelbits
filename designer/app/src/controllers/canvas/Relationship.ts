@@ -1,8 +1,8 @@
 import * as fabric from "fabric";
 
 import Space from "./Space";
-import { selectionStyle } from "../../utils/default";
-import { TransformingObject } from "../../utils/fabric";
+import { selectionStyle } from "@labelbits/designer-shared";
+import { TransformingObject } from "@labelbits/designer-shared/types";
 
 /**
  * The Relationship class represents a space that allows objects to be positioned relative to a label area.

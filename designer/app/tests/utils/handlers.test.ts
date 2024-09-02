@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import { VoidHandler, VoidHandlerAsync, FabricObjectHandler, SelectionEvent, FabricSelectionEventHandler, FabricSelectionEventCallback } from "../../src/utils/handlers";
+import { VoidHandler, VoidHandlerAsync, FabricObjectHandler, SelectionEvent, FabricSelectionEventHandler, FabricSelectionEventCallback } from "@labelbits/designer-shared/types";
 
 describe("VoidHandler", () => {
     it("should not throw an error when called", () => {

@@ -2,8 +2,8 @@ import * as fabric from "fabric";
 
 import Relationship from "../../../src/controllers/canvas/Relationship";
 import { resizeWindow } from "../../window.helper";
-import { Position } from "../../../src/utils/elements";
-import { TransformingObject } from "../../../src/utils/fabric";
+import { Position } from "@labelbits/designer-shared/utils";
+import { TransformingObject } from "@labelbits/designer-shared/types";
 
 describe("Relationship", () => {
     let space: MockRelationship;
