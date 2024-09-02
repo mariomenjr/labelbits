@@ -3,7 +3,16 @@
     "version": "0.0.0",
     "private": true,
     "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./math": {
+            "types": "./dist/math/index.d.ts",
+            "import": "./dist/math/index.js"
+        }
+    },
     "scripts": {
         "build": "tsc",
         "prepare": "pnpm run build",

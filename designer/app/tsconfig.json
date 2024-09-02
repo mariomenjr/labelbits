@@ -1,9 +1,7 @@
 {
-    "extends": "@labelbits/tsconfig/base.json",
+    "extends": "@labelbits/tsconfig/bundler.json",
     "compilerOptions": {
-        "outDir": "dist",
-        "declaration": true,
-        "declarationMap": true
+        "outDir": "dist"
     },
     "include": [
         "src/**/*",

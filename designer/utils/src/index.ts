@@ -1,1 +1,1 @@
-export { sayHello } from './functions';
+export * from './functions';
