@@ -4,9 +4,9 @@
   "description": "A label designer based on Fabric",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && npm run test && snowpack build",
+    "build": "pnpm run lint && pnpm run test && snowpack build",
     "lint": "eslint",
-    "start": "snowpack dev",
+    "dev": "snowpack dev",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -18,7 +18,7 @@
   "author": "Mario Menjivar <mariomenjr@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@labelbits/config-typescript": "*",
+    "@labelbits/tsconfig": "workspace:*",
 
     "@snowpack/plugin-optimize": "^0.2.13",
     "@snowpack/plugin-postcss": "^1.4.3",
@@ -35,6 +35,8 @@
     
   },
   "dependencies": {
+    "@labelbits/designer-utils": "workspace:*",
+
     "alpinejs": "^3.14.1",
     "fabric": "^6.0.2",
     "htmx.org": "^1.9.12",
