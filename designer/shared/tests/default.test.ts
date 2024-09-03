@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import { colors, selectionStyle, createClipPath, createRectangle } from "@labelbits/designer-shared";
+import { colors, selectionStyle, createClipPath, createRectangle } from "../src/default";
 
 describe("colors", () => {
     it("should have a selectionColor property", () => {

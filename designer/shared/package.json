@@ -5,29 +5,31 @@
     "main": "dist/index.js",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "types": "./dist/src/index.d.ts",
+            "import": "./dist/src/index.js"
         },
         "./interfaces": {
-            "types": "./dist/interfaces/index.d.ts",
-            "import": "./dist/interfaces/index.js"
+            "types": "./dist/src/interfaces/index.d.ts",
+            "import": "./dist/src/interfaces/index.js"
         },
         "./types": {
-            "types": "./dist/types/index.d.ts",
-            "import": "./dist/types/index.js"
+            "types": "./dist/src/types/index.d.ts",
+            "import": "./dist/src/types/index.js"
         },
         "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "import": "./dist/utils/index.js"
+            "types": "./dist/src/utils/index.d.ts",
+            "import": "./dist/src/utils/index.js"
         }
     },
     "scripts": {
         "build": "tsc",
+        "dev": "pnpm run build --watch",
         "prepare": "pnpm run build",
-        "dev": "pnpm run build --watch"
+        "test": "jest"
     },
     "license": "MIT",
     "devDependencies": {
+        "@labelbits/jest.config": "workspace:*",
         "@labelbits/tsconfig": "workspace:*"
     }
 }

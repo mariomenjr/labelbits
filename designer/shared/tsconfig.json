@@ -1,11 +1,12 @@
 {
     "extends": "@labelbits/tsconfig/bundler.json",
     "compilerOptions": {
-        "outDir": "dist"
+        "outDir": "dist",
+        "rootDir": "."
     },
     "include": [
         "src/**/*",
-        "tests/**/*"
+        // "tests/**/*"
     ],
     "exclude": [
         "node_modules"
