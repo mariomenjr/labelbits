@@ -6,7 +6,7 @@ import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbi
  * The Space class is an abstract base class for label design spaces.
  * It provides methods to interact with the Fabric.js canvas.
  */
-export default abstract class Space {
+export default abstract class BaseCanvas {
     /**
      * The Fabric.js canvas object.
      */

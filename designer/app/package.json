@@ -7,7 +7,7 @@
     "build": "pnpm run lint && pnpm run test && snowpack build",
     "lint": "eslint",
     "dev": "snowpack dev",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage"
   },
   "keywords": [
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@labelbits/designer-shared": "workspace:*",
+    "@labelbits/designer-core": "workspace:*",
     "alpinejs": "^3.14.1",
     "htmx.org": "^1.9.12",
     "jsbarcode": "^3.11.6",

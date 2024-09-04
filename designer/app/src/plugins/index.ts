@@ -1,4 +1,4 @@
-import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
 import TextboxPlugin from "./TextboxPlugin";
 import BarcodePlugin from "./BarcodePlugin";

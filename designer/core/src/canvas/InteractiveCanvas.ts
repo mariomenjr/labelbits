@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import Relationship from "./Relationship";
+import ObjectsLayer from "./ObjectsLayer";
 
 /**
  * The DraggableCanvas class is an abstract base class for fabric.Canvas objects
@@ -40,7 +40,7 @@ type CanvasPointerEvent = fabric.TPointerEvent & {
  * It also allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
  * the mouse.
  */
-export default abstract class Zoom extends Relationship {
+export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
      * Registers canvas events for the ZoomableSpace class.
      * This method overrides the base class method to include scroll and drag events.

@@ -1,13 +1,13 @@
 import * as fabric from "fabric";
 
-import Space from "./Space";
+import BaseCanvas from "./BaseCanvas";
 import { selectionStyle, TransformingObject } from "@labelbits/designer-shared/fabric";
 
 /**
  * The Relationship class represents a space that allows objects to be positioned relative to a label area.
  * It provides methods to add objects to the canvas, relocate objects based on their relationships, and resize the canvas.
  */
-export default abstract class Relationship extends Space {
+export default abstract class ObjectsLayer extends BaseCanvas {
     /**
      * Adds an object to the canvas and sets it as the active object.
      * 

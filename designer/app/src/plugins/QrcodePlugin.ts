@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 import QRCode from "qrcode";
 
-import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
 /**
  * QrcodePlugin class represents a plugin for creating QR code objects in the Fabric.js library.

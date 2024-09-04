@@ -1,5 +1,5 @@
-import Zoom from "../controllers/canvas/Zoom";
-import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
+import InteractiveCanvas from "@labelbits/designer-core/canvas";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
 import { getPlugins } from "../plugins";
 
@@ -12,7 +12,7 @@ import { FabricSelectionEventHandler } from "@labelbits/designer-shared/fabric";
  * The LabelDesigner class represents the main label designer application.
  * It provides methods to register plugins, start the application, get settings, and get the toolbox.
  */
-export default class LabelDesigner extends Zoom {
+export default class LabelDesigner extends InteractiveCanvas {
 
     /**
      * The list of plugins registered in the label designer.

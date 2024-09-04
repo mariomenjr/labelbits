@@ -1,8 +1,8 @@
 import * as fabric from "fabric";
 
-import Space from "../../../src/controllers/canvas/Space";
+import BaseCanvas from "../../src/canvas/BaseCanvas";
 
-import { resizeWindow } from "../../window.helper";
+import { resizeWindow } from "@labelbits/designer-shared/helpers";
 import { Size } from "@labelbits/designer-shared/fabric";
 
 describe("Space", () => {
@@ -46,7 +46,7 @@ describe("Space", () => {
     });
 });
 
-class MockSpace extends Space {
+class MockSpace extends BaseCanvas {
     public _resizeCanvas_(): void {
         return this.resizeCanvas();
     }

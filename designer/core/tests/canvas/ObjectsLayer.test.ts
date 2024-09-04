@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 
-import Relationship from "../../../src/controllers/canvas/Relationship";
-import { resizeWindow } from "../../window.helper";
+import ObjectsLayer from "../../src/canvas/ObjectsLayer";
+import { resizeWindow } from "@labelbits/designer-shared/helpers";
 import { Position, TransformingObject } from "@labelbits/designer-shared/fabric";
 
 describe("Relationship", () => {
@@ -97,7 +97,7 @@ describe("Relationship", () => {
     });
 });
 
-class MockRelationship extends Relationship {
+class MockRelationship extends ObjectsLayer {
     get _canvas_(): fabric.Canvas {
         return this.canvas;
     }

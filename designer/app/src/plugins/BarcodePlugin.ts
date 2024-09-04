@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 import JsBarcode from 'jsbarcode';
 
-import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
 /**
  * Represents a plugin for creating barcode objects in the Fabric.js library.

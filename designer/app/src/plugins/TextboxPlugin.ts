@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import FabricObjectPlugin from "../controllers/plugins/FabricObjectPlugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
 /**
  * TextboxPlugin class represents a plugin for creating textbox objects in the Fabric.js library.
