@@ -1,14 +1,5 @@
 import * as fabric from "fabric";
-
-/**
- * Represents a handler function that takes no arguments and returns no value.
- */
-export type VoidHandler = () => void;
-
-/**
- * Represents a handler function that takes no arguments and returns a promise that resolves to void.
- */
-export type VoidHandlerAsync = () => Promise<void>;
+import { SelectionEvent } from "./extended";
 
 /**
  * Represents a handler function that takes a fabric object as an argument and returns no value.
@@ -16,22 +7,6 @@ export type VoidHandlerAsync = () => Promise<void>;
  * @param {fabric.Object} object - The fabric object that the handler function takes as an argument.
  */
 export type FabricObjectHandler = (object: fabric.Object) => void;
-
-/**
- * Represents an event object that contains information about the selection event.
- * It is a partial representation of the fabric.TEvent<fabric.TPointerEvent> interface and
- * includes the selected and deselected objects.
- */
-export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
-    /**
-     * The array of selected fabric objects.
-     */
-    selected: fabric.Object[],
-    /**
-     * The array of deselected fabric objects.
-     */
-    deselected: fabric.Object[]
-};
 
 /**
  * Represents a handler function for the selection event.

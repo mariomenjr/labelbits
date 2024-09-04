@@ -1,9 +1,8 @@
 import * as fabric from "fabric";
 
-import { PluginObject, FabricObjectHandler, SettingsSource, SettingBinder, SettingType } from "@labelbits/designer-shared/types";
-import { Plugin, Action } from "@labelbits/designer-shared/interfaces";
-
-import { createSetting } from "../../app/Settings";
+import { SettingsSource, SettingBinder, SettingType, createSetting } from "@labelbits/designer-shared/setting";
+import {PluginObject, FabricObjectHandler,} from "@labelbits/designer-shared/fabric";
+import { Plugin, Action } from "@labelbits/designer-shared";
 
 /**
  * Represents a plugin for objects in the Fabric.js library.

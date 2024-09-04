@@ -1,5 +1,6 @@
 import * as fabric from "fabric";
-import { SettingsSource } from "./settings";
+
+import { SettingsSource } from "../setting/models";
 
 /**
  * Represents a fabric object that can be used in the label designer.
@@ -29,3 +30,18 @@ export type TransformingObject = fabric.Object & {
     relationship: fabric.TMat2D;
 };
 
+/**
+ * Represents an event object that contains information about the selection event.
+ * It is a partial representation of the fabric.TEvent<fabric.TPointerEvent> interface and
+ * includes the selected and deselected objects.
+ */
+export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
+    /**
+     * The array of selected fabric objects.
+     */
+    selected: fabric.Object[],
+    /**
+     * The array of deselected fabric objects.
+     */
+    deselected: fabric.Object[]
+};

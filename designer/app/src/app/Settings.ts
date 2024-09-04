@@ -1,33 +1,6 @@
-import { Collection } from "@labelbits/designer-shared/interfaces";
-import { FabricSelectionEventCallback, PluginObject, SelectionEvent, Setting, SettingBinder } from "@labelbits/designer-shared/types";
-import { camelToKebabCase, camelToTitleCase } from "@labelbits/designer-shared/utils";
-
-
-/**
- * Creates a new setting object from a property name and a setting binder.
- *
- * @param propName The name of the property associated with the setting.
- * @param settingBinder The setting binder.
- *
- * @returns The new setting object.
- */
-export function createSetting(propName: string, settingBinder: SettingBinder): Setting {
-    return {
-        propName,
-
-        label: camelToTitleCase(propName),
-        id: `sg-${camelToKebabCase(propName)}`,
-        type: settingBinder.getValue().constructor.name.toLowerCase(),
-
-        get value() {
-            return settingBinder.getValue();
-        },
-
-        set value(v) {
-            settingBinder.setValue(v);
-        }
-    };
-}
+import { Collection } from "@labelbits/designer-shared";
+import { Setting } from "@labelbits/designer-shared/setting";
+import { FabricSelectionEventCallback, PluginObject, SelectionEvent } from "@labelbits/designer-shared/fabric";
 
 /**
  * Represents a collection of settings for the label designer.

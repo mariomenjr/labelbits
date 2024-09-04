@@ -1,4 +1,4 @@
-import { Action, Collection } from "@labelbits/designer-shared/interfaces";
+import { Action, Collection } from "@labelbits/designer-shared";
 
 /**
  * Toolbox class represents a collection of actions that can be used in the toolbox.

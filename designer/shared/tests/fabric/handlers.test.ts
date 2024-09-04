@@ -1,20 +1,6 @@
 import * as fabric from "fabric";
 
-import { VoidHandler, VoidHandlerAsync, FabricObjectHandler, SelectionEvent, FabricSelectionEventHandler, FabricSelectionEventCallback } from "../../src/types/handlers";
-
-describe("VoidHandler", () => {
-    it("should not throw an error when called", () => {
-        const handler: VoidHandler = () => { };
-        expect(() => handler()).not.toThrow();
-    });
-});
-
-describe("VoidHandlerAsync", () => {
-    it("should return a resolved promise when called", async () => {
-        const handler: VoidHandlerAsync = () => Promise.resolve();
-        await expect(handler()).resolves.toBeUndefined();
-    });
-});
+import { FabricObjectHandler, SelectionEvent, FabricSelectionEventHandler, FabricSelectionEventCallback } from "../../src/fabric";
 
 describe("FabricObjectHandler", () => {
     it("should call the handler function with the object", () => {

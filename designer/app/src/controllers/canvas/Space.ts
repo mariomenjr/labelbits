@@ -1,7 +1,6 @@
 import * as fabric from "fabric";
 
-import { createClipPath } from "@labelbits/designer-shared";
-import { calculateCenter, getViewportSize, Size } from "@labelbits/designer-shared/utils";
+import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbits/designer-shared/fabric";
 
 /**
  * The Space class is an abstract base class for label design spaces.

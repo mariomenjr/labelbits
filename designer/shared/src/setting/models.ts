@@ -1,4 +1,4 @@
-import Element from "../interfaces/Element";
+import { Element } from "../main/models";
 
 export type SettingsSource = () => Setting[];
 

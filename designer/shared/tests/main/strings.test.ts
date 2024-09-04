@@ -1,4 +1,4 @@
-import { camelToKebabCase, camelToTitleCase } from "../../src/utils/strings";
+import { camelToKebabCase, camelToTitleCase } from "../../src/main/strings";
 
 describe("camelToTitleCase", () => {
     it("should convert a camel case string to title case", () => {

@@ -2,23 +2,19 @@
     "name": "@labelbits/designer-shared",
     "version": "0.0.0",
     "private": true,
-    "main": "dist/index.js",
+    "main": "dist/src/main/index.js",
     "exports": {
         ".": {
-            "types": "./dist/src/index.d.ts",
-            "import": "./dist/src/index.js"
+            "types": "./dist/src/main/index.d.ts",
+            "import": "./dist/src/main/index.js"
         },
-        "./interfaces": {
-            "types": "./dist/src/interfaces/index.d.ts",
-            "import": "./dist/src/interfaces/index.js"
+        "./fabric": {
+            "types": "./dist/src/fabric/index.d.ts",
+            "import": "./dist/src/fabric/index.js"
         },
-        "./types": {
-            "types": "./dist/src/types/index.d.ts",
-            "import": "./dist/src/types/index.js"
-        },
-        "./utils": {
-            "types": "./dist/src/utils/index.d.ts",
-            "import": "./dist/src/utils/index.js"
+        "./setting": {
+            "types": "./dist/src/setting/index.d.ts",
+            "import": "./dist/src/setting/index.js"
         }
     },
     "scripts": {
