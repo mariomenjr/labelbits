@@ -9,7 +9,7 @@
 const { plugins } = require("./postcss.config");
 
 module.exports = {
-    workspaceRoot: "../../",
+    workspaceRoot: "../..",
     // Set the mount points for serving static files and the build output
     mount: {
         // Mount the `public` directory to the root URL (/) and serve it as static files

@@ -1,0 +1,34 @@
+{
+    "name": "@labelbits/designer-plugin-barcode",
+    "version": "1.0.0-alpha1.0",
+    "description": "A label designer plugin for the creation of barcode objects",
+    "private": true,
+    "main": "dist/src/BarcodePlugin.js",
+    "types": "dist/src/BarcodePlugin.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "pnpm run build --watch",
+        "prepare": "pnpm run build",
+        "test": "jest"
+    },
+    "keywords": [
+        "labelbits",
+        "label",
+        "designer",
+        "plugin",
+        "barcode"
+    ],
+    "author": "Mario Menjivar <mariomenjr@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@labelbits/jest.config": "workspace:*",
+        "@labelbits/tsconfig": "workspace:*"
+    },
+    "dependencies": {
+        "@labelbits/designer-shared": "workspace:*",
+        "@labelbits/designer-core": "workspace:*"
+    },
+    "peerDependencies": {
+        "jsbarcode": "^3.11.6"
+    }
+}

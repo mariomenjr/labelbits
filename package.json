@@ -1,16 +1,17 @@
 {
   "name": "labelbits",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "clean": "find . -type d \\( -name \"node_modules\" -o -name \"dist\" -o -name \".turbo\" -o -name \"build\" \\) -prune -exec rm -rf '{}' +",
+    "clean": "rm -f ./pnpm-lock.yaml && find . -type d \\( -name \"node_modules\" -o -name \"dist\" -o -name \".turbo\" -o -name \"build\" -o -name \".snowpack\" \\) -prune -exec rm -rf '{}' +",
     "dev": "turbo run dev",
     "format": "npx prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "start": "turbo run start",
     "test": "turbo run test"
   },
+  "license": "MIT",
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",

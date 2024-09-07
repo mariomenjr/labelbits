@@ -2,7 +2,7 @@
   "name": "@labelbits/designer",
   "version": "1.0.0-alpha1.0",
   "description": "A label designer based on Fabric",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "build": "pnpm run lint && pnpm run test && snowpack build",
     "lint": "eslint",
@@ -11,9 +11,11 @@
     "test:coverage": "jest --coverage"
   },
   "keywords": [
-    "labelhub",
-    "labels",
-    "print"
+    "labelbits",
+    "label",
+    "designer",
+    "zebra",
+    "printer"
   ],
   "author": "Mario Menjivar <mariomenjr@gmail.com>",
   "license": "MIT",
@@ -28,11 +30,12 @@
     "snowpack": "^3.2.2" 
   },
   "dependencies": {
+    "@labelbits/designer-plugin-barcode": "workspace:*",
+    "@labelbits/designer-plugin-qrcode": "workspace:*",
+    "@labelbits/designer-plugin-textbox": "workspace:*",
     "@labelbits/designer-shared": "workspace:*",
     "@labelbits/designer-core": "workspace:*",
     "alpinejs": "^3.14.1",
-    "htmx.org": "^1.9.12",
-    "jsbarcode": "^3.11.6",
-    "qrcode": "^1.5.3"
+    "htmx.org": "^1.9.12"
   }
 }

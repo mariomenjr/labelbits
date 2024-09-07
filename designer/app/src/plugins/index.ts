@@ -1,8 +1,8 @@
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
-import TextboxPlugin from "./TextboxPlugin";
-import BarcodePlugin from "./BarcodePlugin";
-import QrcodePlugin from "./QrcodePlugin";
+import BarcodePlugin from "@labelbits/designer-plugin-barcode";
+import QrcodePlugin from "@labelbits/designer-plugin-qrcode";
+import TextboxPlugin from "@labelbits/designer-plugin-textbox";
 
 /**
  * Retrieves the list of plugins for the application.
