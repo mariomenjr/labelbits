@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import { SettingDefinitionCollection, getSettingCollectionSource } from "@labelbits/designer-shared/setting";
+import { SettingDefinition, SettingDefinitionCollection, getSettingCollectionSource } from "@labelbits/designer-shared/setting";
 import { PluginObject, FabricObjectHandler, } from "@labelbits/designer-shared/fabric";
 import { Plugin, Action } from "@labelbits/designer-shared";
 
@@ -9,27 +9,48 @@ import { Plugin, Action } from "@labelbits/designer-shared";
  * It provides an abstract base class for creating plugins that can be used in the application.
  */
 export default abstract class FabricObjectPlugin implements Plugin<FabricObjectHandler> {
+
+    /**
+     * The default value of the plugin, which is used when creating a new object.
+     */
+    protected abstract defaultValue: string;
+
     /**
      * The name of the plugin.
      */
-    name: string;
+    public name: string;
 
+    /**
+     * The default settings of the plugin.
+     * The settings are used to generate the settings collection for the plugin.
+     */
+    protected defaultSettings: SettingDefinition[] = [
+        {
+            /**
+             * The name of the setting.
+             */
+            name: `left`,
+            /**
+             * Whether the setting is bound to the plugin.
+             */
+            isPluginBound: false
+        },
+        {
+            name: `top`,
+            isPluginBound: false
+        },
+        {
+            name: `content`,
+            isPluginBound: true
+        }
+    ];
+
+    /**
+     * Retrieves the setting definitions of the plugin.
+     * The setting definitions are used to generate the settings collection for the plugin.
+     */
     protected get settingDefinitions(): SettingDefinitionCollection {
-
-        return new SettingDefinitionCollection(this.updateObjectAsync, ...[
-            {
-                name: `left`,
-                isPluginBound: false
-            },
-            {
-                name: `top`,
-                isPluginBound: false
-            },
-            {
-                name: `content`,
-                isPluginBound: true
-            }
-        ]);
+        return new SettingDefinitionCollection(this.updateObjectAsync, ...this.defaultSettings);
     }
 
     /**
@@ -42,33 +63,47 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
 
     /**
      * Creates a new Fabric.js object asynchronously.
+     * The object is created with the default value of the plugin.
      * @returns A promise that resolves to the created object.
      */
-    abstract createObjectAsync(): Promise<fabric.Object>;
+    protected async onCreationAsync(): Promise<fabric.Object> {
+        const o = await this.createObjectAsync();
+        const p = o as PluginObject;
 
-    abstract updateObjectAsync(object: fabric.Object): Promise<fabric.Object>;
+        p.content = this.defaultValue;
+        p.getSettings = getSettingCollectionSource(this.settingDefinitions, p);
+
+        return p;
+    }
+
+    /**
+     * Creates a new Fabric.js object asynchronously.
+     * @returns A promise that resolves to the created object.
+     */
+    public abstract createObjectAsync(): Promise<fabric.Object>;
+
+    /**
+     * Updates an existing Fabric.js object asynchronously.
+     * The object is updated with the properties of the plugin.
+     * @param object The object to update.
+     * @returns A promise that resolves to the updated object.
+     */
+    public abstract updateObjectAsync(object: fabric.Object): Promise<fabric.Object>;
 
     /**
      * Retrieves the action for the plugin asynchronously.
+     * The action is used to create a new object in the label designer.
      * @param handler The handler function for the plugin.
      * @returns A promise that resolves to the action.
      */
-    async getActionAsync(handler: FabricObjectHandler): Promise<Action> {
+    public async getActionAsync(handler: FabricObjectHandler): Promise<Action> {
         return {
             // The id of the action
             id: `btn-${this.name}`,
             // The icon of the action
             icon: `icon-${this.name}`,
             // The onClick event handler for the action
-            onClick: async () => {
-                const o = await this.createObjectAsync();
-                const p = o as PluginObject;
-
-                p.content = ``;
-                p.getSettings = getSettingCollectionSource(this.settingDefinitions, p);
-
-                handler(o);
-            }
+            onClick: async () => handler(await this.onCreationAsync())
         };
     }
 }

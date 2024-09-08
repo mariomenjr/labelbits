@@ -7,6 +7,9 @@ import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
  * It extends the FabricObjectPlugin class and provides an implementation for the createObjectAsync method.
  */
 export default class TextboxPlugin extends FabricObjectPlugin {
+
+    protected defaultValue: string = `New text`;
+
     updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
         throw new Error("Method not implemented.");
     }
@@ -15,7 +18,7 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      * @returns A promise that resolves to the created object.
      */
     async createObjectAsync(): Promise<fabric.Object> {
-        return new fabric.Textbox(`New text`, {
+        return new fabric.Textbox(this.defaultValue, {
             /**
              * The width of the textbox.
              */

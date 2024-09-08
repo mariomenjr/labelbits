@@ -8,6 +8,9 @@ import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
  * It extends the FabricObjectPlugin class and provides an implementation for the createObjectAsync method.
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
+
+    protected defaultValue: string = `https://mariomenjr.com`;
+
     updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
         throw new Error("Method not implemented.");
     }
@@ -17,7 +20,7 @@ export default class QrcodePlugin extends FabricObjectPlugin {
      */
     async createObjectAsync(): Promise<fabric.Object> {
         // Generate QR code as SVG string
-        const svgStr = await QRCode.toString(`https://mariomenjr.com`, { type: `svg` });
+        const svgStr = await QRCode.toString(this.defaultValue, { type: `svg` });
 
         // Load SVG string into Fabric.js
         const svgObject = await fabric.loadSVGFromString(svgStr);
