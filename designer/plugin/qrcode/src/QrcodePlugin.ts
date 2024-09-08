@@ -1,13 +1,16 @@
 import * as fabric from "fabric";
 import QRCode from "qrcode";
 
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
 /**
  * QrcodePlugin class represents a plugin for creating QR code objects in the Fabric.js library.
  * It extends the FabricObjectPlugin class and provides an implementation for the createObjectAsync method.
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
+    updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
+        throw new Error("Method not implemented.");
+    }
     /**
      * Creates a new QR code object asynchronously.
      * @returns A promise that resolves to the created object.

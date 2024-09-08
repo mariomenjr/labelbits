@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 
-import { SettingsSource } from "../setting/models";
+import { SettingCollectionSource } from "../setting/models";
 
 /**
  * Represents a fabric object that can be used in the label designer.
@@ -12,7 +12,9 @@ export type PluginObject = fabric.Object & {
      * A function that returns an array of settings for the object.
      * This function is used to retrieve settings from the object.
      */
-    getSettings: SettingsSource;
+    getSettings: SettingCollectionSource;
+    
+    content: string;
 };
 
 /**

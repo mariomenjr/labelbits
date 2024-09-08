@@ -1,6 +1,5 @@
+import { FabricObjectProcessorAsync } from "../fabric";
 import { Element } from "../main/models";
-
-export type SettingsSource = () => Setting[];
 
 /**
  * Represents the type of a setting value.
@@ -47,4 +46,19 @@ export interface Setting extends Element {
      * The value of the setting.
      */
     value: SettingType;
+}
+
+export type SettingCollectionSource = () => Setting[];
+
+export type SettingDefinition = { name: string, isPluginBound: boolean };
+
+export class SettingDefinitionCollection extends Array<SettingDefinition> {
+
+    public pluginBinder: FabricObjectProcessorAsync;
+
+    constructor(pluginBinder: FabricObjectProcessorAsync, ...args: SettingDefinition[]) {
+
+        super(...args);
+        this.pluginBinder = pluginBinder;
+    }
 }

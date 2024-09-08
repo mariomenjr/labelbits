@@ -1,5 +1,5 @@
 import InteractiveCanvas from "@labelbits/designer-core/canvas";
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
 import { FabricSelectionEventHandler } from "@labelbits/designer-shared/fabric";
 

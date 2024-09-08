@@ -1,4 +1,4 @@
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
 export type PluginLoader = () => Promise<FabricObjectPlugin>;
 

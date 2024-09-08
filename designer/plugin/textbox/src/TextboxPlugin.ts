@@ -1,12 +1,15 @@
 import * as fabric from "fabric";
 
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
+import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
 /**
  * TextboxPlugin class represents a plugin for creating textbox objects in the Fabric.js library.
  * It extends the FabricObjectPlugin class and provides an implementation for the createObjectAsync method.
  */
 export default class TextboxPlugin extends FabricObjectPlugin {
+    updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
+        throw new Error("Method not implemented.");
+    }
     /**
      * Creates a new textbox object asynchronously.
      * @returns A promise that resolves to the created object.
