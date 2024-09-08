@@ -14,7 +14,7 @@ export default class QrcodePlugin extends FabricObjectPlugin {
      */
     async createObjectAsync(): Promise<fabric.Object> {
         // Generate QR code as SVG string
-        const svgStr = await QRCode.toString("https://mariomenjr.com", { type: "svg" });
+        const svgStr = await QRCode.toString(`https://mariomenjr.com`, { type: `svg` });
 
         // Load SVG string into Fabric.js
         const svgObject = await fabric.loadSVGFromString(svgStr);

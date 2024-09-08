@@ -6,17 +6,17 @@
  */
 export function resizeWindow(diff: number): void {
 
-    Object.defineProperty(window, 'innerWidth', {
+    Object.defineProperty(window, `innerWidth`, {
         writable: true,
         configurable: true,
         value: window.innerWidth + diff,
     });
 
-    Object.defineProperty(window, 'innerHeight', {
+    Object.defineProperty(window, `innerHeight`, {
         writable: true,
         configurable: true,
         value: window.innerHeight + diff,
     });
 
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event(`resize`));
 }

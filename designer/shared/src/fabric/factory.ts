@@ -12,7 +12,7 @@ export function createClipPath(): fabric.Rect {
     return new fabric.Rect({
         fill: colors.labelBackground, // The color with which the rectangle will be filled
         selectable: false, // Whether the rectangle can be selected
-        hoverCursor: 'default', // The cursor to display when hovering over the rectangle
+        hoverCursor: `default`, // The cursor to display when hovering over the rectangle
     });
 }
 

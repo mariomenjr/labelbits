@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Label Hub</title>
-
+    <title>Labelbits Designer</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="icon" href="/svg/favicon.svg" type="image/svg+xml" />
 </head>
 
 <body>
@@ -27,7 +27,8 @@
             <table class="divide-y divide-gray-300" x-data="settings">
                 <thead class="bg-gray-100 sticky top-0 z-10">
                     <tr>
-                        <th class="py-1 px-2 text-left text-gray-600 font-medium text-xs uppercase tracking-wider">Setting
+                        <th class="py-1 px-2 text-left text-gray-600 font-medium text-xs uppercase tracking-wider">
+                            Setting
                         </th>
                         <th class="py-1 px-2 text-left text-gray-600 font-medium text-xs uppercase tracking-wider">Value
                         </th>
@@ -39,7 +40,8 @@
                             <td class="py-1 px-2 text-sm" colspan="2">No item selected to display settings.</td>
                         </tr>
                     </template>
-                    <template x-for="(control, i) in data.items" :key="control.id"><!-- Keep `i` around while working on this -->
+                    <template x-for="(control, i) in data.items"
+                        :key="control.id"><!-- Keep `i` around while working on this -->
                         <tr>
                             <td class="py-1 px-2 text-sm">
                                 <label :for="control.id" x-text="`${i}. ${control.label}`"
@@ -47,8 +49,7 @@
                             </td>
                             <td class="py-1 px-2 text-sm">
                                 <input :type="control.type" :id="control.id" :name="control.propName"
-                                    :placeholder="`${control.label}`"
-                                    :value="`${control.value}`"
+                                    :placeholder="`${control.label}`" :value="`${control.value}`"
                                     x-model.number="control.value"
                                     class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
                             </td>

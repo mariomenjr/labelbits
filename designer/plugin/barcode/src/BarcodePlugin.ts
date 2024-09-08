@@ -13,8 +13,8 @@ export default class BarcodePlugin extends FabricObjectPlugin {
      */
     async createObjectAsync(): Promise<fabric.Object> {
         // Generate the barcode
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        JsBarcode(svg, "barcode", { format: "CODE128", displayValue: true });
+        const svg = document.createElementNS(`http://www.w3.org/2000/svg`, `svg`);
+        JsBarcode(svg, `barcode`, { format: `CODE128`, displayValue: true });
 
         // Convert the SVG node to a string
         const serializer = new XMLSerializer();
