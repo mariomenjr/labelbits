@@ -13,7 +13,7 @@ export default class App {
      * and starts the application.
      */
     static async start(): Promise<void> {
-        const labelDesigner = new LabelDesigner();
+        const labelDesigner = await LabelDesigner.createAsync();
 
         /**
          * Registers the Toolbox instance as an Alpine.js component.

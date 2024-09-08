@@ -1,12 +1,12 @@
 import InteractiveCanvas from "@labelbits/designer-core/canvas";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugins";
 
-import { getPlugins } from "../plugins";
+import { FabricSelectionEventHandler } from "@labelbits/designer-shared/fabric";
 
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
 
-import { FabricSelectionEventHandler } from "@labelbits/designer-shared/fabric";
+import { loadPluginsAsync } from "../../labelbits.config";
 
 /**
  * The LabelDesigner class represents the main label designer application.
@@ -17,7 +17,17 @@ export default class LabelDesigner extends InteractiveCanvas {
     /**
      * The list of plugins registered in the label designer.
      */
-    protected plugins: FabricObjectPlugin[] = getPlugins();
+    protected plugins: FabricObjectPlugin[] = [];
+
+    protected constructor(plugins: FabricObjectPlugin[]) {
+        super();
+
+        this.plugins = plugins;
+    }
+
+    public static async createAsync(): Promise<LabelDesigner> {
+        return new LabelDesigner(await loadPluginsAsync());
+    }
 
     /**
      * Retrieves the settings of the label designer.
