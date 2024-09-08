@@ -28,12 +28,19 @@ abstract class DraggableCanvas extends fabric.Canvas {
  * Defines a custom pointer event for the canvas.
  */
 type CanvasPointerEvent = fabric.TPointerEvent & {
+    /**
+     * The x-coordinate of the pointer.
+     */
     clientX: number;
+
+    /**
+     * The y-coordinate of the pointer.
+     */
     clientY: number;
 }
 
 /**
- * The ZoomableSpace class extends the ChildfulSpace class and provides zoom functionality.
+ * The InteractiveCanvas class extends the ChildfulSpace class and provides zoom functionality.
  * It allows the user to zoom in and out of the canvas by holding the Ctrl key and scrolling
  * up or down.
  * 
@@ -42,7 +49,7 @@ type CanvasPointerEvent = fabric.TPointerEvent & {
  */
 export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
-     * Registers canvas events for the ZoomableSpace class.
+     * Registers canvas events for the InteractiveCanvas class.
      * This method overrides the base class method to include scroll and drag events.
      */
     protected registerCanvasEvents(): void {

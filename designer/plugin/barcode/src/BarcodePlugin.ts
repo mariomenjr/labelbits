@@ -6,6 +6,8 @@ import { generateBarcodeAsync } from "./utils";
 
 /**
  * Represents a plugin for creating barcode objects in the Fabric.js library.
+ * This plugin provides an implementation for creating barcode objects and updating them
+ * when the content of the barcode is changed.
  */
 export default class BarcodePlugin extends FabricObjectPlugin {
     /**
@@ -16,6 +18,8 @@ export default class BarcodePlugin extends FabricObjectPlugin {
     /**
      * Updates an existing barcode object asynchronously.
      * This method is called when the content of the barcode is changed.
+     * It updates the object by generating a new barcode SVG from the current content of the object,
+     * and then sets the options of the object from the SVG.
      * @param object The object to update.
      * @returns A promise that resolves to the updated object.
      */
@@ -45,6 +49,8 @@ export default class BarcodePlugin extends FabricObjectPlugin {
 
     /**
      * Creates a new barcode object asynchronously.
+     * It generates a new barcode SVG from the default value and then creates a new group object
+     * with the generated SVG elements.
      * @returns A promise that resolves to the created object.
      */
     async createObjectAsync(): Promise<fabric.Object> {

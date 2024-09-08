@@ -21,8 +21,13 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
     public name: string;
 
     /**
-     * The default settings of the plugin.
-     * The settings are used to generate the settings collection for the plugin.
+     * The default settings of the plugin, which are used to generate the settings collection for the plugin.
+     * The settings are an array of objects, each with the following properties:
+     * {
+     *   name: string,
+     *   isPluginBound: boolean
+     * }
+     * The `isPluginBound` property is a boolean flag indicating whether the setting is bound to the plugin.
      */
     protected defaultSettings: SettingDefinition[] = [
         {
@@ -46,8 +51,8 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
     ];
 
     /**
-     * Retrieves the setting definitions of the plugin.
-     * The setting definitions are used to generate the settings collection for the plugin.
+     * Retrieves the setting definitions of the plugin, which are used to generate the settings collection for the plugin.
+     * @returns A promise that resolves to the setting definitions.
      */
     protected get settingDefinitions(): SettingDefinitionCollection {
         return new SettingDefinitionCollection(this.updateObjectAsync, ...this.defaultSettings);

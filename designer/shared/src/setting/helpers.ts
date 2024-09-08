@@ -3,7 +3,7 @@ import { camelToKebabCase, camelToTitleCase } from "../main/strings";
 import { Setting, SettingBinder, SettingType, SettingCollectionSource, SettingDefinitionCollection } from "./models";
 
 /**
- * Creates a new setting object from a property name and a setting binder.
+ * Creates a new setting object that represents a property of a fabric object.
  *
  * @param propName The name of the property associated with the setting.
  * @param settingBinder The setting binder.
@@ -27,7 +27,6 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
         }
     };
 }
-
 
 /**
  * Binds a property of the fabric object to a setting.
@@ -82,6 +81,7 @@ export function getPluginBinder(object: PluginObject, propName: string, bindingP
 
 /**
  * Retrieves the settings source for the fabric object.
+ * @param propSettings The collection of setting definitions.
  * @param object The fabric object.
  * @returns A function that returns an array of settings.
  */
@@ -92,3 +92,4 @@ export function getSettingCollectionSource(propSettings: SettingDefinitionCollec
         return createSettingElement(name, settingBinder);
     });
 }
+

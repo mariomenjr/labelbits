@@ -4,7 +4,7 @@ import BaseCanvas from "./BaseCanvas";
 import { selectionStyle, TransformingObject } from "@labelbits/designer-shared/fabric";
 
 /**
- * The Relationship class represents a space that allows objects to be positioned relative to a label area.
+ * The ObjectsLayer class represents a space that allows objects to be positioned relative to a label area.
  * It provides methods to add objects to the canvas, relocate objects based on their relationships, and resize the canvas.
  */
 export default abstract class ObjectsLayer extends BaseCanvas {
@@ -100,9 +100,9 @@ export default abstract class ObjectsLayer extends BaseCanvas {
 
         // Invert the transform matrix
         const invertedTransform = fabric.util.invertTransform(labelTransform);
-
         // Calculate the relationship transform matrix
         to.relationship = fabric.util.multiplyTransformMatrices(invertedTransform, to.calcTransformMatrix());
     }
 }
+
 

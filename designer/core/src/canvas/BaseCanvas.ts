@@ -1,6 +1,11 @@
 import * as fabric from "fabric";
 
-import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbits/designer-shared/fabric";
+import {
+    createClipPath,
+    calculateCenter,
+    getViewportSize,
+    Size
+} from "@labelbits/designer-shared/fabric";
 
 /**
  * The Space class is an abstract base class for label design spaces.
@@ -58,6 +63,7 @@ export default abstract class BaseCanvas {
 
     /**
      * Renders the clip path on the canvas.
+     * It sets the size and position of the clip path based on the element size.
      */
     protected centerClip(): void {
         // TODO: Get label size
@@ -93,6 +99,7 @@ export default abstract class BaseCanvas {
 
     /**
      * Resizes the canvas to fit the viewport.
+     * It also centers the clip path after resizing the canvas.
      */
     protected resizeCanvas(): void {
         // Resize the canvas to fit the viewport
@@ -104,6 +111,7 @@ export default abstract class BaseCanvas {
 
     /**
      * Styles the canvas.
+     * It sets the background color of the canvas to a light gray color.
      */
     protected styleCanvas(): void {
         // Set the background color of the canvas

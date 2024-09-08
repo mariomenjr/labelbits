@@ -9,8 +9,16 @@ import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
 
+    /**
+     * The default value for the QR code.
+     */
     protected defaultValue: string = `https://mariomenjr.com`;
 
+    /**
+     * Updates an existing QR code object asynchronously.
+     * @param object The object to update.
+     * @returns A promise that resolves to the updated object.
+     */
     updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
         throw new Error("Method not implemented.");
     }
