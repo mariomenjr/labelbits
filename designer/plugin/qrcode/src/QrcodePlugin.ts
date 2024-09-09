@@ -2,7 +2,7 @@ import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
-import { generateQrcodeAsync } from "./utils";
+import { generateQrcodeAsync, regenerateQrcodeAsync } from "./utils";
 import { PluginObject, replaceSvg } from "@labelbits/designer-shared/fabric";
 
 /**
@@ -27,7 +27,7 @@ export default class QrcodePlugin extends FabricObjectPlugin {
         const pluginObject = object as PluginObject;
 
         // Generate the barcode SVG from the current content of the object
-        const qrcodeSvg = await generateQrcodeAsync(pluginObject.text);
+        const qrcodeSvg = await regenerateQrcodeAsync(pluginObject, propertyName);
 
         return replaceSvg(object, qrcodeSvg);
     }

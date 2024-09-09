@@ -1,7 +1,9 @@
 import * as fabric from "fabric";
+
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 import { PluginObject, replaceSvg } from "@labelbits/designer-shared/fabric";
-import { generateBarcodeAsync } from "./utils";
+
+import { generateBarcodeAsync, regenerateBarcodeAsync } from "./utils";
 
 /**
  * Represents a plugin for creating barcode objects in the Fabric.js library.
@@ -32,7 +34,7 @@ export default class BarcodePlugin extends FabricObjectPlugin {
     async updateObjectAsync(object: fabric.Object, propertyName: string): Promise<fabric.Object> {
         const pluginObject = object as PluginObject;
         // Generate the barcode SVG from the current content of the object
-        const barcodeSvg = await generateBarcodeAsync(pluginObject.text);
+        const barcodeSvg = await regenerateBarcodeAsync(pluginObject, propertyName);
         return replaceSvg(object, barcodeSvg);
     }
 
