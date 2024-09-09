@@ -3,12 +3,12 @@ import { camelToKebabCase, camelToTitleCase } from "../main/strings";
 import { Setting, SettingBinder, SettingType, SettingCollectionSource, SettingDefinitionCollection } from "./models";
 
 /**
- * Creates a new setting object that represents a property of a fabric object.
+ * Creates a new setting object that represents a property of a Fabric object.
  *
- * @param propName The name of the property associated with the setting.
- * @param settingBinder The setting binder.
- *
- * @returns The new setting object.
+ * @param {string} propName - The name of the property associated with the setting.
+ * @param {SettingBinder} settingBinder - The setting binder that manages the property's value.
+ * 
+ * @returns {Setting} The new setting object, including methods to get and set the property's value.
  */
 export function createSettingElement(propName: string, settingBinder: SettingBinder): Setting {
     return {
@@ -29,16 +29,19 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
 }
 
 /**
- * Binds a property of the fabric object to a setting.
- * @param object The fabric object.
- * @param propName The name of the property.
- * @returns A setting binder object.
+ * Binds a property of the Fabric object to a setting using a default binder.
+ * 
+ * @param {PluginObject} object - The Fabric object to bind the property from.
+ * @param {string} propName - The name of the property to bind.
+ * 
+ * @returns {SettingBinder} A setting binder object for the property.
  */
 export function getDefaultBinder(object: PluginObject, propName: string): SettingBinder {
     return {
         /**
          * Retrieves the value of the property.
-         * @returns The value of the property.
+         * 
+         * @returns {SettingType} The current value of the property.
          */
         getValue(): SettingType {
             return object.get(propName);
@@ -46,7 +49,8 @@ export function getDefaultBinder(object: PluginObject, propName: string): Settin
 
         /**
          * Sets the value of the property.
-         * @param v The new value of the property.
+         * 
+         * @param {SettingType} v - The new value to set for the property.
          */
         setValue(v: SettingType) {
             object.set(propName, v);
@@ -58,6 +62,15 @@ export function getDefaultBinder(object: PluginObject, propName: string): Settin
     };
 }
 
+/**
+ * Binds a property of the Fabric object to a setting using a plugin-specific binder.
+ * 
+ * @param {PluginObject} object - The Fabric object to bind the property from.
+ * @param {string} propName - The name of the property to bind.
+ * @param {FabricObjectProcessorAsync} bindingProcessorAsync - An asynchronous processor for the Fabric object.
+ * 
+ * @returns {SettingBinder} A setting binder object that includes asynchronous processing.
+ */
 export function getPluginBinder(object: PluginObject, propName: string, bindingProcessorAsync: FabricObjectProcessorAsync): SettingBinder {
     const binder = getDefaultBinder(object, propName);
 
@@ -80,16 +93,16 @@ export function getPluginBinder(object: PluginObject, propName: string, bindingP
 }
 
 /**
- * Retrieves the settings source for the fabric object.
- * @param propSettings The collection of setting definitions.
- * @param object The fabric object.
- * @returns A function that returns an array of settings.
+ * Retrieves the settings source for the Fabric object, based on the provided property settings.
+ * 
+ * @param {SettingDefinitionCollection} propSettings - The collection of setting definitions to use.
+ * @param {PluginObject} object - The Fabric object for which settings are being retrieved.
+ * 
+ * @returns {SettingCollectionSource} A function that returns an array of setting objects.
  */
 export function getSettingCollectionSource(propSettings: SettingDefinitionCollection, object: PluginObject): SettingCollectionSource {
     return () => propSettings.map(({ name, isPluginBound }) => {
-
         const settingBinder = isPluginBound ? getPluginBinder(object, name, propSettings.pluginBinder!) : getDefaultBinder(object, name);
         return createSettingElement(name, settingBinder);
     });
 }
-

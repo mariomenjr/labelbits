@@ -2,6 +2,10 @@ import * as fabric from "fabric";
 
 /**
  * Represents a size with width and height properties.
+ * 
+ * @typedef {Object} Size
+ * @property {number} width - The width of the size.
+ * @property {number} height - The height of the size.
  */
 export type Size = {
     /** The width of the size. */
@@ -12,6 +16,10 @@ export type Size = {
 
 /**
  * Represents a position with top and left properties.
+ * 
+ * @typedef {Object} Position
+ * @property {number} top - The top position of the object.
+ * @property {number} left - The left position of the object.
  */
 export type Position = {
     /** The top position of the object. */
@@ -22,7 +30,8 @@ export type Position = {
 
 /**
  * Returns the size of the viewport.
- * @returns {Size} The size of the viewport.
+ * 
+ * @returns {Size} The size of the viewport, including its width and height.
  */
 export function getViewportSize(): Size {
     // Get the width and height of the viewport
@@ -34,17 +43,16 @@ export function getViewportSize(): Size {
 
 /**
  * Calculates the center position of an object relative to the given reference size.
- * @param {fabric.Object} object - The object whose center needs to be calculated.
- * @param {Size} referenceSize - The size of the reference element.
- * @returns {Position} The center position of the object.
+ * 
+ * @param {fabric.Object} object - The `fabric.Object` whose center needs to be calculated.
+ * @param {Size} referenceSize - The size of the reference element, used for centering the object.
+ * @returns {Position} The center position of the object, including its top and left coordinates.
  */
 export function calculateCenter(object: fabric.Object, referenceSize: Size): Position {
-    // Calculate the center position of the object based on its size and reference size
-    
     // Calculate the left position of the center by subtracting half of the object's width
     // from half of the reference size's width
     const left = referenceSize.width / 2 - object.width / 2;
-    
+
     // Calculate the top position of the center by subtracting half of the object's height
     // from half of the reference size's height
     const top = referenceSize.height / 2 - object.height / 2;
@@ -52,4 +60,3 @@ export function calculateCenter(object: fabric.Object, referenceSize: Size): Pos
     // Return the center position
     return { left, top };
 }
-

@@ -1,91 +1,84 @@
 import * as fabric from "fabric";
-
 import ObjectsLayer from "./ObjectsLayer";
 
 /**
  * The DraggableCanvas class is an abstract base class for fabric.Canvas objects
  * that support dragging. It adds properties and methods to track the state of
  * dragging and the last position of the pointer.
+ *
+ * @abstract
+ * @extends fabric.Canvas
  */
 abstract class DraggableCanvas extends fabric.Canvas {
     /**
      * Indicates whether a drag operation is currently in progress.
+     * @type {boolean}
      */
     isDragging: boolean = false;
 
     /**
      * The x-coordinate of the pointer's last position during a drag operation.
+     * @type {number}
      */
     lastPosX: number = 0;
 
     /**
      * The y-coordinate of the pointer's last position during a drag operation.
+     * @type {number}
      */
     lastPosY: number = 0;
 }
 
 /**
  * Defines a custom pointer event for the canvas.
+ * @typedef {Object} CanvasPointerEvent
+ * @property {number} clientX - The x-coordinate of the pointer.
+ * @property {number} clientY - The y-coordinate of the pointer.
+ * @extends fabric.TPointerEvent
  */
 type CanvasPointerEvent = fabric.TPointerEvent & {
-    /**
-     * The x-coordinate of the pointer.
-     */
     clientX: number;
-
-    /**
-     * The y-coordinate of the pointer.
-     */
     clientY: number;
-}
+};
 
 /**
- * The InteractiveCanvas class extends the ChildfulSpace class and provides zoom functionality.
- * It allows the user to zoom in and out of the canvas by holding the Ctrl key and scrolling
- * up or down.
- * 
- * It also allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
- * the mouse.
+ * The InteractiveCanvas class extends the ObjectsLayer class and provides
+ * zoom and drag functionality. It allows the user to zoom in and out of the
+ * canvas by holding the Ctrl key and scrolling, and drag the canvas by
+ * holding the Ctrl key and dragging the mouse.
+ *
+ * @abstract
+ * @extends ObjectsLayer
  */
 export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
      * Registers canvas events for the InteractiveCanvas class.
      * This method overrides the base class method to include scroll and drag events.
+     * 
+     * @protected
+     * @override
      */
     protected registerCanvasEvents(): void {
-        // Register base class events
         super.registerCanvasEvents();
-
-        // Register scroll event
         this.registerOnScroll();
-
-        // Register drag event
         this.registerOnDrag();
     }
 
     /**
      * Registers a scroll event listener for the canvas.
      * This method listens for the 'mouse:wheel' event and zooms the canvas in or out
-     * depending on the scroll direction and the Ctrl key being held down.
+     * depending on the scroll direction and whether the Ctrl key is being held down.
+     * 
+     * @private
      */
     private registerOnScroll(): void {
-        // Register scroll event handler
         this.canvas.on('mouse:wheel', (opt) => {
-            // Check if Ctrl key is pressed
             if (!opt.e.ctrlKey) return;
-
-            // Calculate zoom factor
             const zoom = this.calculateZoom(opt.e.deltaY);
-
-            // Set zoom point and zoom factor
             const point = new fabric.Point(opt.e.offsetX, opt.e.offsetY);
             this.setZoom(point, zoom);
-
-            // Prevent default scroll behavior and stop propagation
             opt.e.preventDefault();
             opt.e.stopPropagation();
-
-            // Request render all objects
             this.canvas.requestRenderAll();
         });
     }
@@ -93,13 +86,13 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
      * Registers a drag event listener for the canvas.
      * This method listens for the 'mouse:down', 'mouse:move', and 'mouse:up' events
-     * and allows the user to drag the canvas by holding the Ctrl key and clicking and dragging
-     * the mouse.
+     * to allow the user to drag the canvas by holding the Ctrl key and dragging the mouse.
+     * 
+     * @private
      */
     private registerOnDrag(): void {
         const draggableCanvas = this.canvas as DraggableCanvas;
 
-        // Register mouse down event handler
         draggableCanvas.on('mouse:down', (opt) => {
             const evt = opt.e as CanvasPointerEvent;
             if (evt.ctrlKey === true) {
@@ -110,13 +103,10 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
             }
         });
 
-        // Register mouse move event handler
         draggableCanvas.on('mouse:move', (opt) => {
             if (draggableCanvas.isDragging) {
                 const e = opt.e as CanvasPointerEvent;
                 const vpt = draggableCanvas.viewportTransform;
-
-                // Calculate translation and apply it to viewport transform
                 vpt[4] += e.clientX - draggableCanvas.lastPosX;
                 vpt[5] += e.clientY - draggableCanvas.lastPosY;
                 draggableCanvas.requestRenderAll();
@@ -125,9 +115,7 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
             }
         });
 
-        // Register mouse up event handler
         draggableCanvas.on('mouse:up', (_) => {
-            // Set viewport transform and restore selection state
             draggableCanvas.setViewportTransform(draggableCanvas.viewportTransform);
             draggableCanvas.isDragging = false;
             draggableCanvas.selection = true;
@@ -135,9 +123,11 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
     }
 
     /**
-     * Calculates the zoom factor based on the scroll direction and the Ctrl key being held down.
-     * @param delta - The scroll direction.
-     * @returns The zoom factor.
+     * Calculates the zoom factor based on the scroll direction.
+     *
+     * @protected
+     * @param {number} delta - The scroll direction.
+     * @returns {number} The zoom factor.
      */
     protected calculateZoom(delta: number): number {
         const zoom = this.canvas.getZoom() * (1 - 0.001 * delta);
@@ -146,11 +136,12 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
 
     /**
      * Sets the zoom point and zoom factor for the canvas.
-     * @param point - The point to zoom to.
-     * @param zoom - The zoom factor.
+     * 
+     * @protected
+     * @param {fabric.Point} point - The point to zoom to.
+     * @param {number} zoom - The zoom factor.
      */
     protected setZoom(point: fabric.Point, zoom: number): void {
         this.canvas.zoomToPoint(point, zoom);
     }
 }
-

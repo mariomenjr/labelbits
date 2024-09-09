@@ -1,5 +1,4 @@
 import * as fabric from "fabric";
-
 import {
     createClipPath,
     calculateCenter,
@@ -8,53 +7,54 @@ import {
 } from "@labelbits/designer-shared/fabric";
 
 /**
- * The Space class is an abstract base class for label design spaces.
- * It provides methods to interact with the Fabric.js canvas.
+ * The BaseCanvas class is an abstract base class for label design spaces.
+ * It provides methods to interact with the Fabric.js canvas, including resizing,
+ * centering objects, and styling.
+ *
+ * @abstract
  */
 export default abstract class BaseCanvas {
     /**
      * The Fabric.js canvas object.
+     * 
+     * @protected
+     * @type {fabric.Canvas}
      */
     protected canvas: fabric.Canvas;
 
     /**
      * The clip path used to restrict the rendering of objects on the canvas.
+     * 
+     * @protected
+     * @type {fabric.Rect}
      */
     protected labelArea: fabric.Rect;
 
     /**
-     * Creates a new space.
+     * Creates a new design space and initializes the canvas.
+     * It sets up the clip path, styles, event listeners, and renders the canvas.
      */
     constructor() {
-        // Create a new canvas
         this.canvas = new fabric.Canvas(`canvas`);
-
-        // Create a new clip path
         this.labelArea = createClipPath();
-
-        // Add the clip path to the canvas
         this.canvas.add(this.labelArea);
 
-        // Style the canvas and resize it
         this.styleCanvas();
         this.resizeCanvas();
-
-        // Register canvas events
         this.registerCanvasEvents();
-
-        // Render the canvas
         this.canvas.renderAll();
 
-        // Log initialization message
         console.log(`Canvas initialized.`);
     }
 
     /**
      * Returns the size of the canvas.
-     * @returns {Size} The size of the canvas.
+     * 
+     * @protected
+     * @type {Size}
+     * @returns {Size} The current size of the canvas.
      */
     protected get canvasSize(): Size {
-        // Get the width and height of the canvas
         return {
             width: this.canvas.width,
             height: this.canvas.height
@@ -63,13 +63,11 @@ export default abstract class BaseCanvas {
 
     /**
      * Renders the clip path on the canvas.
-     * It sets the size and position of the clip path based on the element size.
+     * Sets the size and position of the clip path based on a fixed element size.
      */
     protected centerClip(): void {
-        // TODO: Get label size
-        const elementSize: Size = { width: 500, height: 250 };
+        const elementSize: Size = { width: 500, height: 250 }; // TODO: Get actual label size
 
-        // Set the size and position of the clip path
         this.centerObject(this.labelArea.set({
             ...elementSize,
             absolutePositioned: true
@@ -79,43 +77,42 @@ export default abstract class BaseCanvas {
     /**
      * Centers the specified object on the canvas.
      * 
-     * @param {fabric.Object} object - The object to center.
+     * @protected
+     * @param {fabric.Object} object - The object to center on the canvas.
      */
     protected centerObject(object: fabric.Object): void {
-        // Calculate the center of the object based on its size and canvas size
         const center = calculateCenter(object, this.canvasSize);
-
-        // Set the object's position and coordinates
         object.set({ ...center }).setCoords();
     }
 
     /**
      * Registers event listeners for the canvas.
+     * Currently listens for the window resize event to adjust the canvas size.
+     * 
+     * @protected
      */
     protected registerCanvasEvents(): void {
-        // Register a resize event listener for the window
         window.addEventListener('resize', () => this.resizeCanvas());
     }
 
     /**
-     * Resizes the canvas to fit the viewport.
-     * It also centers the clip path after resizing the canvas.
+     * Resizes the canvas to fit the current viewport size.
+     * Also re-centers the clip path after resizing.
+     * 
+     * @protected
      */
     protected resizeCanvas(): void {
-        // Resize the canvas to fit the viewport
         this.canvas.setDimensions(getViewportSize());
-
-        // Recenter the clip path
         this.centerClip();
     }
 
     /**
      * Styles the canvas.
-     * It sets the background color of the canvas to a light gray color.
+     * Sets the background color of the canvas to a light gray.
+     * 
+     * @protected
      */
     protected styleCanvas(): void {
-        // Set the background color of the canvas
         this.canvas.backgroundColor = `rgb(209 213 219)`;
     }
 }
-

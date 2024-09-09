@@ -1,53 +1,52 @@
 import Alpine from "alpinejs";
-
 import LabelDesigner from "./LabelDesigner";
 
 /**
  * Represents the main application class.
- * It provides a static method to start the Alpine.js application.
+ * Provides a static method to initialize and start the Alpine.js application.
  */
 export default class App {
     /**
      * Starts the Alpine.js application.
-     * It registers the Toolbox instance and the Settings instance as Alpine.js components,
+     * Registers the Toolbox and Settings instances as Alpine.js components,
      * and starts the application.
+     * 
+     * @static
+     * @async
+     * @returns {Promise<void>} A promise that resolves when the application has started.
      */
     static async start(): Promise<void> {
+        // Create an instance of the LabelDesigner asynchronously
         const labelDesigner = await LabelDesigner.createAsync();
+
+        // Retrieve the Toolbox instance asynchronously
+        const toolbox = await labelDesigner.getToolboxAsync();
 
         /**
          * Registers the Toolbox instance as an Alpine.js component.
-         * This makes the Toolbox instance available to all components in the application.
+         * The component is made available to all Alpine.js contexts.
          */
-        const toolbox = await labelDesigner.getToolboxAsync();
         Alpine.data(`toolbox`, () => toolbox);
 
         /**
          * Registers the Settings instance as an Alpine.js component.
-         * This makes the Settings instance available to all components in the application.
-         *
-         * @returns {Object} The Alpine.js component data object.
+         * The Settings instance is made available to all Alpine.js contexts.
+         * 
+         * @returns {Object} The Alpine.js component data object for settings.
          */
         Alpine.data(`settings`, () => {
-            /**
-             * Represents the Settings instance as an Alpine.js component data object.
-             *
-             * @type {Object}
-             * @property {Settings} data - The Settings instance.
-             */
             return {
                 /**
                  * The Settings instance.
-                 *
+                 * 
                  * @type {Settings}
                  */
                 data: labelDesigner.getSettings(),
+
                 /**
                  * Initializes the component data.
-                 * This function is called when the application starts,
-                 * and it starts the Settings instance.
-                 *
-                 * @returns {void}
+                 * This function is automatically called by Alpine.js when the component is initialized.
+                 * It starts the Settings instance.
                  */
                 init(): void {
                     this.data.start();
@@ -55,12 +54,7 @@ export default class App {
             };
         });
 
-        /**
-         * Starts the Alpine.js application.
-         * This function is called when the application starts,
-         * and it starts the Alpine.js application.
-         */
+        // Start the Alpine.js application
         Alpine.start();
     }
 }
-

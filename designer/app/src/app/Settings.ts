@@ -5,52 +5,59 @@ import { FabricSelectionEventCallback, PluginObject, SelectionEvent } from "@lab
 /**
  * Represents a collection of settings for the label designer.
  * The settings are derived from the properties of the selected fabric object.
+ *
+ * @extends {Collection<Setting>}
  */
 export default class Settings extends Collection<Setting> {
     /**
      * Indicates whether there is a selection.
+     * 
+     * @type {boolean}
      */
     public hasSelection: boolean = false;
 
     /**
-     * The selected fabric object.
+     * The currently selected fabric object.
+     * 
+     * @type {PluginObject | null}
      */
     public selectedObject: PluginObject | null = null;
 
     /**
-     * The callback function for the fabric selection event.
+     * The callback function for handling fabric selection events.
+     * This function will be called when a selection event occurs.
+     * 
+     * @type {FabricSelectionEventCallback}
      */
     protected setSettingsRefiller: FabricSelectionEventCallback;
 
     /**
      * Creates a new instance of the Settings class.
-     *
-     * @param {FabricSelectionEventCallback} setSelectionHandler - The callback function for the fabric selection event.
+     * 
+     * @param {FabricSelectionEventCallback} setSelectionHandler - The callback function for handling fabric selection events.
      */
     constructor(setSelectionHandler: FabricSelectionEventCallback) {
         super();
-
         this.setSettingsRefiller = setSelectionHandler;
         console.log(`Settings initialized.`);
     }
 
     /**
-     * Registers a callback function for the fabric selection event.
-     * When a fabric object is selected, the callback function retrieves the properties of the object and creates settings from them.
-     * The created settings are added to the collection.
+     * Registers a callback function for fabric selection events.
+     * This method starts listening for selection events and refills the settings collection based on the selected object.
      */
     public start(): void {
         /**
          * A callback function that is called when a selection event occurs.
-         *
+         * 
          * @param {SelectionEvent} e - The selection event object.
          */
         this.setSettingsRefiller(e => this.refillSettings(e));
     }
 
     /**
-     * Refills the collection with settings from the selected fabric object.
-     *
+     * Refills the settings collection with settings from the selected fabric object.
+     * 
      * @param {SelectionEvent} e - The selection event object.
      */
     protected refillSettings(e: SelectionEvent): void {
@@ -60,14 +67,13 @@ export default class Settings extends Collection<Setting> {
         // Set the selection state based on the number of selected objects
         this.hasSelection = e.selected?.length === 1;
 
-        // Reset the selected object
+        // Set the selected object based on the selection state
         this.selectedObject = this.hasSelection ? e.selected[0] as PluginObject : null;
 
-        // If there is no selection, return
+        // If no object is selected, return
         if (!this.selectedObject) return;
 
-        // Get the properties of the selected object
+        // Get and add the settings from the selected object
         this.push(...this.selectedObject.getSettings());
     }
 }
-

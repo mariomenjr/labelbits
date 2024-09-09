@@ -1,15 +1,17 @@
 import { Action, Collection } from "@labelbits/designer-shared";
 
 /**
- * Toolbox class represents a collection of actions that can be used in the toolbox.
+ * Represents a collection of actions that can be used in the toolbox.
  * It extends the Collection class and provides a constructor to initialize the toolbox.
+ * @extends {Collection<Action>}
  */
 export default class Toolbox extends Collection<Action> {
 
     /**
      * Constructs a new Toolbox instance.
      *
-     * @param {Action[]} actions - An array of Action objects representing the actions in the toolbox.
+     * @constructor
+     * @param {...Action[]} actions - An array of Action objects representing the actions in the toolbox.
      */
     constructor(...actions: Action[]) {
         super(...actions);
@@ -18,4 +20,3 @@ export default class Toolbox extends Collection<Action> {
         console.log(`Toolbox initialized.`);
     }
 }
-
