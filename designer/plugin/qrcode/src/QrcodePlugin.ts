@@ -1,7 +1,9 @@
 import * as fabric from "fabric";
-import QRCode from "qrcode";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
+
+import { generateQrcodeAsync } from "./utils";
+import { PluginObject, replaceSvg } from "@labelbits/designer-shared/fabric";
 
 /**
  * QrcodePlugin class represents a plugin for creating QR code objects in the Fabric.js library.
@@ -12,36 +14,31 @@ export default class QrcodePlugin extends FabricObjectPlugin {
     /**
      * The default value for the QR code.
      */
-    protected defaultValue: string = `https://mariomenjr.com`;
+    protected defaultValue: string = `https://labelbits.mariomenjr.com`;
 
     /**
      * Updates an existing QR code object asynchronously.
      * @param object The object to update.
      * @returns A promise that resolves to the updated object.
      */
-    updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
-        throw new Error("Method not implemented.");
+    async updateObjectAsync(object: fabric.Object, propertyName: string): Promise<fabric.Object> {
+        const pluginObject = object as PluginObject;
+
+        // Generate the barcode SVG from the current content of the object
+        const qrcodeSvg = await generateQrcodeAsync(pluginObject.text);
+
+        return replaceSvg(object, qrcodeSvg);
     }
     /**
      * Creates a new QR code object asynchronously.
      * @returns A promise that resolves to the created object.
      */
     async createObjectAsync(): Promise<fabric.Object> {
-        // Generate QR code as SVG string
-        const svgStr = await QRCode.toString(this.defaultValue, { type: `svg` });
-
         // Load SVG string into Fabric.js
-        const svgObject = await fabric.loadSVGFromString(svgStr);
+        const svgObject = await generateQrcodeAsync(this.defaultValue);
 
         // Group SVG objects into a single group object
-        const o = fabric.util.groupSVGElements(svgObject.objects as fabric.Object[], svgObject.options);
-
-        // Scale the group object to desired height and width
-        o.scaleToHeight(125);
-        o.scaleToWidth(125);
-
-        // Apply the selection style to the group object
-        return o;
+        return fabric.util.groupSVGElements(svgObject.objects as fabric.Object[], svgObject.options);
     }
 }
 

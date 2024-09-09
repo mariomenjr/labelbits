@@ -24,4 +24,4 @@ export type FabricSelectionEventHandler = (selectionEvent: SelectionEvent) => vo
  */
 export type FabricSelectionEventCallback = (selectionEventHandler: FabricSelectionEventHandler) => void;
 
-export type FabricObjectProcessorAsync = (object: fabric.Object) => Promise<fabric.Object>;
+export type FabricObjectProcessorAsync = (object: fabric.Object, propertyName: string) => Promise<fabric.Object>;

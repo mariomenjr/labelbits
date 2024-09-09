@@ -68,7 +68,7 @@ export function getPluginBinder(object: PluginObject, propName: string, bindingP
 
             const { left, top, scaleX, scaleY, angle, flipX, flipY } = object;
 
-            const updatedObject = await bindingProcessorAsync(object);
+            const updatedObject = await bindingProcessorAsync(object, propName);
 
             updatedObject.set({ left, top, scaleX, scaleY, angle, flipX, flipY });
 

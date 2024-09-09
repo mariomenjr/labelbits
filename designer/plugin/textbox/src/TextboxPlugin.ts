@@ -1,6 +1,7 @@
 import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
+import { SettingDefinition } from "@labelbits/designer-shared/setting";
 
 /**
  * TextboxPlugin class represents a plugin for creating textbox objects in the Fabric.js library.
@@ -12,6 +13,11 @@ export default class TextboxPlugin extends FabricObjectPlugin {
 
     protected defaultValue: string = `New text`;
 
+    protected defaultSettings: SettingDefinition[] = super.settingDefinitions.map(sd => {
+        sd.isPluginBound = false;
+        return sd;
+    });
+
     /**
      * Updates an existing textbox object asynchronously.
      * This method is called when the content of the textbox is changed.
@@ -19,7 +25,7 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      * @param object The object to update.
      * @returns A promise that resolves to the updated object.
      */
-    updateObjectAsync(_: fabric.FabricObject): Promise<fabric.Object> {
+    updateObjectAsync(_: fabric.FabricObject, propertyName: string): Promise<fabric.Object> {
         throw new Error("Method not implemented.");
     }
     /**

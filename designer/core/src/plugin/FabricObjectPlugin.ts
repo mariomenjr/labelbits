@@ -45,7 +45,7 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
             isPluginBound: false
         },
         {
-            name: `content`,
+            name: `text`,
             isPluginBound: true
         }
     ];
@@ -75,7 +75,7 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
         const o = await this.createObjectAsync();
         const p = o as PluginObject;
 
-        p.content = this.defaultValue;
+        p.text = this.defaultValue;
         p.getSettings = getSettingCollectionSource(this.settingDefinitions, p);
 
         return p;
@@ -93,7 +93,7 @@ export default abstract class FabricObjectPlugin implements Plugin<FabricObjectH
      * @param object The object to update.
      * @returns A promise that resolves to the updated object.
      */
-    public abstract updateObjectAsync(object: fabric.Object): Promise<fabric.Object>;
+    public abstract updateObjectAsync(object: fabric.Object, propertyName: string): Promise<fabric.Object>;
 
     /**
      * Retrieves the action for the plugin asynchronously.

@@ -14,7 +14,7 @@ export type PluginObject = fabric.Object & {
      */
     getSettings: SettingCollectionSource;
     
-    content: string;
+    text: string;
 };
 
 /**

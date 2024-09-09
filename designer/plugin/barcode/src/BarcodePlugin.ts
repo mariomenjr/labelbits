@@ -1,7 +1,8 @@
 import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { PluginObject } from "@labelbits/designer-shared/fabric";
+import { PluginObject, replaceSvg } from "@labelbits/designer-shared/fabric";
+
 import { generateBarcodeAsync } from "./utils";
 
 /**
@@ -23,28 +24,13 @@ export default class BarcodePlugin extends FabricObjectPlugin {
      * @param object The object to update.
      * @returns A promise that resolves to the updated object.
      */
-    async updateObjectAsync(object: fabric.Object): Promise<fabric.Object> {
+    async updateObjectAsync(object: fabric.Object, propertyName: string): Promise<fabric.Object> {
         const pluginObject = object as PluginObject;
 
         // Generate the barcode SVG from the current content of the object
-        const barcodeSvg = await generateBarcodeAsync(pluginObject.content);
+        const barcodeSvg = await generateBarcodeAsync(pluginObject.text);
 
-        // Set the options of the object from the SVG
-        object.set({
-            // Set the objects of the group to the SVG elements
-            objects: barcodeSvg.objects,
-            // Set the other options from the SVG
-            ...barcodeSvg.options,
-        });
-
-        // Remove all the current objects from the group
-        const svgGroup = object as unknown as fabric.Group;
-        svgGroup.remove(...svgGroup.getObjects());
-
-        // Add the new SVG elements to the group
-        svgGroup.add(...barcodeSvg.objects);
-
-        return object;
+        return replaceSvg(object, barcodeSvg);
     }
 
     /**
