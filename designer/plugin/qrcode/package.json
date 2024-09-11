@@ -9,7 +9,7 @@
         "build": "tsc",
         "dev": "pnpm run build --watch",
         "prepare": "pnpm run build",
-        "test": "jest"
+        "test": "jest --passWithNoTests"
     },
     "keywords": [
         "labelbits",

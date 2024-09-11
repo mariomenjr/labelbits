@@ -1,6 +1,5 @@
 packages:
   - 'designer/*'
-  - '!designer/plugin'
   - 'designer/plugin/*'
   - 'packages/*'
   
