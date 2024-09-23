@@ -1,10 +1,5 @@
 import * as fabric from "fabric";
-import {
-    createClipPath,
-    calculateCenter,
-    getViewportSize,
-    Size
-} from "@labelbits/designer-shared/fabric";
+import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbits/designer-shared/fabric";
 
 /**
  * The BaseCanvas class is an abstract base class for label design spaces.
@@ -44,7 +39,7 @@ export default abstract class BaseCanvas {
         this.registerCanvasEvents();
         this.canvas.renderAll();
 
-        console.log(`Canvas initialized.`);
+        console.debug(`Canvas initialized.`);
     }
 
     /**

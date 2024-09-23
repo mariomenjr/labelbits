@@ -1,6 +1,29 @@
 import * as fabric from "fabric";
+
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { SettingDefinition } from "@labelbits/designer-shared/setting";
+import { PluginOptions, PluginTextbox } from "@labelbits/designer-shared/fabric";
+import { SettingProp } from "@labelbits/designer-shared/setting";
+
+const pluginOptions: PluginOptions = {
+    left: { isNative: true },
+    text: { isNative: true, value: `Edit me` },
+};
+
+class TextboxObject extends PluginTextbox {
+
+    public plugin: PluginOptions = pluginOptions;
+    
+    /**
+     * Updates the object asynchronously when a setting property is changed.
+     * The object is updated by using the new setting property value.
+     * @param {string} propName - The name of the setting property that changed.
+     * @param {SettingProp} settingProp - The new setting property value.
+     * @returns {Promise<TextboxObject>} A promise that resolves to the updated object.
+     */
+    public async updateObjectAsync(propName: string, _: SettingProp): Promise<TextboxObject> {
+        throw new Error(`Not implemented property name ${propName} for plugin handler: ${TextboxObject.prototype.updateObjectAsync.name}`);
+    }
+}
 
 /**
  * Represents a plugin for creating and managing textbox objects in the Fabric.js library.
@@ -13,40 +36,17 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      * @protected
      * @type {string}
      */
-    protected defaultValue: string = `New text`;
-
-    /**
-     * The default settings for the textbox plugin.
-     * These settings are derived from the parent class and modified to set isPluginBound to false.
-     * @protected
-     * @type {SettingDefinition[]}
-     */
-    protected defaultSettings: SettingDefinition[] = super.settingDefinitions.map(sd => {
-        sd.isPluginBound = false;
-        return sd;
-    });
-
-    /**
-     * Updates an existing textbox object asynchronously.
-     * This method is called when the content of the textbox is changed.
-     * It updates the object by setting the new value of the textbox.
-     * @param {fabric.FabricObject} _ - The object to update (unused in this implementation).
-     * @param {string} propertyName - The name of the property that was changed.
-     * @returns {Promise<fabric.Object>} A promise that resolves to the updated object.
-     * @throws {Error} Always throws an error as the method is not implemented.
-     */
-    updateObjectAsync(_: fabric.FabricObject, propertyName: string): Promise<fabric.Object> {
-        throw new Error("Method not implemented.");
-    }
+    protected defaultValue: string = pluginOptions.text.value as string;
 
     /**
      * Creates a new textbox object asynchronously.
      * The object is created with the default value of the plugin.
+     * 
      * @async
-     * @returns {Promise<fabric.Object>} A promise that resolves to the created textbox object.
+     * @returns {Promise<TextboxObject>} A promise that resolves to the created textbox object.
      */
-    async createObjectAsync(): Promise<fabric.Object> {
-        return new fabric.Textbox(this.defaultValue, {
+    async createObjectAsync(): Promise<TextboxObject> {
+        return new TextboxObject(new fabric.Textbox(this.defaultValue, {
             /**
              * The width of the textbox.
              * @type {number}
@@ -58,6 +58,6 @@ export default class TextboxPlugin extends FabricObjectPlugin {
              * @type {number}
              */
             fontSize: 16,
-        });
+        }));
     }
 }

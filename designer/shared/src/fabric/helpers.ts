@@ -1,5 +1,6 @@
 import * as fabric from "fabric";
 import { FabricSvg } from "./models";
+import { PluginGroup, PluginOptions } from ".";
 
 /**
  * Replaces the contents of a `fabric.Object` with elements from an SVG.
@@ -10,23 +11,16 @@ import { FabricSvg } from "./models";
  * @param {FabricSvg} fabricSvg - The SVG output containing the new objects and options.
  * @returns {fabric.Object} The updated `fabric.Object` with replaced SVG elements.
  */
-export function replaceSvg(object: fabric.Object, fabricSvg: FabricSvg): fabric.Object {
-    // Set the options of the object from the SVG
-    object.set({
-        // Set the objects of the group to the SVG elements
-        objects: fabricSvg.objects,
-        // Set the other options from the SVG
-        ...fabricSvg.options,
-    });
+export function replaceSvg<T extends PluginGroup>(object: T, fabricSvg: FabricSvg): T {
 
-    // Remove all the current objects from the group
-    const svgGroup = object as unknown as fabric.Group;
-    svgGroup.remove(...svgGroup.getObjects());
+    const { left, top, scaleX, scaleY, angle, flipX, flipY } = object;
 
-    // Add the new SVG elements to the group
-    svgGroup.add(...fabricSvg.objects);
+    object.removeAll();
+    object.add(...fabricSvg.objects);
 
-    return svgGroup;
+    object.set({ ...fabricSvg.options, left, top, scaleX, scaleY, angle, flipX, flipY });
+
+    return object;
 }
 
 /**
@@ -37,9 +31,17 @@ export function replaceSvg(object: fabric.Object, fabricSvg: FabricSvg): fabric.
  * @param {string} svgString - The SVG string to be loaded.
  * @returns {Promise<FabricSvg>} A promise that resolves to the created `FabricSvg` object.
  */
-export async function buildFabricSvgAsync(svgString: string): Promise<FabricSvg> {
+export async function buildFabricSvgAsync(svgString: string, options: PluginOptions): Promise<FabricSvg> {
     const svgOutput = await fabric.loadSVGFromString(svgString);
 
     // Group the SVG objects into a single group object
-    return { objects: svgOutput.objects as fabric.Object[], options: svgOutput.options };
+    return { 
+        objects: svgOutput.objects as fabric.Object[], 
+        options: { 
+            ...svgOutput.options, 
+            ...{
+                plugin: options
+            }
+        } 
+    };
 }

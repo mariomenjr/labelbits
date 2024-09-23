@@ -1,8 +1,10 @@
 import InteractiveCanvas from "@labelbits/designer-core/canvas";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { FabricSelectionEventHandler } from "@labelbits/designer-shared/fabric";
+import { FabricSelectionEventAction } from "@labelbits/designer-shared/fabric";
+
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
+
 import { loadPluginsAsync } from "../../labelbits.config";
 
 /**
@@ -41,8 +43,7 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @returns {Promise<LabelDesigner>} A promise that resolves to a new instance of LabelDesigner.
      */
     public static async createAsync(): Promise<LabelDesigner> {
-        const plugins = await loadPluginsAsync();  // Load plugins asynchronously
-        return new LabelDesigner(plugins);
+        return new LabelDesigner(await loadPluginsAsync()); // Load plugins asynchronously
     }
 
     /**
@@ -51,7 +52,7 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @returns {Settings} The settings of the label designer.
      */
     getSettings(): Settings {
-        return new Settings((selectionHandler: FabricSelectionEventHandler) => {
+        return new Settings((selectionHandler: FabricSelectionEventAction) => {
             /**
              * Attaches event listeners to the canvas for selection events.
              * The selection events are used to update the settings of the label designer.
@@ -59,6 +60,8 @@ export default class LabelDesigner extends InteractiveCanvas {
             this.canvas.on("selection:created", selectionHandler);
             this.canvas.on("selection:updated", selectionHandler);
             this.canvas.on("selection:cleared", selectionHandler);
+            
+            console.debug(`Selection event listener attached.`);
         });
     }
 

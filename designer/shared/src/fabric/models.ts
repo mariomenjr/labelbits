@@ -1,5 +1,7 @@
 import * as fabric from "fabric";
 
+import { SettingProp } from "../setting";
+
 /**
  * Represents the output of an SVG, containing the elements and options to be used.
  * 
@@ -10,4 +12,18 @@ import * as fabric from "fabric";
 export type FabricSvg = {
     objects: fabric.Object[],
     options: Record<string, unknown>
+};
+
+export class PluginOptions implements Record<string, SettingProp> {
+    [key: string]: SettingProp;
+
+    static as<T>(pluginOptions: PluginOptions): T {
+        return Object.keys(pluginOptions).reduce((seed, current) => {
+
+            return {
+                ...seed,
+                [current]: pluginOptions[current].value
+            };
+        }, {} as T);
+    }
 };

@@ -1,9 +1,47 @@
-import * as fabric from "fabric";
-
+import { classRegistry } from "fabric";
+import { SettingProp } from "@labelbits/designer-shared/setting";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { PluginObject, replaceSvg } from "@labelbits/designer-shared/fabric";
+import { FabricSvg, PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
 
 import { generateBarcodeAsync, regenerateBarcodeAsync } from "./utils";
+
+const pluginOptions: PluginOptions = {
+    text: { value: `1234567890`, isNative: false },
+    displayValue: { value: true, isNative: false },
+    format: { value: `CODE128`, isNative: false }
+};
+
+class BarcodeObject extends PluginGroup {
+
+    static type = `BarcodeObject`;
+
+    constructor(object: FabricSvg) {
+        super(object);
+    }
+
+    /**
+     * The plugin options for this plugin.
+     * This is a shortcut to the plugin options that are used to generate the barcode.
+     * @type {PluginOptions}
+     */
+    public plugin: PluginOptions = pluginOptions;
+
+    /**
+     * Updates the object asynchronously when a setting property is changed.
+     * The object is updated by regenerating the barcode SVG string based on the new setting property value.
+     * @param {string} propName - The name of the setting property that changed.
+     * @param {SettingProp} settingProp - The new setting property value.
+     * @returns {Promise<BarcodeObject>} A promise that resolves to the updated object.
+     */
+    async updateObjectAsync(propName: string, settingProp: SettingProp): Promise<BarcodeObject> {
+
+        const barcodeSvg = await regenerateBarcodeAsync(this, propName);
+
+        return replaceSvg(this, barcodeSvg);
+    }
+}
+
+classRegistry.setClass(BarcodeObject);
 
 /**
  * Represents a plugin for creating barcode objects in the Fabric.js library.
@@ -17,40 +55,20 @@ export default class BarcodePlugin extends FabricObjectPlugin {
      * @protected
      * @type {string}
      */
-    protected defaultValue: string = `1234567890`;
-
-    /**
-     * Updates an existing barcode object asynchronously.
-     * This method is called when the content of the barcode is changed.
-     * It updates the object by generating a new barcode SVG from the current content of the object,
-     * and then sets the options of the object from the SVG.
-     * 
-     * @async
-     * @param {fabric.Object} object - The object to update.
-     * @param {string} propertyName - The name of the property that was changed.
-     * @returns {Promise<fabric.Object>} A promise that resolves to the updated object.
-     * @throws {Error} If there's an issue generating the barcode or updating the object.
-     */
-    async updateObjectAsync(object: fabric.Object, propertyName: string): Promise<fabric.Object> {
-        const pluginObject = object as PluginObject;
-        // Generate the barcode SVG from the current content of the object
-        const barcodeSvg = await regenerateBarcodeAsync(pluginObject, propertyName);
-        return replaceSvg(object, barcodeSvg);
-    }
+    protected defaultValue: string = pluginOptions.text.value as string;
 
     /**
      * Creates a new barcode object asynchronously.
-     * It generates a new barcode SVG from the default value and then creates a new group object
-     * with the generated SVG elements.
+     * The object is created with the default value of the plugin.
      * 
      * @async
-     * @returns {Promise<fabric.Object>} A promise that resolves to the created object.
-     * @throws {Error} If there's an issue generating the barcode or creating the object.
+     * @returns {Promise<BarcodeObject>} A promise that resolves to the created barcode object.
      */
-    async createObjectAsync(): Promise<fabric.Object> {
+    async createObjectAsync(): Promise<BarcodeObject> {
+
         // Generate the barcode SVG from the default value
-        const svgOutput = await generateBarcodeAsync(this.defaultValue);
-        // Create a new group object with the generated SVG elements
-        return fabric.util.groupSVGElements(svgOutput.objects, svgOutput.options);
+        const svgOutput = await generateBarcodeAsync(this.defaultValue, pluginOptions);
+
+        return new BarcodeObject(svgOutput);
     }
 }

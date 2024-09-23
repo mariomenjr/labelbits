@@ -1,30 +1,9 @@
 import * as fabric from "fabric";
-import { SettingCollectionSource } from "../setting/models";
 
-/**
- * Represents a fabric object that can be used in the label designer.
- * This type extends the fabric.Object type and adds additional properties
- * for use in the plugin system.
- * 
- * @typedef {Object} PluginObject
- * @extends {fabric.Object}
- */
-export type PluginObject = fabric.Object & {
-    /**
-     * A function that returns an array of settings for the object.
-     * This function is used to retrieve settings from the object.
-     * 
-     * @type {SettingCollectionSource}
-     */
-    getSettings: SettingCollectionSource;
+import { Setting, SettingProp } from "../setting/models";
 
-    /**
-     * The text content of the object.
-     * 
-     * @type {string}
-     */
-    text: string;
-};
+import { FabricSvg, PluginOptions } from "./models";
+import { getBoundSettingHandlers } from "../setting";
 
 /**
  * Represents a fabric object that can have a relationship transform matrix.
@@ -66,3 +45,41 @@ export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
      */
     deselected: fabric.Object[]
 };
+
+export interface IPluginObject extends fabric.Object {
+    plugin: PluginOptions
+    updateObjectAsync(propName: string, prop: SettingProp): Promise<IPluginObject>;
+    getSettings(): Setting[]
+}
+
+export abstract class PluginTextbox extends fabric.Textbox implements IPluginObject {
+
+    static type = 'PluginObject';
+
+    constructor(object: fabric.Textbox) {
+        super(object.text, object);
+    }
+
+    public abstract plugin: PluginOptions;
+    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginTextbox>;
+
+    public getSettings = (): Setting[] => getBoundSettingHandlers(this);
+};
+
+fabric.classRegistry.setClass(PluginTextbox);
+
+export abstract class PluginGroup extends fabric.Group implements IPluginObject {
+
+    static type = 'PluginGroup';
+
+    constructor(object: FabricSvg) {
+        super(object.objects, object.options);
+    }
+
+    public abstract plugin: PluginOptions;
+    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginGroup>;
+
+    public getSettings = (): Setting[] => getBoundSettingHandlers(this);
+}
+
+fabric.classRegistry.setClass(PluginGroup);

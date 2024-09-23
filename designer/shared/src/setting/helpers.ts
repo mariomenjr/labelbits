@@ -1,6 +1,6 @@
-import { FabricObjectProcessorAsync, PluginObject } from "../fabric";
+import { IPluginObject, PluginGroup, PluginTextbox } from "../fabric";
 import { camelToKebabCase, camelToTitleCase } from "../main/strings";
-import { Setting, SettingBinder, SettingType, SettingCollectionSource, SettingDefinitionCollection } from "./models";
+import { Setting, SettingBinder, SettingType } from "./models";
 
 /**
  * Creates a new setting object that represents a property of a Fabric object.
@@ -28,81 +28,35 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
     };
 }
 
-/**
- * Binds a property of the Fabric object to a setting using a default binder.
- * 
- * @param {PluginObject} object - The Fabric object to bind the property from.
- * @param {string} propName - The name of the property to bind.
- * 
- * @returns {SettingBinder} A setting binder object for the property.
- */
-export function getDefaultBinder(object: PluginObject, propName: string): SettingBinder {
-    return {
-        /**
-         * Retrieves the value of the property.
-         * 
-         * @returns {SettingType} The current value of the property.
-         */
-        getValue(): SettingType {
-            return object.get(propName);
-        },
+export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setting[] {
+    return Object.keys(self.plugin).map(k => {
+        const prop = self.plugin[k];
+        
+        // Native binder
+        if (prop.isNative) return createSettingElement(k, {
+            getValue: () => self.get(k),
+            setValue: (v: SettingType) => {
+                self.set(k, v);
+                self.plugin[k].value = v;
+                
+                self.setCoords();
+                self.canvas?.requestRenderAll();    
+                self.fire('modified');
+            }
+        });
 
-        /**
-         * Sets the value of the property.
-         * 
-         * @param {SettingType} v - The new value to set for the property.
-         */
-        setValue(v: SettingType) {
-            object.set(propName, v);
+        // Plugin binder
+        return createSettingElement(k, {
+            getValue: () => self.plugin[k].value!,
+            setValue: async (v: SettingType) => {
+                self.plugin[k].value = v;
 
-            object.setCoords();
-            object.canvas?.requestRenderAll();
-            object.fire('modified');
-        }
-    };
-}
-
-/**
- * Binds a property of the Fabric object to a setting using a plugin-specific binder.
- * 
- * @param {PluginObject} object - The Fabric object to bind the property from.
- * @param {string} propName - The name of the property to bind.
- * @param {FabricObjectProcessorAsync} bindingProcessorAsync - An asynchronous processor for the Fabric object.
- * 
- * @returns {SettingBinder} A setting binder object that includes asynchronous processing.
- */
-export function getPluginBinder(object: PluginObject, propName: string, bindingProcessorAsync: FabricObjectProcessorAsync): SettingBinder {
-    const binder = getDefaultBinder(object, propName);
-
-    return {
-        ...binder,
-        async setValue(v: SettingType) {
-            object.set(propName, v);
-
-            const { left, top, scaleX, scaleY, angle, flipX, flipY } = object;
-
-            const updatedObject = await bindingProcessorAsync(object, propName);
-
-            updatedObject.set({ left, top, scaleX, scaleY, angle, flipX, flipY });
-
-            updatedObject.setCoords();
-            updatedObject.canvas?.requestRenderAll();
-            updatedObject.fire('modified');
-        }
-    };
-}
-
-/**
- * Retrieves the settings source for the Fabric object, based on the provided property settings.
- * 
- * @param {SettingDefinitionCollection} propSettings - The collection of setting definitions to use.
- * @param {PluginObject} object - The Fabric object for which settings are being retrieved.
- * 
- * @returns {SettingCollectionSource} A function that returns an array of setting objects.
- */
-export function getSettingCollectionSource(propSettings: SettingDefinitionCollection, object: PluginObject): SettingCollectionSource {
-    return () => propSettings.map(({ name, isPluginBound }) => {
-        const settingBinder = isPluginBound ? getPluginBinder(object, name, propSettings.pluginBinder!) : getDefaultBinder(object, name);
-        return createSettingElement(name, settingBinder);
+                const uo = await self.updateObjectAsync(k, self.plugin[k]);
+                
+                uo.setCoords();
+                uo.canvas?.requestRenderAll();
+                uo.fire('modified');
+            }
+        });
     });
 }

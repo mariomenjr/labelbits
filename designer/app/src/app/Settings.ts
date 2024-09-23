@@ -1,6 +1,6 @@
 import { Collection } from "@labelbits/designer-shared";
 import { Setting } from "@labelbits/designer-shared/setting";
-import { FabricSelectionEventCallback, PluginObject, SelectionEvent } from "@labelbits/designer-shared/fabric";
+import { FabricSelectionEventCallback, IPluginObject, SelectionEvent } from "@labelbits/designer-shared/fabric";
 
 /**
  * Represents a collection of settings for the label designer.
@@ -15,50 +15,52 @@ export default class Settings extends Collection<Setting> {
      * @type {boolean}
      */
     public hasSelection: boolean = false;
-
     /**
-     * The currently selected fabric object.
+     * A callback function that sets the selection event handler.
      * 
-     * @type {PluginObject | null}
-     */
-    public selectedObject: PluginObject | null = null;
-
-    /**
-     * The callback function for handling fabric selection events.
-     * This function will be called when a selection event occurs.
+     * The handler is called with the selected fabric object and the settings collection refills
+     * itself with the settings derived from the selected object.
      * 
      * @type {FabricSelectionEventCallback}
+     * @protected
      */
     protected setSettingsRefiller: FabricSelectionEventCallback;
 
     /**
-     * Creates a new instance of the Settings class.
+     * Initializes the settings collection.
      * 
-     * @param {FabricSelectionEventCallback} setSelectionHandler - The callback function for handling fabric selection events.
+     * @param {FabricSelectionEventCallback} setSelectionHandler - A callback function that sets the selection event handler.
+     * The handler is called with the selected fabric object and the settings collection refills
+     * itself with the settings derived from the selected object.
      */
     constructor(setSelectionHandler: FabricSelectionEventCallback) {
         super();
         this.setSettingsRefiller = setSelectionHandler;
-        console.log(`Settings initialized.`);
+
+        console.debug(`Settings initialized.`);
     }
 
     /**
-     * Registers a callback function for fabric selection events.
-     * This method starts listening for selection events and refills the settings collection based on the selected object.
+     * Starts the settings collection by attaching the selection event handler.
+     * 
+     * @returns {Settings} The settings collection itself.
      */
-    public start(): void {
+    public start(): Settings {
         /**
          * A callback function that is called when a selection event occurs.
          * 
          * @param {SelectionEvent} e - The selection event object.
          */
         this.setSettingsRefiller(e => this.refillSettings(e));
+        return this;
     }
 
     /**
-     * Refills the settings collection with settings from the selected fabric object.
+     * Refills the settings collection based on the selected fabric object.
      * 
-     * @param {SelectionEvent} e - The selection event object.
+     * This method is called when a selection event occurs.
+     * 
+     * @param {SelectionEvent} e - The selection event object that contains information about the event.
      */
     protected refillSettings(e: SelectionEvent): void {
         // Clear the collection
@@ -67,13 +69,13 @@ export default class Settings extends Collection<Setting> {
         // Set the selection state based on the number of selected objects
         this.hasSelection = e.selected?.length === 1;
 
-        // Set the selected object based on the selection state
-        this.selectedObject = this.hasSelection ? e.selected[0] as PluginObject : null;
-
         // If no object is selected, return
-        if (!this.selectedObject) return;
-
+        if (!this.hasSelection) return;
+        
         // Get and add the settings from the selected object
-        this.push(...this.selectedObject.getSettings());
+        const object = e.selected[0] as IPluginObject;
+
+        // Add the settings from the selected object
+        this.push(...object.getSettings());
     }
 }

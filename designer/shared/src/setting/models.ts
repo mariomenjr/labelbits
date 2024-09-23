@@ -1,4 +1,3 @@
-import { FabricObjectProcessorAsync } from "../fabric";
 import { Element } from "../main/models";
 
 /**
@@ -6,7 +5,7 @@ import { Element } from "../main/models";
  * 
  * @typedef {number | string} SettingType
  */
-export type SettingType = number | string;
+export type SettingType = number | string | boolean;
 
 /**
  * Represents a setting binder, which is an object that has methods to get and set the value of a setting.
@@ -62,46 +61,4 @@ export interface Setting extends Element {
     value: SettingType;
 }
 
-/**
- * Represents a function that returns an array of settings.
- * 
- * @returns {Setting[]} An array of setting objects.
- */
-export type SettingCollectionSource = () => Setting[];
-
-/**
- * Represents a definition of a setting.
- * 
- * @typedef {Object} SettingDefinition
- * @property {string} name - The name of the setting.
- * @property {boolean} isPluginBound - Indicates whether the setting is bound to a plugin.
- */
-export type SettingDefinition = { name: string, isPluginBound: boolean };
-
-/**
- * Represents a collection of setting definitions.
- * 
- * This class extends `Array<SettingDefinition>` and includes a `pluginBinder` property for processing Fabric objects.
- * 
- * @extends {Array<SettingDefinition>}
- */
-export class SettingDefinitionCollection extends Array<SettingDefinition> {
-
-    /**
-     * The Fabric object processor used to process the Fabric object when the setting is changed.
-     * 
-     * @type {FabricObjectProcessorAsync}
-     */
-    public pluginBinder: FabricObjectProcessorAsync;
-
-    /**
-     * Constructs a new `SettingDefinitionCollection`.
-     * 
-     * @param {FabricObjectProcessorAsync} pluginBinder - The Fabric object processor used for processing changes.
-     * @param {...SettingDefinition} args - The setting definitions to initialize the collection with.
-     */
-    constructor(pluginBinder: FabricObjectProcessorAsync, ...args: SettingDefinition[]) {
-        super(...args);
-        this.pluginBinder = pluginBinder;
-    }
-}
+export type SettingProp = { value?: SettingType; isNative: true } | { value: SettingType; isNative: false };

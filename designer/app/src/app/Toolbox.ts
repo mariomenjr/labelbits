@@ -17,6 +17,6 @@ export default class Toolbox extends Collection<Action> {
         super(...actions);
 
         // Log a message indicating that the toolbox has been initialized.
-        console.log(`Toolbox initialized.`);
+        console.debug(`Toolbox initialized.`);
     }
 }
