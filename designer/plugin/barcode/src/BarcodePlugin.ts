@@ -1,4 +1,5 @@
 import { classRegistry } from "fabric";
+
 import { SettingProp } from "@labelbits/designer-shared/setting";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 import { FabricSvg, PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";

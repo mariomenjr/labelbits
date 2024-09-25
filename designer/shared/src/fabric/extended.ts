@@ -47,39 +47,45 @@ export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
 };
 
 export interface IPluginObject extends fabric.Object {
-    plugin: PluginOptions
+    plugin: PluginOptions;
+
     updateObjectAsync(propName: string, prop: SettingProp): Promise<IPluginObject>;
-    getSettings(): Setting[]
+    getSettings(): Setting[];
 }
 
-export abstract class PluginTextbox extends fabric.Textbox implements IPluginObject {
+export type PluginConstructor<T = fabric.Object> = new (...args: any[]) => T;
+export type PluginMixinConstructor<U, T extends PluginConstructor> = new (...args: ConstructorParameters<T>) => U;
 
-    static type = 'PluginObject';
+export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginMixinConstructor<IPluginObject, T> {
+    abstract class PluginObject extends BaseObject implements IPluginObject {
+        static type = 'PluginObject';
 
-    constructor(object: fabric.Textbox) {
-        super(object.text, object);
+        // Declare the plugin property
+        public abstract plugin: PluginOptions;
+
+        // Declare the updateObjectAsync method
+        public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<IPluginObject>;
+
+        /**
+         * Retrieves the settings of the fabric object.
+         * The settings are derived from the properties of the object.
+         * 
+         * @returns {Setting[]} An array of `Setting` objects representing the settings of the fabric object.
+         */
+        public getSettings(): Setting[] {
+            return getBoundSettingHandlers(this);
+        }
     }
 
-    public abstract plugin: PluginOptions;
-    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginTextbox>;
+    return PluginObject as unknown as PluginMixinConstructor<IPluginObject, T>;
+}
 
-    public getSettings = (): Setting[] => getBoundSettingHandlers(this);
-};
-
-fabric.classRegistry.setClass(PluginTextbox);
-
-export abstract class PluginGroup extends fabric.Group implements IPluginObject {
-
+export abstract class PluginGroup extends PluginMixin(fabric.Group) {
     static type = 'PluginGroup';
 
     constructor(object: FabricSvg) {
         super(object.objects, object.options);
     }
-
-    public abstract plugin: PluginOptions;
-    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginGroup>;
-
-    public getSettings = (): Setting[] => getBoundSettingHandlers(this);
 }
 
 fabric.classRegistry.setClass(PluginGroup);

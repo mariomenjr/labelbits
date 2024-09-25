@@ -1,3 +1,5 @@
+import { classRegistry } from "fabric";
+
 import { SettingProp } from "@labelbits/designer-shared/setting";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 import { FabricSvg, PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
@@ -37,6 +39,8 @@ class QrcodeObject extends PluginGroup {
         return replaceSvg(this, qrcodeSvg);
     }
 }
+
+classRegistry.setClass(QrcodeObject);
 
 /**
  * QrcodePlugin class represents a plugin for creating QR code objects in the Fabric.js library.

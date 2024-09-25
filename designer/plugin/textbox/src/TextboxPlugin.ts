@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { PluginOptions, PluginTextbox } from "@labelbits/designer-shared/fabric";
+import { PluginOptions, PluginMixin, IPluginObject, PluginConstructor } from "@labelbits/designer-shared/fabric";
 import { SettingProp } from "@labelbits/designer-shared/setting";
 
 const pluginOptions: PluginOptions = {
@@ -9,21 +9,28 @@ const pluginOptions: PluginOptions = {
     text: { isNative: true, value: `Edit me` },
 };
 
-class TextboxObject extends PluginTextbox {
+class TextboxObject extends PluginMixin(fabric.Textbox) {
+    static type = 'TextboxObject';
 
     public plugin: PluginOptions = pluginOptions;
-    
+
+    constructor(object: fabric.Textbox) {
+        super(object.text, object);
+    }
+
     /**
      * Updates the object asynchronously when a setting property is changed.
      * The object is updated by using the new setting property value.
      * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} settingProp - The new setting property value.
+     * @param {SettingProp} _ - The new setting property value.
      * @returns {Promise<TextboxObject>} A promise that resolves to the updated object.
      */
     public async updateObjectAsync(propName: string, _: SettingProp): Promise<TextboxObject> {
         throw new Error(`Not implemented property name ${propName} for plugin handler: ${TextboxObject.prototype.updateObjectAsync.name}`);
     }
 }
+
+fabric.classRegistry.setClass(TextboxObject);
 
 /**
  * Represents a plugin for creating and managing textbox objects in the Fabric.js library.
@@ -59,5 +66,6 @@ export default class TextboxPlugin extends FabricObjectPlugin {
              */
             fontSize: 16,
         }));
+        
     }
 }
