@@ -25,4 +25,13 @@ export type FabricSelectionEventAction = (selectionEvent: SelectionEvent) => voi
  */
 export type FabricSelectionEventCallback = (selectionEventHandler: FabricSelectionEventAction) => void;
 
+/**
+ * Represents an asynchronous handler function for a plugin object.
+ * This function takes an `IPluginObject` and a property name as arguments, and returns a promise that resolves to an `IPluginObject`.
+ * 
+ * @async
+ * @param {IPluginObject} object - The `IPluginObject` that the handler function processes.
+ * @param {string} propertyName - The name of the property that the handler function processes.
+ * @returns {Promise<IPluginObject>} A promise that resolves to the updated `IPluginObject`.
+ */
 export type PluginObjectHandlerAsync = (object: IPluginObject, propertyName: string) => Promise<IPluginObject>;

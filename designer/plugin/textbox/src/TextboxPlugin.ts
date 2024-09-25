@@ -9,11 +9,31 @@ const pluginOptions: PluginOptions = {
     text: { isNative: true, value: `Edit me` },
 };
 
+/**
+ * Represents a Fabric.js Textbox object with plugin-specific properties.
+ * It extends the PluginMixin class to provide a standard implementation for the plugin.
+ * @extends {PluginMixin<fabric.Textbox>}
+ */
 class TextboxObject extends PluginMixin(fabric.Textbox) {
+    /**
+     * The type of the object.
+     * This property is used to determine the type of the object when it is created or loaded.
+     * @type {string}
+     */
     static type = 'TextboxObject';
 
+    /**
+     * The default options for the object.
+     * These options are used when creating a new object.
+     * @type {PluginOptions}
+     */
     public plugin: PluginOptions = pluginOptions;
 
+    /**
+     * Constructor.
+     * @param {string} text - The text for the object.
+     * @param {fabric.Textbox} object - The underlying fabric object.
+     */
     constructor(object: fabric.Textbox) {
         super(object.text, object);
     }
@@ -48,7 +68,7 @@ export default class TextboxPlugin extends FabricObjectPlugin {
     /**
      * Creates a new textbox object asynchronously.
      * The object is created with the default value of the plugin.
-     * 
+     *
      * @async
      * @returns {Promise<TextboxObject>} A promise that resolves to the created textbox object.
      */
@@ -66,6 +86,5 @@ export default class TextboxPlugin extends FabricObjectPlugin {
              */
             fontSize: 16,
         }));
-        
     }
 }

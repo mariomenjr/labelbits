@@ -1,4 +1,4 @@
-import { IPluginObject, PluginGroup, PluginTextbox } from "../fabric";
+import { IPluginObject } from "../fabric";
 import { camelToKebabCase, camelToTitleCase } from "../main/strings";
 import { Setting, SettingBinder, SettingType } from "./models";
 
@@ -28,6 +28,23 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
     };
 }
 
+/**
+ * Returns an array of setting objects bound to the properties of the given plugin object.
+ *
+ * Each setting object in the array represents a property of the plugin object, and contains
+ * a label, id, and type, as well as methods to get and set the property's value.
+ *
+ * The setting objects are bound to the plugin object's properties in the following way:
+ *
+ * - For native properties, the setting object's getValue and setValue methods are bound to the
+ *   plugin object's get and set methods.
+ * - For plugin properties, the setting object's getValue method is bound to the plugin object's
+ *   property value, and the setting object's setValue method is bound to the plugin object's
+ *   updateObjectAsync method.
+ *
+ * @param {T} self - The plugin object whose properties are to be bound to setting objects.
+ * @returns {Setting[]} An array of setting objects bound to the properties of the plugin object.
+ */
 export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setting[] {
     return Object.keys(self.plugin).map(k => {
         const prop = self.plugin[k];

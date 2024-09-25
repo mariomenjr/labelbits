@@ -12,13 +12,19 @@ const pluginOptions: PluginOptions = {
     format: { value: `CODE128`, isNative: false }
 };
 
+/**
+ * Represents a barcode object in the Fabric.js library.
+ * This class extends the PluginGroup class and provides an implementation for updating the object
+ * when the content of the barcode is changed.
+ */
 class BarcodeObject extends PluginGroup {
 
-    static type = `BarcodeObject`;
-
-    constructor(object: FabricSvg) {
-        super(object);
-    }
+    /**
+     * The type of object that this represents.
+     * This is a string that is used to identify the type of object.
+     * @type {string}
+     */
+    static type: string = `BarcodeObject`;
 
     /**
      * The plugin options for this plugin.

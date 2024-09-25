@@ -3,7 +3,7 @@ import { Element } from "../main/models";
 /**
  * Represents the type of a setting value.
  * 
- * @typedef {number | string} SettingType
+ * @typedef {number | string | boolean} SettingType
  */
 export type SettingType = number | string | boolean;
 
@@ -61,4 +61,50 @@ export interface Setting extends Element {
     value: SettingType;
 }
 
-export type SettingProp = { value?: SettingType; isNative: true } | { value: SettingType; isNative: false };
+/**
+ * A property that is native to the fabric object.
+ * 
+ * The value property is optional, and if it is not provided, the setting value will be set to undefined.
+ * The isNative property is set to true.
+ */
+export type SettingNativeProp = {
+    /**
+     * The value of the setting property.
+     * 
+     * @type {SettingType}
+     */
+    value?: SettingType;
+    /**
+     * Whether the property is native to the fabric object.
+     * 
+     * @type {true}
+     */
+    isNative: true;
+}
+
+/**
+ * A property that is not native to the fabric object.
+ * 
+ * The value property is required, and the isNative property is set to false.
+ */
+export type SettingPluginProp = {
+    /**
+     * The value of the setting property.
+     * 
+     * @type {SettingType}
+     */
+    value: SettingType;
+    /**
+     * Whether the property is native to the fabric object.
+     * 
+     * @type {false}
+     */
+    isNative: false;
+}
+
+/**
+ * A setting property.
+ * 
+ * This type can be either a native property or a plugin property.
+ */
+export type SettingProp = SettingNativeProp | SettingPluginProp;

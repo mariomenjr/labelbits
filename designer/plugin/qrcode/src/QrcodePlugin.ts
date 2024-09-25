@@ -11,17 +11,22 @@ const pluginOptions: PluginOptions = {
     text: { isNative: false, value: `https://mariomenjr.com` },
 };
 
+/**
+ * QrcodeObject class represents a Fabric.js object that is generated from a QR code SVG string.
+ * It extends the PluginGroup class and provides an implementation for the updateObjectAsync method.
+ * @extends {PluginGroup}
+ */
 class QrcodeObject extends PluginGroup {
 
+    /**
+     * The type of the object.
+     * @type {string}
+     */
     static type = `QrcodeObject`;
-
-    constructor(object: FabricSvg) {
-        super(object);
-    }
 
     /**
      * The plugin options for this plugin.
-     * This is a shortcut to the plugin options that are used to generate the barcode.
+     * This is a shortcut to the plugin options that are used to generate the QR code.
      * @type {PluginOptions}
      */
     public plugin: PluginOptions = pluginOptions;
@@ -33,7 +38,13 @@ class QrcodeObject extends PluginGroup {
      * @param {SettingProp} settingProp - The new setting property value.
      * @returns {Promise<QrcodeObject>} A promise that resolves to the updated object.
      */
-    async updateObjectAsync(propName: string, settingProp: SettingProp): Promise<QrcodeObject> {
+    /**
+     * @async
+     * @param {string} propName - The name of the setting property that changed.
+     * @param {SettingProp} _ - The new setting property value.
+     * @returns {Promise<QrcodeObject>} A promise that resolves to the updated object.
+     */
+    async updateObjectAsync(propName: string, _: SettingProp): Promise<QrcodeObject> {
 
         const qrcodeSvg = await regenerateQrcodeAsync(this, propName);
         return replaceSvg(this, qrcodeSvg);
