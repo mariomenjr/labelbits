@@ -48,10 +48,32 @@
                                     class="block text-gray-700 text-xs font-medium mb-1 w-32 text-balance"></label>
                             </td>
                             <td class="py-1 px-2 text-sm">
-                                <input :type="control.type" :id="control.id" :name="control.propName"
-                                    :placeholder="`${control.label}`" :value="`${control.value}`"
-                                    x-model.number="control.value"
-                                    class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                <!-- checkbox case -->
+                                <template x-if="control.type === 'checkbox'">
+                                    <label class="relative inline-flex items-center cursor-pointer my-0 align-middle">
+                                        <input type="checkbox" :id="control.id" :name="control.propName"
+                                            x-model.boolean="control.value" class="sr-only peer"
+                                            x-on:click="$event.target.blur()" />
+                                        <div
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 
+                                                    rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white 
+                                                    after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 
+                                                    after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 cursor-pointer">
+                                        </div>
+                                    </label>
+                                </template>
+                                <!-- number case -->
+                                <template x-if="control.type === 'number'">
+                                    <input :type="control.type" :id="control.id" :name="control.propName"
+                                        :placeholder="`${control.label}`" x-model.number="control.value"
+                                        class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                </template>
+                                <!-- default case -->
+                                <template x-if="!['checkbox', 'number'].includes(control.type)">
+                                    <input :type="control.type" :id="control.id" :name="control.propName"
+                                        :placeholder="`${control.label}`" x-model.debounce="control.value"
+                                        class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                </template>
                             </td>
                         </tr>
                     </template>

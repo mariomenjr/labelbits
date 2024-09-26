@@ -2,6 +2,30 @@ import { IPluginObject } from "../fabric";
 import { camelToKebabCase, camelToTitleCase } from "../main/strings";
 import { Setting, SettingBinder, SettingType } from "./models";
 
+const SettingToInputMap: { [key: string]: string } = {
+    string: "text",
+    number: "number",
+    boolean: "checkbox",
+};
+
+/**
+ * Maps a SettingType to a string that represents the HTML input element type that is
+ * most suitable for editing a value of that type.
+ *
+ * The mapping is as follows:
+ * - string: "text"
+ * - number: "number"
+ * - boolean: "checkbox"
+ * - Any other type: "text" (default)
+ *
+ * @param {SettingType} type - The SettingType to map to an HTML input element type.
+ * @returns {string} The HTML input element type as a string.
+ */
+function SettingToInputType(type: SettingType): string {
+    const k = type.constructor.name.toLowerCase()
+    return SettingToInputMap[k] ?? "text"; // Default to "text" if type not found
+}
+
 /**
  * Creates a new setting object that represents a property of a Fabric object.
  *
@@ -16,7 +40,7 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
 
         label: camelToTitleCase(propName),
         id: `sg-${camelToKebabCase(propName)}`,
-        type: settingBinder.getValue().constructor.name.toLowerCase(),
+        type: SettingToInputType(settingBinder.getValue()),
 
         get value() {
             return settingBinder.getValue();
@@ -48,16 +72,16 @@ export function createSettingElement(propName: string, settingBinder: SettingBin
 export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setting[] {
     return Object.keys(self.plugin).map(k => {
         const prop = self.plugin[k];
-        
+
         // Native binder
         if (prop.isNative) return createSettingElement(k, {
             getValue: () => self.get(k),
             setValue: (v: SettingType) => {
                 self.set(k, v);
                 self.plugin[k].value = v;
-                
+
                 self.setCoords();
-                self.canvas?.requestRenderAll();    
+                self.canvas?.requestRenderAll();
                 self.fire('modified');
             }
         });
@@ -69,7 +93,7 @@ export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setti
                 self.plugin[k].value = v;
 
                 const uo = await self.updateObjectAsync(k, self.plugin[k]);
-                
+
                 uo.setCoords();
                 uo.canvas?.requestRenderAll();
                 uo.fire('modified');
