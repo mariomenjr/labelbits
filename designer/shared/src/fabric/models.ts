@@ -47,6 +47,9 @@ export class PluginOptions implements Record<string, SettingProp> {
     static as<T>(pluginOptions: PluginOptions): T {
         return Object.keys(pluginOptions).reduce((seed, current) => {
 
+            if (pluginOptions[current].value === undefined) {
+                return seed;
+            }
             return {
                 ...seed,
                 [current]: pluginOptions[current].value

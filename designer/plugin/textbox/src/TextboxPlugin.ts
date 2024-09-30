@@ -1,13 +1,10 @@
 import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { PluginOptions, PluginMixin, IPluginObject, PluginConstructor } from "@labelbits/designer-shared/fabric";
+import { PluginOptions, PluginMixin } from "@labelbits/designer-shared/fabric";
 import { SettingProp } from "@labelbits/designer-shared/setting";
 
-const pluginOptions: PluginOptions = {
-    left: { isNative: true },
-    text: { isNative: true, value: `Edit me` },
-};
+import { pluginOptions } from "./defaults";
 
 /**
  * Represents a Fabric.js Textbox object with plugin-specific properties.
@@ -20,7 +17,7 @@ class TextboxObject extends PluginMixin(fabric.Textbox) {
      * This property is used to determine the type of the object when it is created or loaded.
      * @type {string}
      */
-    static type = 'TextboxObject';
+    static type: string = 'TextboxObject';
 
     /**
      * The default options for the object.
@@ -31,7 +28,6 @@ class TextboxObject extends PluginMixin(fabric.Textbox) {
 
     /**
      * Constructor.
-     * @param {string} text - The text for the object.
      * @param {fabric.Textbox} object - The underlying fabric object.
      */
     constructor(object: fabric.Textbox) {
@@ -73,18 +69,7 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      * @returns {Promise<TextboxObject>} A promise that resolves to the created textbox object.
      */
     async createObjectAsync(): Promise<TextboxObject> {
-        return new TextboxObject(new fabric.Textbox(this.defaultValue, {
-            /**
-             * The width of the textbox.
-             * @type {number}
-             */
-            width: 150,
-
-            /**
-             * The font size of the textbox.
-             * @type {number}
-             */
-            fontSize: 16,
-        }));
+        const textOptions = PluginOptions.as<{}>(pluginOptions);
+        return new TextboxObject(new fabric.Textbox(this.defaultValue, textOptions));
     }
 }
