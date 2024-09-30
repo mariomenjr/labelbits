@@ -1,102 +1,135 @@
 import { IPluginObject } from "../fabric";
 import { camelToKebabCase, camelToTitleCase } from "../main/strings";
-import { Setting, SettingBinder, SettingType } from "./models";
-
-const SettingToInputMap: { [key: string]: string } = {
-    string: "text",
-    number: "number",
-    boolean: "checkbox",
-};
+import { Setting, SettingAllowedTypes, SettingBinder, SettingProp, SettingType } from "./models";
 
 /**
- * Maps a SettingType to a string that represents the HTML input element type that is
- * most suitable for editing a value of that type.
+ * Determines the allowed type of a setting based on the provided property configuration and binder.
  *
- * The mapping is as follows:
- * - string: "text"
- * - number: "number"
- * - boolean: "checkbox"
- * - Any other type: "text" (default)
- *
- * @param {SettingType} type - The SettingType to map to an HTML input element type.
- * @returns {string} The HTML input element type as a string.
+ * @param {SettingProp} settingProp - The configuration options for the setting.
+ * @param {SettingBinder} settingBinder - The binder that provides the current value of the setting.
+ * @returns {SettingAllowedTypes} The determined setting type (e.g., "array", "textarea", etc.).
  */
-function SettingToInputType(type: SettingType): string {
-    const k = type.constructor.name.toLowerCase()
-    return SettingToInputMap[k] ?? "text"; // Default to "text" if type not found
+export function getSettingType(settingProp: SettingProp, settingBinder: SettingBinder): SettingAllowedTypes {
+    return Array.isArray(settingProp.select?.values)
+        ? "array"
+        : settingProp.textarea
+            ? "textarea"
+            : (typeof settingBinder.getValue() as SettingAllowedTypes); // TODO: double check
 }
 
 /**
- * Creates a new setting object that represents a property of a Fabric object.
+ * Creates a new setting object that represents a property of a Fabric.js object.
  *
- * @param {string} propName - The name of the property associated with the setting.
- * @param {SettingBinder} settingBinder - The setting binder that manages the property's value.
+ * The setting object includes metadata such as the property name, label, and type, and provides
+ * methods to get and set the value of the associated property.
+ *
+ * @param {string} propName - The name of the property to create the setting for.
+ * @param {SettingProp} settingProp - The configuration of the property, including type and possible options.
+ * @param {SettingBinder} settingBinder - An object that manages getting and setting the property's value.
  * 
- * @returns {Setting} The new setting object, including methods to get and set the property's value.
+ * @returns {Setting} The constructed setting object, bound to the specified property.
  */
-export function createSettingElement(propName: string, settingBinder: SettingBinder): Setting {
-    return {
+export function createSettingElement(propName: string, settingProp: SettingProp, settingBinder: SettingBinder): Setting {
+
+    // Determine the type of the setting (e.g., "array", "textarea").
+    const settingType: SettingAllowedTypes = getSettingType(settingProp, settingBinder);
+
+    // Initialize the setting object with default values and accessor methods.
+    const setting: Setting = {
         propName,
-
+        id: `setting:${camelToKebabCase(propName)}`,
         label: camelToTitleCase(propName),
-        id: `sg-${camelToKebabCase(propName)}`,
-        type: SettingToInputType(settingBinder.getValue()),
-
+        type: "text", // Default to "text", will be overridden below if needed.
+        /**
+         * Retrieves the current value of the setting.
+         * 
+         * @returns {SettingType} The current value of the setting.
+         */
         get value() {
             return settingBinder.getValue();
         },
 
-        set value(v) {
+        /**
+         * Sets a new value for the setting.
+         * 
+         * @param {SettingType} v - The new value to set.
+         */
+        set value(v: SettingType) {
             settingBinder.setValue(v);
         }
     };
+
+    // Adjust the setting type and any specific configuration based on the determined type.
+    switch (settingType) {
+        case "number":
+            setting.type = "number";
+            return setting;
+
+        case "boolean":
+            setting.type = "checkbox";
+            return setting;
+
+        case "array":
+            setting.type = "select";
+            setting.select = settingProp.select?.values;
+            return setting;
+
+        case "textarea":
+            setting.type = "textarea";
+            setting.textarea = settingProp.textarea;
+            return setting;
+
+        default:
+            setting.type = "text";
+            return setting;
+    }
 }
 
 /**
- * Returns an array of setting objects bound to the properties of the given plugin object.
+ * Generates an array of setting objects, each bound to a property of the given plugin object.
+ * 
+ * These settings represent both native properties and plugin-specific properties of the object. The
+ * setting objects provide methods for retrieving and updating the values of these properties.
  *
- * Each setting object in the array represents a property of the plugin object, and contains
- * a label, id, and type, as well as methods to get and set the property's value.
+ * - For native properties, the setting object binds to the plugin's `get` and `set` methods.
+ * - For plugin-specific properties, the setting object binds to the `updateObjectAsync` method.
  *
- * The setting objects are bound to the plugin object's properties in the following way:
- *
- * - For native properties, the setting object's getValue and setValue methods are bound to the
- *   plugin object's get and set methods.
- * - For plugin properties, the setting object's getValue method is bound to the plugin object's
- *   property value, and the setting object's setValue method is bound to the plugin object's
- *   updateObjectAsync method.
- *
- * @param {T} self - The plugin object whose properties are to be bound to setting objects.
- * @returns {Setting[]} An array of setting objects bound to the properties of the plugin object.
+ * @template T
+ * @param {T} self - The plugin object whose properties are to be converted into settings.
+ * @returns {Setting[]} An array of setting objects, each representing a property of the plugin.
  */
 export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setting[] {
-    return Object.keys(self.plugin).map(k => {
+    return Object.keys(self.plugin).sort().map(k => {
         const prop = self.plugin[k];
 
-        // Native binder
-        if (prop.isNative) return createSettingElement(k, {
-            getValue: () => self.get(k),
-            setValue: (v: SettingType) => {
-                self.set(k, v);
-                self.plugin[k].value = v;
+        // Native binder: Create a setting for native properties, binding to get and set methods.
+        if (prop.isNative) {
+            return createSettingElement(k, prop, {
+                getValue: () => self.get(k),
+                setValue: (v: SettingType) => {
+                    self.set(k, v);
+                    self.plugin[k].value = v;
 
-                self.setCoords();
-                self.canvas?.requestRenderAll();
-                self.fire('modified');
-            }
-        });
+                    // Update the object's coordinates and re-render the canvas.
+                    self.setCoords();
+                    self.canvas?.requestRenderAll();
+                    self.fire('modified');
+                }
+            });
+        }
 
-        // Plugin binder
-        return createSettingElement(k, {
+        // Plugin binder: Create a setting for plugin-specific properties, binding to async update.
+        return createSettingElement(k, prop, {
             getValue: () => self.plugin[k].value!,
             setValue: async (v: SettingType) => {
                 self.plugin[k].value = v;
 
-                const uo = await self.updateObjectAsync(k, self.plugin[k]);
+                // Update the object asynchronously and refresh its coordinates.
+                const o = await self.updateObjectAsync(k, self.plugin[k]);
 
-                uo.setCoords();
-                uo.canvas?.requestRenderAll();
-                uo.fire('modified');
+                o.setCoords();
+                o.canvas?.requestRenderAll();
+                o.fire('modified');
             }
         });
     });
