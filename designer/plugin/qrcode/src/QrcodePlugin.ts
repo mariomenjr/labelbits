@@ -1,57 +1,8 @@
-import { classRegistry } from "fabric";
-
-import { SettingProp } from "@labelbits/designer-shared/setting";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { FabricSvg, PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
 
-import { generateQrcodeAsync, regenerateQrcodeAsync } from "./utils";
-
-const pluginOptions: PluginOptions = {
-    left: { isNative: true },
-    text: { isNative: false, value: `https://mariomenjr.com` },
-};
-
-/**
- * QrcodeObject class represents a Fabric.js object that is generated from a QR code SVG string.
- * It extends the PluginGroup class and provides an implementation for the updateObjectAsync method.
- * @extends {PluginGroup}
- */
-class QrcodeObject extends PluginGroup {
-
-    /**
-     * The type of the object.
-     * @type {string}
-     */
-    static type = `QrcodeObject`;
-
-    /**
-     * The plugin options for this plugin.
-     * This is a shortcut to the plugin options that are used to generate the QR code.
-     * @type {PluginOptions}
-     */
-    public plugin: PluginOptions = pluginOptions;
-
-    /**
-     * Updates the object asynchronously when a setting property is changed.
-     * The object is updated by regenerating the QR code SVG string based on the new setting property value.
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} settingProp - The new setting property value.
-     * @returns {Promise<QrcodeObject>} A promise that resolves to the updated object.
-     */
-    /**
-     * @async
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} _ - The new setting property value.
-     * @returns {Promise<QrcodeObject>} A promise that resolves to the updated object.
-     */
-    async updateObjectAsync(propName: string, _: SettingProp): Promise<QrcodeObject> {
-
-        const qrcodeSvg = await regenerateQrcodeAsync(this, propName);
-        return replaceSvg(this, qrcodeSvg);
-    }
-}
-
-classRegistry.setClass(QrcodeObject);
+import { generateQrcodeAsync } from "./utils";
+import { pluginOptions } from "./defaults";
+import { QrcodeObject } from "./models";
 
 /**
  * QrcodePlugin class represents a plugin for creating QR code objects in the Fabric.js library.

@@ -1,9 +1,6 @@
 import QRCode from "qrcode";
 
-import { buildFabricSvgAsync, FabricSvg, IPluginObject, PluginOptions } from "@labelbits/designer-shared/fabric";
-import { SettingType } from "@labelbits/designer-shared/setting";
-
-const qrcodeDefaults: QRCode.QRCodeToStringOptions = { type: `svg`, width: 125, margin: 0 };
+import { buildFabricSvgAsync, FabricSvg, PluginOptions } from "@labelbits/designer-shared/fabric";
 
 /**
  * Generates a QR code object asynchronously from the given value and plugin options.
@@ -14,28 +11,10 @@ const qrcodeDefaults: QRCode.QRCodeToStringOptions = { type: `svg`, width: 125, 
  * @returns {Promise<FabricSvg>} A promise that resolves to the `FabricSvg` object.
  */
 export async function generateQrcodeAsync(value: string, pluginOptions: PluginOptions): Promise<FabricSvg> {
+    const qrcodeDefaults = PluginOptions.as<QRCode.QRCodeToStringOptions>(pluginOptions);
     // Generate an SVG string for the QR code with the specified value
-    const svgStr = await QRCode.toString(value, qrcodeDefaults);
+    const svgStr = await QRCode.toString(value, {...qrcodeDefaults, type: `svg`});
 
     // Load the SVG string into Fabric.js
     return buildFabricSvgAsync(svgStr, pluginOptions);
-}
-
-/**
- * Regenerates a QR code object asynchronously when a setting property is changed.
- * The object is updated by regenerating the QR code SVG string based on the new setting property value.
- * @param {IPluginObject} pluginObject - The object to be updated.
- * @param {string} propertyName - The name of the setting property that changed.
- * @returns {Promise<FabricSvg>} A promise that resolves to the updated object.
- */
-export async function regenerateQrcodeAsync(pluginObject: IPluginObject, propertyName: string): Promise<FabricSvg> {
-
-    const v = pluginObject.plugin[propertyName].value as SettingType;
-    switch (propertyName) {
-        case `text`:
-            return generateQrcodeAsync(v as string, pluginObject.plugin);
-
-        default:
-            throw new Error(`Not implemented property name ${propertyName} for plugin handler: ${regenerateQrcodeAsync.name}`);
-    }
 }
