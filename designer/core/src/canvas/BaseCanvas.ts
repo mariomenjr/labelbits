@@ -9,6 +9,8 @@ import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbi
  * @abstract
  */
 export default abstract class BaseCanvas {
+    public gridSize: number = 8;
+
     /**
      * The Fabric.js canvas object.
      * 
@@ -16,7 +18,7 @@ export default abstract class BaseCanvas {
      * @type {fabric.Canvas}
      */
     protected canvas: fabric.Canvas;
-
+    
     /**
      * The clip path used to restrict the rendering of objects on the canvas.
      * 
@@ -88,6 +90,14 @@ export default abstract class BaseCanvas {
      */
     protected registerCanvasEvents(): void {
         window.addEventListener('resize', () => this.resizeCanvas());
+
+        this.canvas.on('object:moving', (e) => {
+            const obj = e.target;
+            obj.set({
+                top: Math.round(obj.top / this.gridSize) * this.gridSize,
+                left: Math.round(obj.left / this.gridSize) * this.gridSize,
+            });
+        });
     }
 
     /**
