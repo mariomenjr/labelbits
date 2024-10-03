@@ -27,14 +27,6 @@ class TextboxObject extends PluginMixin(fabric.Textbox) {
     public plugin: PluginOptions = pluginOptions;
 
     /**
-     * Constructor.
-     * @param {fabric.Textbox} object - The underlying fabric object.
-     */
-    constructor(object: fabric.Textbox) {
-        super(object.text, object);
-    }
-
-    /**
      * Updates the object asynchronously when a setting property is changed.
      * The object is updated by using the new setting property value.
      * @param {string} propName - The name of the setting property that changed.
@@ -70,6 +62,6 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      */
     async createObjectAsync(): Promise<TextboxObject> {
         const textOptions = PluginOptions.as<{}>(pluginOptions);
-        return new TextboxObject(new fabric.Textbox(this.defaultValue, textOptions));
+        return new TextboxObject(this.defaultValue, textOptions);
     }
 }
