@@ -12,16 +12,31 @@
 <body>
     <header x-data="toolbox" class="z-10 absolute top-3 left-3 shadow-lg">
         <template x-for="control in items" :key="control.id">
-            <button :id="control.id" @click="control.onClick"
+            <button :id="`btn:${control.id}`" @click="control.onClick"
                 class="px-3 py-2 text-black bg-white hover:bg-slate-50 transition">
                 <svg class="h-5 w-5 inline">
-                    <use :href="`/svg/toolbox.svg#${control.icon}`"></use>
+                    <use :href="`/svg/toolbox.svg#icon-${control.icon}`"></use>
                 </svg>
             </button>
         </template>
     </header>
-    <main class="h-screen w-screen p-0">
+    <main x-data="contextmenu" class="h-screen w-screen p-0">
         <canvas id="canvas" class="z-0 shadow-inner"></canvas>
+
+        <template x-if="toggled">
+            <div :style="{ top: `${y}px`, left: `${x}px` }" @contextmenu.prevent @click.away="hide" x-transition class="absolute bg-white shadow-lg border border-gray-200 w-48 z-50 p-0 text-sm">
+                <ul class="m-0 p-0">
+                    <template x-for="option in options" :key="option.label">
+                        <li @click="option.onClick()" class="p-2 hover:bg-gray-200 cursor-pointer">
+                            <svg class="h-5 w-5 mr-2 inline align-middle">
+                                <use :href="`/svg/toolbox.svg#icon-${option.icon}`"></use>
+                            </svg>
+                            <span x-text="option.label"></span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
 
         <div class="z-10 absolute bottom-5 right-5 max-h-96 overflow-y-auto shadow-lg smooth-scroll">
             <table class="divide-y divide-gray-300" x-data="settings">
@@ -51,26 +66,23 @@
                                 <!-- checkbox case -->
                                 <template x-if="control.type === 'checkbox'">
                                     <label class="relative inline-flex items-center cursor-pointer my-0 align-middle">
-                                        <input type="checkbox" :id="control.id" :name="control.propName"
+                                        <input type="checkbox" :id="`setting:${control.id}`" :name="control.propName"
                                             x-model.boolean.debounce="control.value" class="sr-only peer"
                                             x-on:click="$event.target.blur()" />
                                         <div
-                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 
-                                                    rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white 
-                                                    after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 
-                                                    after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 cursor-pointer">
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 cursor-pointer">
                                         </div>
                                     </label>
                                 </template>
                                 <!-- number case -->
                                 <template x-if="control.type === 'number'">
-                                    <input :type="control.type" :id="control.id" :name="control.propName"
+                                    <input :type="control.type" :id="`setting:${control.id}`" :name="control.propName"
                                         :placeholder="`${control.label}`" x-model.number.debounce="control.value"
                                         class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
                                 </template>
                                 <!-- dropdown case -->
                                 <template x-if="control.type === 'select'">
-                                    <select :id="control.id" :name="control.propName" x-model.debounce="control.value"
+                                    <select :id="`setting:${control.id}`" :name="control.propName" x-model.debounce="control.value"
                                         class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500">
                                         <template x-for="option in control.select" :key="option">
                                             <option :value="option" :selected="option === control.value"
@@ -80,13 +92,13 @@
                                 </template>
                                 <!-- Add the textarea case here -->
                                 <template x-if="control.type === 'textarea'">
-                                    <textarea :id="control.id" :name="control.propName"
+                                    <textarea :id="`setting:${control.id}`" :name="control.propName"
                                         :placeholder="`${control.label}`" x-model.debounce="control.value"
                                         class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500 h-24"></textarea>
                                 </template>
                                 <!-- default case -->
                                 <template x-if="!['checkbox', 'number', 'select', 'textarea'].includes(control.type)">
-                                    <input :type="control.type" :id="control.id" :name="control.propName"
+                                    <input :type="control.type" :id="`setting:${control.id}`" :name="control.propName"
                                         :placeholder="`${control.label}`" x-model.debounce="control.value"
                                         class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
                                 </template>

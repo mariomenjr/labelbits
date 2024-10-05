@@ -29,7 +29,11 @@
     },
     "license": "MIT",
     "devDependencies": {
+        "@types/uuid": "^10.0.0",
         "@labelbits/jest.config": "workspace:*",
         "@labelbits/tsconfig": "workspace:*"
+    },
+    "dependencies": {
+        "uuid": "^10.0.0"
     }
 }

@@ -37,7 +37,7 @@ export function createSettingElement(propName: string, settingProp: SettingProp,
     // Initialize the setting object with default values and accessor methods.
     const setting: Setting = {
         propName,
-        id: `setting:${camelToKebabCase(propName)}`,
+        id: camelToKebabCase(propName),
         label: camelToTitleCase(propName),
         type: "text", // Default to "text", will be overridden below if needed.
         /**

@@ -16,7 +16,7 @@ const pluginLoaders: PluginLoader[] = [
      */
     async () => {
         const { default: plugin } = await import("@labelbits/designer-plugin-textbox");
-        return new plugin("text-plus");
+        return new plugin("textbox");
     },
     /**
      * Asynchronously loads the "barcode" plugin from the "@labelbits/designer-plugin-barcode" package.
@@ -32,7 +32,7 @@ const pluginLoaders: PluginLoader[] = [
      */
     async () => {
         const { default: plugin } = await import("@labelbits/designer-plugin-qrcode");
-        return new plugin("qrcode-plus");
+        return new plugin("qrcode");
     },
 ]
 

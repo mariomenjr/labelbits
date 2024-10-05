@@ -1,4 +1,5 @@
 import * as fabric from "fabric";
+import { v4 as uuidv4 } from "uuid";
 
 import { Setting, SettingProp } from "../setting/models";
 
@@ -55,6 +56,7 @@ export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
  * @extends {fabric.Object}
  */
 export interface IPluginObject extends fabric.Object {
+    uid: string;
     /**
      * The plugin options of the object.
      * 
@@ -115,6 +117,8 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
          */
         static type: string = 'PluginObject';
 
+        public readonly uid:string = uuidv4();
+
         /**
          * The plugin options of the PluginObject object.
          * This property is abstract and must be implemented by the subclasses.
@@ -157,6 +161,8 @@ export abstract class PluginGroup extends fabric.Group implements IPluginObject 
      * @type {string}
      */
     static type: string = 'PluginGroup';
+
+    public readonly uid:string = uuidv4();
 
     /**
      * Creates a new PluginGroup object from an SVG string.

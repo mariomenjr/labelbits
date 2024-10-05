@@ -17,8 +17,12 @@ export default abstract class BaseCanvas {
      * @protected
      * @type {fabric.Canvas}
      */
-    protected canvas: fabric.Canvas;
-    
+    private _canvas: fabric.Canvas;
+
+    public get canvas(): fabric.Canvas {
+        return this._canvas;
+    }
+
     /**
      * The clip path used to restrict the rendering of objects on the canvas.
      * 
@@ -32,7 +36,11 @@ export default abstract class BaseCanvas {
      * It sets up the clip path, styles, event listeners, and renders the canvas.
      */
     constructor() {
-        this.canvas = new fabric.Canvas(`canvas`);
+        this._canvas = new fabric.Canvas(`canvas`, {
+            fireRightClick: true,
+            fireMiddleClick: true,
+            stopContextMenu: true,
+        });
         this.labelArea = createClipPath();
         this.canvas.add(this.labelArea);
 

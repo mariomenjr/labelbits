@@ -52,8 +52,8 @@ export default abstract class FabricObjectPlugin implements Plugin<PluginObjectA
      */
     public async getActionAsync(handler: PluginObjectAction): Promise<Action> {
         return {
-            id: `btn-${this.name}`,
-            icon: `icon-${this.name}`,
+            id: this.name,
+            icon: this.name,
             onClick: async () => handler(await this.createObjectAsync())
         };
     }
