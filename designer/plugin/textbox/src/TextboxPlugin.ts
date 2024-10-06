@@ -3,8 +3,7 @@ import * as fabric from "fabric";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 import { PluginOptions, PluginMixin } from "@labelbits/designer-shared/fabric";
 import { SettingProp } from "@labelbits/designer-shared/setting";
-
-import { pluginOptions } from "./defaults";
+import { getDefaults } from "./utils";
 
 /**
  * Represents a Fabric.js Textbox object with plugin-specific properties.
@@ -24,7 +23,7 @@ class TextboxObject extends PluginMixin(fabric.Textbox) {
      * These options are used when creating a new object.
      * @type {PluginOptions}
      */
-    public plugin: PluginOptions = pluginOptions;
+    public plugin: PluginOptions = getDefaults();
 
     /**
      * Updates the object asynchronously when a setting property is changed.
@@ -47,13 +46,6 @@ fabric.classRegistry.setClass(TextboxObject);
  */
 export default class TextboxPlugin extends FabricObjectPlugin {
     /**
-     * The default value for the textbox when creating a new object.
-     * @protected
-     * @type {string}
-     */
-    protected defaultValue: string = pluginOptions.text.value as string;
-
-    /**
      * Creates a new textbox object asynchronously.
      * The object is created with the default value of the plugin.
      *
@@ -61,7 +53,10 @@ export default class TextboxPlugin extends FabricObjectPlugin {
      * @returns {Promise<TextboxObject>} A promise that resolves to the created textbox object.
      */
     async createObjectAsync(): Promise<TextboxObject> {
-        const textOptions = PluginOptions.as<{}>(pluginOptions);
-        return new TextboxObject(this.defaultValue, textOptions);
+        const defaultOptions = getDefaults();
+        const defaultValue = defaultOptions.text.value as string;
+
+        const textOptions = PluginOptions.as<{}>(defaultOptions);
+        return new TextboxObject(defaultValue, textOptions);
     }
 }

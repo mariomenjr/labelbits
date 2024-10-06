@@ -12,12 +12,20 @@ import { buildFabricSvgAsync, FabricSvg, PluginOptions } from "@labelbits/design
  */
 export async function generateQrcodeAsync(value: string, pluginOptions: PluginOptions): Promise<FabricSvg> {
     // Generate an SVG string for the QR code with the specified value
-    const svgStr = await QRCode.toString(value, { 
-        ...PluginOptions.as<QRCode.QRCodeToStringOptions>(pluginOptions), 
-        type: `svg`, 
-        color: { dark: `#000`, light: `#0000` } 
+    const svgStr = await QRCode.toString(value, {
+        ...PluginOptions.as<QRCode.QRCodeToStringOptions>(pluginOptions),
+        type: `svg`,
+        color: { dark: `#000`, light: `#0000` }
     });
 
     // Load the SVG string into Fabric.js
     return buildFabricSvgAsync(svgStr, pluginOptions);
+}
+
+export function getDefaults(): PluginOptions {
+    return {
+        text: { isNative: false, value: `https://mariomenjr.com` },
+        margin: { isNative: false, value: 0.5 },
+        width: { isNative: false, value: 125 },
+    };
 }

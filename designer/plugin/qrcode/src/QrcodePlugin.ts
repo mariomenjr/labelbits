@@ -1,7 +1,6 @@
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
-import { generateQrcodeAsync } from "./utils";
-import { pluginOptions } from "./defaults";
+import { generateQrcodeAsync, getDefaults } from "./utils";
 import { QrcodeObject } from "./models";
 
 /**
@@ -10,13 +9,6 @@ import { QrcodeObject } from "./models";
  * @extends {FabricObjectPlugin}
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
-
-    /**
-     * The default value of the plugin.
-     * This value is used when creating a new QR code object.
-     */
-    protected defaultValue: string = pluginOptions.text.value as string;
-
     /**
      * Creates a new QR code object asynchronously.
      * The object is created with the default value of the plugin.
@@ -24,8 +16,11 @@ export default class QrcodePlugin extends FabricObjectPlugin {
      * @returns {Promise<QrcodeObject>} A promise that resolves to the created QR code object.
      */
     async createObjectAsync(): Promise<QrcodeObject> {
+        const defaultOptions = getDefaults();
+        const defaultValue = defaultOptions.text.value as string;
+
         // Load SVG string into Fabric.js (likely generated from fetched data)
-        const svgObject = await generateQrcodeAsync(this.defaultValue, pluginOptions);
+        const svgObject = await generateQrcodeAsync(defaultValue, defaultOptions);
 
         // Group SVG objects into a single group object
         return new QrcodeObject(svgObject);

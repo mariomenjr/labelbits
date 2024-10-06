@@ -9,16 +9,6 @@ import { Plugin, Action } from "@labelbits/designer-shared";
  * @implements {Plugin<PluginObjectAction>}
  */
 export default abstract class FabricObjectPlugin implements Plugin<PluginObjectAction> {
-
-    /**
-     * The default value of the plugin, which is used when creating a new object.
-     * 
-     * @protected
-     * @abstract
-     * @type {string}
-     */
-    protected abstract defaultValue: string;
-
     /**
      * The name of the plugin.
      * 

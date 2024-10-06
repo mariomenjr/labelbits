@@ -3,8 +3,7 @@ import { classRegistry } from "fabric";
 import { PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
 import { SettingProp } from "@labelbits/designer-shared/setting";
 
-import { generateQrcodeAsync } from "./utils";
-import { pluginOptions } from "./defaults";
+import { generateQrcodeAsync, getDefaults } from "./utils";
 
 /**
  * QrcodeObject class represents a Fabric.js object that is generated from a QR code SVG string.
@@ -24,7 +23,7 @@ export class QrcodeObject extends PluginGroup {
      * This is a shortcut to the plugin options that are used to generate the QR code.
      * @type {PluginOptions}
      */
-    public plugin: PluginOptions = pluginOptions;
+    public plugin: PluginOptions = getDefaults();
 
     /**
      * Updates the object asynchronously when a setting property is changed.
