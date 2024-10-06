@@ -13,7 +13,11 @@ import { buildFabricSvgAsync, FabricSvg, PluginOptions } from "@labelbits/design
 export async function generateBarcodeAsync(value: string, pluginOptions: PluginOptions): Promise<FabricSvg> {
     // Generate the barcode
     const svg = document.createElementNS(`http://www.w3.org/2000/svg`, `svg`);
-    JsBarcode(svg, value, PluginOptions.as<JsBarcode.Options>(pluginOptions));
+    
+    JsBarcode(svg, value, {
+        ...PluginOptions.as<JsBarcode.Options>(pluginOptions),
+        background: `rgba(0,0,0,0)`
+    });
 
     // Convert the SVG node to a string
     const serializer = new XMLSerializer();

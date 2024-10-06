@@ -75,7 +75,7 @@ export default abstract class ObjectsLayer extends BaseCanvas {
      * @param {IPluginObject} object - The object to register events for.
      */
     protected attachEvents(object: IPluginObject): void {
-        object.on('modified', (opt) => this._updateRelationship(opt.target as IPluginObject));
+        object.on('modified', (_) => this._updateRelationship(object));
     }
 
     /**

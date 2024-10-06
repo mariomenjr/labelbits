@@ -11,9 +11,12 @@ import { buildFabricSvgAsync, FabricSvg, PluginOptions } from "@labelbits/design
  * @returns {Promise<FabricSvg>} A promise that resolves to the `FabricSvg` object.
  */
 export async function generateQrcodeAsync(value: string, pluginOptions: PluginOptions): Promise<FabricSvg> {
-    const qrcodeDefaults = PluginOptions.as<QRCode.QRCodeToStringOptions>(pluginOptions);
     // Generate an SVG string for the QR code with the specified value
-    const svgStr = await QRCode.toString(value, {...qrcodeDefaults, type: `svg`});
+    const svgStr = await QRCode.toString(value, { 
+        ...PluginOptions.as<QRCode.QRCodeToStringOptions>(pluginOptions), 
+        type: `svg`, 
+        color: { dark: `#000`, light: `#0000` } 
+    });
 
     // Load the SVG string into Fabric.js
     return buildFabricSvgAsync(svgStr, pluginOptions);

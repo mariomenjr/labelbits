@@ -33,6 +33,8 @@ export default class LabelDesigner extends InteractiveCanvas {
     protected constructor(plugins: FabricObjectPlugin[]) {
         super();
         this.plugins = plugins;
+        
+        console.debug(`LabelDesigner initialized.`);
     }
 
     /**
