@@ -7,23 +7,6 @@ import { FabricSvg, PluginOptions } from "./models";
 import { getBoundSettingHandlers } from "../setting";
 
 /**
- * Represents a fabric object that can have a relationship transform matrix.
- * This type extends the fabric.Object type and adds the `relationship` property.
- * 
- * @typedef {Object} TransformingObject
- * @extends {fabric.Object}
- */
-export type TransformingObject = fabric.Object & {
-    /**
-     * The relationship transform matrix of the object.
-     * This matrix describes the relationship of the object to the label area.
-     * 
-     * @type {fabric.TMat2D}
-     */
-    relationship: fabric.TMat2D;
-};
-
-/**
  * Represents an event object that contains information about the selection event.
  * It is a partial representation of the fabric.TEvent<fabric.TPointerEvent> interface and
  * includes the selected and deselected objects.
@@ -56,13 +39,27 @@ export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
  * @extends {fabric.Object}
  */
 export interface IPluginObject extends fabric.Object {
-    uid: string;
+    /** 
+     * The unique identifier of the object.
+     * 
+     * @type {string}
+     * @readonly
+    */
+    readonly uid: string;
     /**
      * The plugin options of the object.
      * 
      * @type {PluginOptions}
      */
     plugin: PluginOptions;
+
+    /**
+     * The relationship transform matrix of the object.
+     * This matrix describes the relationship of the object to the label area.
+     * 
+     * @type {fabric.TMat2D}
+     */
+    relationship?: fabric.TMat2D;
 
     /**
      * Updates the object asynchronously.
@@ -83,7 +80,23 @@ export interface IPluginObject extends fabric.Object {
     getSettings(): Setting[];
 }
 
+/** 
+ * The constructor of the fabric object that is extended with the IPluginObject interface.
+ * 
+ * @template T - The type of the fabric object class to extend.
+ * @param {T} BaseObject - The fabric object class to extend.
+ * @returns {PluginConstructor<T>} The constructor of the fabric object that is extended with the IPluginObject interface.
+*/
 export type PluginConstructor<T = fabric.Object> = new (...args: any[]) => T;
+/**
+ * The constructor of the mixin class that extends the given fabric object class with the IPluginObject interface.
+ * 
+ * @template T - The type of the fabric object class to extend.
+ * @template U - The type of the mixin class that extends the given fabric object class with the IPluginObject interface.
+ * @param {U} BaseObject - The fabric object class to extend.
+ * @returns {PluginMixinConstructor<U, T>} The constructor of the mixin class that extends the given fabric object class
+ * with the IPluginObject interface.
+ */
 export type PluginMixinConstructor<U, T extends PluginConstructor> = new (...args: ConstructorParameters<T>) => U;
 
 /**
@@ -117,6 +130,12 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
          */
         static type: string = 'PluginObject';
 
+        /**
+         * The unique identifier of the fabric object.
+         * @type {string}
+         * @readonly
+         * @default uuidv4()
+         */
         public readonly uid:string = uuidv4();
 
         /**
@@ -154,7 +173,7 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
  * 
  * @extends {fabric.Group}
  */
-export abstract class PluginGroup extends fabric.Group implements IPluginObject {
+export abstract class PluginGroup extends fabric.Group implements IPluginObject { // TODO: How to extend it from PluginMixin?
 
     /**
      * The type of the plugin object.
@@ -162,6 +181,12 @@ export abstract class PluginGroup extends fabric.Group implements IPluginObject 
      */
     static type: string = 'PluginGroup';
 
+    /**
+     * The unique identifier of the fabric object.
+     * @type {string}
+     * @readonly
+     * @default uuidv4()
+     */
     public readonly uid:string = uuidv4();
 
     /**

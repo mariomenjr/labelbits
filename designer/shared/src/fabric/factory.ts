@@ -1,43 +1,19 @@
 import * as fabric from "fabric";
+
 import { colors } from "./config";
+import { Size } from "./window";
 
 /**
- * Creates a new `fabric.Rect` object to be used as a clipping path.
- * The rectangle will have default properties suitable for clipping other objects
- * within the canvas and ensuring they do not extend beyond its boundaries.
- *
- * @returns {fabric.Rect} The created rectangle object, which can be used as a clipping path.
+ * Creates a clip path rectangle to restrict the rendering of objects on the canvas.
+ * @param size The size of the clip path.
+ * @returns A fabric.Rect object representing the clip path.
  */
-export function createClipPath(): fabric.Rect {
+export function createClipPath(size: Size): fabric.Rect {
     return new fabric.Rect({
         fill: colors.labelBackground, // The color with which the rectangle will be filled
         selectable: false, // Whether the rectangle can be selected
         hoverCursor: `default`, // The cursor to display when hovering over the rectangle
-    });
-}
-
-/**
- * Creates a new `fabric.Rect` object representing a rectangle with default properties.
- * This rectangle can be added to the canvas and will have a fixed size and background color.
- *
- * @returns {fabric.Rect} The created rectangle object, which can be added to the canvas.
- */
-export function createRectangle(): fabric.Rect {
-    return new fabric.Rect({
-        /**
-         * The color with which the rectangle will be filled.
-         * @type {string}
-         */
-        fill: colors.rectangleBackground,
-        /**
-         * The width of the rectangle in pixels.
-         * @type {number}
-         */
-        width: 125,
-        /**
-         * The height of the rectangle in pixels.
-         * @type {number}
-         */
-        height: 125,
+        absolutePositioned: true, // Whether the rectangle is absolutely positioned
+        ...size
     });
 }

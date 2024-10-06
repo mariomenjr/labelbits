@@ -62,3 +62,19 @@ export const selectionStyle = {
      */
     transparentCorners: true
 };
+
+/** 
+ * Represents the default style for the canvas.
+ * This object defines the appearance of the canvas.
+ * @typedef {Object} CanvasDefaults
+ * @property {boolean} fireRightClick - Whether the canvas should fire right click events.
+ * @property {boolean} fireMiddleClick - Whether the canvas should fire middle click events.
+ * @property {boolean} stopContextMenu - Whether the canvas should stop the context menu event.
+ * @property {string} backgroundColor - The background color of the canvas.
+*/
+export const canvasDefaults = {
+    fireRightClick: true,
+    fireMiddleClick: true,
+    stopContextMenu: true,
+    backgroundColor: `rgb(209 213 219)`,
+};

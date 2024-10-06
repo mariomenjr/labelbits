@@ -1,6 +1,7 @@
 import * as fabric from "fabric";
+import { IPluginObject, selectionStyle } from "@labelbits/designer-shared/fabric";
+
 import BaseCanvas from "./BaseCanvas";
-import { selectionStyle, TransformingObject } from "@labelbits/designer-shared/fabric";
 
 /**
  * The ObjectsLayer class represents a space that allows objects to be positioned relative to a label area.
@@ -10,23 +11,30 @@ import { selectionStyle, TransformingObject } from "@labelbits/designer-shared/f
  * @extends BaseCanvas
  */
 export default abstract class ObjectsLayer extends BaseCanvas {
+
     /**
-     * Adds an object to the canvas and sets it as the active object.
+     * Adds one or more objects to the canvas and centers them relative to the label area.
+     * Sets the selection style for the objects and registers event listeners to update the objects when modified.
+     * Sets the last object in the list as the active object.
      * 
-     * @protected
-     * @param {fabric.Object} object - The object to be added to the canvas.
+     * @param {...IPluginObject[]} objects - The objects to add to the canvas.
+     * @returns {number} The number of objects added to the canvas.
      */
-    protected addObject(object: fabric.Object): void {
-        object.set({ ...selectionStyle });
-        object.clipPath = this.labelArea;
+    public add(...objects: IPluginObject[]): number {
+        const n = super.add(...objects);
 
-        this.centerObject(object);
-        this.setObjectTransform(object as TransformingObject);
+        for (let i = 0; i < objects.length; i++) {
+            const object = objects[i];
 
-        this.canvas.add(object);
-        this.canvas.setActiveObject(object);
+            object.set({ ...selectionStyle });
 
-        this.registerObjectEvents(object);
+            this.centerObject(object);
+            this._updateRelationship(object);
+            this.attachEvents(object);
+
+            this.setActiveObject(object);
+        }
+        return n;
     }
 
     /**
@@ -35,13 +43,14 @@ export default abstract class ObjectsLayer extends BaseCanvas {
      * 
      * @protected
      */
-    protected relocateObjects(): void {
-        const objects = this.canvas.getObjects().filter(f => f !== this.labelArea);
+    protected preserveLayout(): void {
+        const objects = this.getObjects().filter(f => f !== this.labelArea);
 
         objects.forEach(o => {
-            const to = o as TransformingObject;
+            const to = o as IPluginObject;
 
             if (to.relationship) {
+
                 const newTransform = fabric.util.multiplyTransformMatrices(
                     this.labelArea.calcTransformMatrix(),
                     to.relationship
@@ -63,10 +72,10 @@ export default abstract class ObjectsLayer extends BaseCanvas {
      * Ensures that the object is updated correctly after any modifications.
      * 
      * @protected
-     * @param {fabric.Object} object - The object to register events for.
+     * @param {IPluginObject} object - The object to register events for.
      */
-    protected registerObjectEvents(object: fabric.Object): void {
-        object.on('modified', () => this.setObjectTransform(object as TransformingObject));
+    protected attachEvents(object: IPluginObject): void {
+        object.on('modified', (opt) => this._updateRelationship(opt.target as IPluginObject));
     }
 
     /**
@@ -75,22 +84,23 @@ export default abstract class ObjectsLayer extends BaseCanvas {
      * @protected
      * @override
      */
-    protected resizeCanvas(): void {
-        super.resizeCanvas();
-        this.relocateObjects();
+    protected matchViewport(): void {
+        super.matchViewport();
+        this.preserveLayout();
     }
 
     /**
-     * Sets the transform of the specified object relative to the label area.
-     * This method calculates the object's transform matrix based on its relationship to the label area.
+     * Updates the relationship transform matrix of the specified object.
+     * The relationship transform matrix describes the relationship of the object to the label area.
+     * It is used to maintain the relative positions of all objects after transformations.
      * 
      * @private
-     * @param {TransformingObject} to - The object for which the transform will be set.
+     * @param {IPluginObject} object - The object to update the relationship of.
      */
-    private setObjectTransform(to: TransformingObject): void {
+    private _updateRelationship(object: IPluginObject): void {
         const labelTransform = this.labelArea.calcTransformMatrix();
         const invertedTransform = fabric.util.invertTransform(labelTransform);
-        
-        to.relationship = fabric.util.multiplyTransformMatrices(invertedTransform, to.calcTransformMatrix());
+
+        object.relationship = fabric.util.multiplyTransformMatrices(invertedTransform, object.calcTransformMatrix());
     }
 }

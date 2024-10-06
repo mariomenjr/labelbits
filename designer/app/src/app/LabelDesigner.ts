@@ -57,10 +57,10 @@ export default class LabelDesigner extends InteractiveCanvas {
              * Attaches event listeners to the canvas for selection events.
              * The selection events are used to update the settings of the label designer.
              */
-            this.canvas.on("selection:created", selectionHandler);
-            this.canvas.on("selection:updated", selectionHandler);
-            this.canvas.on("selection:cleared", selectionHandler);
-            
+            this.on("selection:created", selectionHandler);
+            this.on("selection:updated", selectionHandler);
+            this.on("selection:cleared", selectionHandler);
+
             console.debug(`Selection event listener attached.`);
         });
     }
@@ -77,7 +77,7 @@ export default class LabelDesigner extends InteractiveCanvas {
          * Get the actions from the plugins.
          * Actions are retrieved asynchronously using the getActionAsync method of each plugin.
          */
-        const actionsAsync = this.plugins.map((p) => p.getActionAsync((o) => this.addObject(o)));
+        const actionsAsync = this.plugins.map((p) => p.getActionAsync((o) => this.add(o)));
 
         /**
          * Wait for all the actions to be retrieved using Promise.all.

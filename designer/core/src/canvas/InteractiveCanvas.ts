@@ -1,56 +1,33 @@
 import * as fabric from "fabric";
+
 import ObjectsLayer from "./ObjectsLayer";
 
-/**
- * The DraggableCanvas class is an abstract base class for fabric.Canvas objects
- * that support dragging. It adds properties and methods to track the state of
- * dragging and the last position of the pointer.
- *
+/** 
+ * The InteractiveCanvas class extends the ObjectsLayer class
+ * and provides additional methods for handling mouse events.
+ * 
  * @abstract
- * @extends fabric.Canvas
- */
-abstract class DraggableCanvas extends fabric.Canvas {
+ * @extends ObjectsLayer
+*/
+export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
      * Indicates whether a drag operation is currently in progress.
      * @type {boolean}
      */
-    isDragging: boolean = false;
+    public isDragging: boolean = false;
 
     /**
      * The x-coordinate of the pointer's last position during a drag operation.
      * @type {number}
      */
-    lastPosX: number = 0;
+    public lastPosX: number = 0;
 
     /**
      * The y-coordinate of the pointer's last position during a drag operation.
      * @type {number}
      */
-    lastPosY: number = 0;
-}
+    public lastPosY: number = 0;
 
-/**
- * Defines a custom pointer event for the canvas.
- * @typedef {Object} CanvasPointerEvent
- * @property {number} clientX - The x-coordinate of the pointer.
- * @property {number} clientY - The y-coordinate of the pointer.
- * @extends fabric.TPointerEvent
- */
-type CanvasPointerEvent = fabric.TPointerEvent & {
-    clientX: number;
-    clientY: number;
-};
-
-/**
- * The InteractiveCanvas class extends the ObjectsLayer class and provides
- * zoom and drag functionality. It allows the user to zoom in and out of the
- * canvas by holding the Ctrl key and scrolling, and drag the canvas by
- * holding the Ctrl key and dragging the mouse.
- *
- * @abstract
- * @extends ObjectsLayer
- */
-export default abstract class InteractiveCanvas extends ObjectsLayer {
     /**
      * Registers canvas events for the InteractiveCanvas class.
      * This method overrides the base class method to include scroll and drag events.
@@ -58,90 +35,97 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
      * @protected
      * @override
      */
-    protected registerCanvasEvents(): void {
-        super.registerCanvasEvents();
-        this.registerOnScroll();
-        this.registerOnDrag();
+    protected registerEvents(): void {
+        super.registerEvents();
+
+        this._registerOnDrag();
+        this._registerOnScroll();
     }
 
     /**
-     * Registers a scroll event listener for the canvas.
-     * This method listens for the 'mouse:wheel' event and zooms the canvas in or out
-     * depending on the scroll direction and whether the Ctrl key is being held down.
+     * Registers a mouse:wheel event handler to zoom the canvas.
+     * When the user scrolls the mouse wheel while holding the Ctrl key,
+     * the canvas is zoomed in or out.
      * 
      * @private
      */
-    private registerOnScroll(): void {
-        this.canvas.on('mouse:wheel', (opt) => {
+    private _registerOnScroll(): void {
+        this.on('mouse:wheel', (opt) => {
             if (!opt.e.ctrlKey) return;
-            const zoom = this.calculateZoom(opt.e.deltaY);
+
+            const zoom = this.computeZoom(opt.e.deltaY);
             const point = new fabric.Point(opt.e.offsetX, opt.e.offsetY);
-            this.setZoom(point, zoom);
+
+            this.zoomToPoint(point, zoom);
+
             opt.e.preventDefault();
             opt.e.stopPropagation();
-            this.canvas.requestRenderAll();
+
+            this.requestRenderAll();
         });
     }
 
+
     /**
-     * Registers a drag event listener for the canvas.
-     * This method listens for the 'mouse:down', 'mouse:move', and 'mouse:up' events
-     * to allow the user to drag the canvas by holding the Ctrl key and dragging the mouse.
+     * Registers a mouse:down event handler to enable dragging of the canvas.
+     * If the user holds the Ctrl key and clicks, the canvas is set to a dragging mode.
+     * In this mode, moving the mouse will pan the canvas.
+     * Clicking again will exit the dragging mode and re-enable object selection.
      * 
      * @private
      */
-    private registerOnDrag(): void {
-        const draggableCanvas = this.canvas as DraggableCanvas;
+    private _registerOnDrag(): void {
+        this.on('mouse:down', (opt) => {
+            // const evt = opt.e as CanvasPointerEvent;
+            if (opt.e.ctrlKey === true) {
 
-        draggableCanvas.on('mouse:down', (opt) => {
-            const evt = opt.e as CanvasPointerEvent;
-            if (evt.ctrlKey === true) {
-                draggableCanvas.isDragging = true;
-                draggableCanvas.selection = false;
-                draggableCanvas.lastPosX = evt.clientX;
-                draggableCanvas.lastPosY = evt.clientY;
+                this.isDragging = true;
+                this.selection = false;
+
+                this.lastPosX = opt.viewportPoint.x;
+                this.lastPosY = opt.viewportPoint.y;
+                // this.lastPosX = evt.clientX;
+                // this.lastPosY = evt.clientY;
             }
         });
 
-        draggableCanvas.on('mouse:move', (opt) => {
-            if (draggableCanvas.isDragging) {
-                const e = opt.e as CanvasPointerEvent;
-                const vpt = draggableCanvas.viewportTransform;
-                vpt[4] += e.clientX - draggableCanvas.lastPosX;
-                vpt[5] += e.clientY - draggableCanvas.lastPosY;
-                draggableCanvas.requestRenderAll();
-                draggableCanvas.lastPosX = e.clientX;
-                draggableCanvas.lastPosY = e.clientY;
+        this.on('mouse:move', (opt) => {
+            if (this.isDragging) {
+                const vpt = this.viewportTransform;
+
+                vpt[4] += opt.viewportPoint.x - this.lastPosX;
+                vpt[5] += opt.viewportPoint.y - this.lastPosY;
+
+                this.requestRenderAll();
+
+                this.lastPosX = opt.viewportPoint.x;
+                this.lastPosY = opt.viewportPoint.y;
             }
         });
 
-        draggableCanvas.on('mouse:up', (_) => {
-            draggableCanvas.setViewportTransform(draggableCanvas.viewportTransform);
-            draggableCanvas.isDragging = false;
-            draggableCanvas.selection = true;
+        this.on('mouse:up', (_) => {
+            this.setViewportTransform(this.viewportTransform);
+            this.isDragging = false;
+            this.selection = true;
         });
     }
 
     /**
-     * Calculates the zoom factor based on the scroll direction.
-     *
-     * @protected
-     * @param {number} delta - The scroll direction.
-     * @returns {number} The zoom factor.
-     */
-    protected calculateZoom(delta: number): number {
-        const zoom = this.canvas.getZoom() * (1 - 0.001 * delta);
-        return Math.max(0.01, Math.min(20, zoom));
-    }
-
-    /**
-     * Sets the zoom point and zoom factor for the canvas.
+     * Computes the new zoom level for the canvas based on a scroll delta.
      * 
-     * @protected
-     * @param {fabric.Point} point - The point to zoom to.
-     * @param {number} zoom - The zoom factor.
+     * The zoom level is calculated by multiplying the current zoom level by a factor
+     * dependent on the sign of the delta. The factor is 1 - 0.001 * delta, which means
+     * that scrolling up (negative delta) will increase the zoom level and scrolling down
+     * (positive delta) will decrease the zoom level.
+     * 
+     * The computed zoom level is then clamped to the range [0.01, 20] to prevent it from
+     * getting too large or too small.
+     * 
+     * @param {number} delta - The scroll delta.
+     * @returns {number} The new zoom level.
      */
-    protected setZoom(point: fabric.Point, zoom: number): void {
-        this.canvas.zoomToPoint(point, zoom);
+    protected computeZoom(delta: number): number {
+        const zoom = this.getZoom() * (1 - 0.001 * delta);
+        return Math.max(0.01, Math.min(20, zoom));
     }
 }

@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import * as fabric from "fabric";
 
-import { IPluginObject } from "@labelbits/designer-shared/fabric";
+import { IPluginObject, PluginObjectAction } from "@labelbits/designer-shared/fabric";
 
 import LabelDesigner from "./LabelDesigner";
 
@@ -120,7 +120,7 @@ export default class App {
                              */
                             onClick: () => this.perform((o) => {
                                 o.canvas?.sendObjectToBack(o);
-                                o.canvas?.sendObjectToBack(o.clipPath as fabric.Object);
+                                // o.canvas?.sendObjectToBack(o.clipPath as fabric.Object);
                             })
                         },
                         {
@@ -131,28 +131,27 @@ export default class App {
                     ];
                 },
                 /**
-                 * Applies the given action to the object that was right-clicked
-                 * or to all active objects if no object was right-clicked.
-                 * After applying the action, it hides the context menu and refreshes the canvas.
+                 * Applies the specified action to the selected object.
+                 * If the selected object is `undefined`, the action is applied to all active objects.
+                 * After applying the action, the active object is discarded and the canvas is rendered.
+                 * The context menu is then hidden.
                  * 
-                 * @param {function(target: IPluginObject | fabric.Group): void} action
-                 * The function that will be called with the target object as its argument.
-                 * @returns {void}
+                 * @param {PluginObjectAction} action - The action to apply to the selected object(s).
                  */
-                perform(action: (target: IPluginObject | fabric.Group) => void): void {
+                perform(action: PluginObjectAction): void {
                     if (!this.uid) return;
 
-                    const canvas = labelDesigner.canvas;
-                    const target = canvas.getObjects().find((o) => (o as IPluginObject).uid === this.uid) as IPluginObject;
+                    const target = labelDesigner.getObjects().find((o) => (o as IPluginObject).uid === this.uid) as IPluginObject;
 
                     if (target) {
                         action(target);
                     } else {
-                        canvas.getActiveObjects().forEach((o) => action(o as IPluginObject));
-                        canvas.discardActiveObject();
+                        labelDesigner.getActiveObjects().forEach((o) => action(o as IPluginObject));
                     }
 
-                    canvas.requestRenderAll();
+                    labelDesigner.discardActiveObject();
+                    labelDesigner.requestRenderAll();
+
                     this.hide();
                 },
                 /**
@@ -163,7 +162,7 @@ export default class App {
                  * @returns {void}
                  */
                 init(): void {
-                    labelDesigner.canvas.on('mouse:down', (event) => {
+                    labelDesigner.on('mouse:down', (event) => {
                         if (!event.target) return;
 
                         const o = event.target as IPluginObject;

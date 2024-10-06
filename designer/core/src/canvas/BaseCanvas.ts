@@ -1,5 +1,5 @@
 import * as fabric from "fabric";
-import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbits/designer-shared/fabric";
+import { createClipPath, getViewportSize, canvasDefaults } from "@labelbits/designer-shared/fabric";
 
 /**
  * The BaseCanvas class is an abstract base class for label design spaces.
@@ -8,20 +8,8 @@ import { createClipPath, calculateCenter, getViewportSize, Size } from "@labelbi
  *
  * @abstract
  */
-export default abstract class BaseCanvas {
+export default abstract class BaseCanvas extends fabric.Canvas {
     public gridSize: number = 8;
-
-    /**
-     * The Fabric.js canvas object.
-     * 
-     * @protected
-     * @type {fabric.Canvas}
-     */
-    private _canvas: fabric.Canvas;
-
-    public get canvas(): fabric.Canvas {
-        return this._canvas;
-    }
 
     /**
      * The clip path used to restrict the rendering of objects on the canvas.
@@ -29,65 +17,38 @@ export default abstract class BaseCanvas {
      * @protected
      * @type {fabric.Rect}
      */
-    protected labelArea: fabric.Rect;
+    protected get labelArea(): fabric.Rect {
+        // TODO: Throw an error if undefined
+        return this.clipPath! as fabric.Rect;
+    };
 
     /**
      * Creates a new design space and initializes the canvas.
      * It sets up the clip path, styles, event listeners, and renders the canvas.
      */
     constructor() {
-        this._canvas = new fabric.Canvas(`canvas`, {
-            fireRightClick: true,
-            fireMiddleClick: true,
-            stopContextMenu: true,
-        });
-        this.labelArea = createClipPath();
-        this.canvas.add(this.labelArea);
+        super('canvas', canvasDefaults);
 
-        this.styleCanvas();
-        this.resizeCanvas();
-        this.registerCanvasEvents();
-        this.canvas.renderAll();
+        this.clipPath = createClipPath({ width: 750, height: 375 });
+
+        this.matchViewport();
+        this.registerEvents();
+
+        this.renderAll();
 
         console.debug(`Canvas initialized.`);
     }
 
     /**
-     * Returns the size of the canvas.
-     * 
-     * @protected
-     * @type {Size}
-     * @returns {Size} The current size of the canvas.
+     * Calculates the nearest snap coordinate for the given single coordinate.
+     * Rounds the given coordinate to the nearest grid size multiple.
+     * @param {number} coord - The single coordinate to calculate the snap for.
+     * @returns {number} The nearest snap coordinate.
+     * @private
      */
-    protected get canvasSize(): Size {
-        return {
-            width: this.canvas.width,
-            height: this.canvas.height
-        };
-    }
+    private _calculateSnapCoord(coord: number): number {
 
-    /**
-     * Renders the clip path on the canvas.
-     * Sets the size and position of the clip path based on a fixed element size.
-     */
-    protected centerClip(): void {
-        const elementSize: Size = { width: 500, height: 250 }; // TODO: Get actual label size
-
-        this.centerObject(this.labelArea.set({
-            ...elementSize,
-            absolutePositioned: true
-        }));
-    }
-
-    /**
-     * Centers the specified object on the canvas.
-     * 
-     * @protected
-     * @param {fabric.Object} object - The object to center on the canvas.
-     */
-    protected centerObject(object: fabric.Object): void {
-        const center = calculateCenter(object, this.canvasSize);
-        object.set({ ...center }).setCoords();
+        return Math.round(coord / this.gridSize) * this.gridSize;
     }
 
     /**
@@ -96,36 +57,30 @@ export default abstract class BaseCanvas {
      * 
      * @protected
      */
-    protected registerCanvasEvents(): void {
-        window.addEventListener('resize', () => this.resizeCanvas());
+    protected registerEvents(): void {
 
-        this.canvas.on('object:moving', (e) => {
-            const obj = e.target;
-            obj.set({
-                top: Math.round(obj.top / this.gridSize) * this.gridSize,
-                left: Math.round(obj.left / this.gridSize) * this.gridSize,
-            });
-        });
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => this.matchViewport());
+
+        // Snap to grid
+        this.on('object:moving', (e) => e.target.set({
+            top: this._calculateSnapCoord(e.target.top),
+            left: this._calculateSnapCoord(e.target.left)
+        }));
+
+        console.debug(`Canvas events registered.`);
     }
 
     /**
-     * Resizes the canvas to fit the current viewport size.
-     * Also re-centers the clip path after resizing.
+     * Resize the canvas and center the label area.
      * 
      * @protected
      */
-    protected resizeCanvas(): void {
-        this.canvas.setDimensions(getViewportSize());
-        this.centerClip();
-    }
+    protected matchViewport(): void {
 
-    /**
-     * Styles the canvas.
-     * Sets the background color of the canvas to a light gray.
-     * 
-     * @protected
-     */
-    protected styleCanvas(): void {
-        this.canvas.backgroundColor = `rgb(209 213 219)`;
+        this.setDimensions(getViewportSize());
+        this.centerObject(this.labelArea);
+
+        console.debug(`Canvas matched to viewport.`);
     }
 }
