@@ -14,6 +14,7 @@ export function replaceSvg<T extends PluginGroup>(object: T, fabricSvg: FabricSv
 
     const { left, top, scaleX, scaleY, angle, flipX, flipY } = object;
 
+    object.scale(1);
     object.removeAll();
     object.add(...fabricSvg.objects);
 
