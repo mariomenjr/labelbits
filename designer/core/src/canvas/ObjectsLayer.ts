@@ -44,18 +44,32 @@ export default abstract class ObjectsLayer extends BaseCanvas {
      * @protected
      */
     protected preserveLayout(): void {
+
+        const activeSelection = this.getActiveObjects();
+
+        // Is there an active selection of more than one object?
+        if (activeSelection.length > 1) {
+
+            // If so, discard the active object
+            this.discardActiveObject();
+        }
+
+        // Get all objects except the label area
         const objects = this.getObjects().filter(f => f !== this.labelArea);
 
-        objects.forEach(o => {
-            const to = o as IPluginObject;
+        // Transform all objects relative to the label area
+        for (let i = 0; i < objects.length; i++) {
+            const o = objects[i] as IPluginObject;
 
-            if (to.relationship) {
+            // If the object has a relationship, transform it
+            if (o.relationship) {
 
                 const newTransform = fabric.util.multiplyTransformMatrices(
                     this.labelArea.calcTransformMatrix(),
-                    to.relationship
+                    o.relationship
                 );
 
+                // Decompose the new transform
                 const opt = fabric.util.qrDecompose(newTransform);
                 const point = new fabric.Point(opt.translateX, opt.translateY);
 
@@ -64,7 +78,14 @@ export default abstract class ObjectsLayer extends BaseCanvas {
                 o.set(opt);
                 o.setCoords();
             }
-        });
+        }
+
+        // If there was an active selection,
+        if (activeSelection.length > 1) {
+
+            // Restore the active selection
+            this.setActiveObject(new fabric.ActiveSelection([...activeSelection], { canvas: this }));
+        }
     }
 
     /**
