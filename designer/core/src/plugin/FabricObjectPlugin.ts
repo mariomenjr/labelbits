@@ -14,17 +14,9 @@ export default abstract class FabricObjectPlugin implements Plugin<PluginObjectA
      * 
      * @public
      * @type {string}
+     * @abstract
      */
-    public name: string;
-
-    /**
-     * Creates a new instance of the plugin with the specified name.
-     * 
-     * @param {string} name - The name of the plugin.
-     */
-    constructor(name: string) {
-        this.name = name;
-    }
+    public abstract name: string;
 
     /**
      * Creates a new object asynchronously.

@@ -9,6 +9,7 @@ import { QrcodeObject } from "./models";
  * @extends {FabricObjectPlugin}
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
+    public name: string = `qrcode`;
     /**
      * Creates a new QR code object asynchronously.
      * The object is created with the default value of the plugin.

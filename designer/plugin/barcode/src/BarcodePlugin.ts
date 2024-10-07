@@ -10,6 +10,8 @@ import { BarcodeObject } from "./models";
  * @extends {FabricObjectPlugin}
  */
 export default class BarcodePlugin extends FabricObjectPlugin {
+    public name: string = `barcode`;
+    
     /**
      * Creates a new barcode object asynchronously.
      * The object is created with the default value of the plugin.

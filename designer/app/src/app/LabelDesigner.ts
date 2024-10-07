@@ -5,7 +5,7 @@ import { FabricSelectionEventAction } from "@labelbits/designer-shared/fabric";
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
 
-import { loadPluginsAsync } from "../../labelbits.config";
+import config from "../../labelbits.config";
 
 /**
  * The LabelDesigner class represents the main label designer application.
@@ -25,19 +25,6 @@ export default class LabelDesigner extends InteractiveCanvas {
     protected plugins: FabricObjectPlugin[] = [];
 
     /**
-     * Creates an instance of LabelDesigner.
-     *
-     * @param {FabricObjectPlugin[]} plugins - The list of plugins registered in the label designer.
-     * @protected
-     */
-    protected constructor(plugins: FabricObjectPlugin[]) {
-        super();
-        this.plugins = plugins;
-        
-        console.debug(`LabelDesigner initialized.`);
-    }
-
-    /**
      * Creates a new instance of LabelDesigner with the specified plugins.
      *
      * @async
@@ -45,7 +32,27 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @returns {Promise<LabelDesigner>} A promise that resolves to a new instance of LabelDesigner.
      */
     public static async createAsync(): Promise<LabelDesigner> {
-        return new LabelDesigner(await loadPluginsAsync()); // Load plugins asynchronously
+        const ld = new LabelDesigner();
+        await ld.loadPluginsAsync();
+        return ld;
+    }
+
+    /**
+     * Loads the plugins registered in the label designer configuration.
+     * 
+     * This method is called internally by the constructor and should not be called directly.
+     * 
+     * @async
+     * @protected
+     * @returns {Promise<void>} A promise that resolves when all plugins are loaded.
+     */
+    protected async loadPluginsAsync(): Promise<void> {
+
+        // Load the plugins registered in the label designer configuration.
+        for (let i = 0; i < config.pluginLoaders.length; i++) {
+            this.plugins.push(new config.pluginLoaders[i]());
+        }
+        console.debug(`Label designer plugins loaded.`);
     }
 
     /**
@@ -53,7 +60,7 @@ export default class LabelDesigner extends InteractiveCanvas {
      *
      * @returns {Settings} The settings of the label designer.
      */
-    getSettings(): Settings {
+    public getSettings(): Settings {
         return new Settings((selectionHandler: FabricSelectionEventAction) => {
             /**
              * Attaches event listeners to the canvas for selection events.
@@ -74,7 +81,7 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @async
      * @returns {Promise<Toolbox>} A promise that resolves to a Toolbox object.
      */
-    async getToolboxAsync(): Promise<Toolbox> {
+    public async getToolboxAsync(): Promise<Toolbox> {
         /**
          * Get the actions from the plugins.
          * Actions are retrieved asynchronously using the getActionAsync method of each plugin.

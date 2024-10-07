@@ -1,47 +1,28 @@
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
 
-/**
- * This type alias defines a function that asynchronously loads a FabricObjectPlugin.
- */
-export type PluginLoader = () => Promise<FabricObjectPlugin>;
+import TextboxPlugin from "@labelbits/designer-plugin-textbox";
+import BarcodePlugin from "@labelbits/designer-plugin-barcode";
+import QrcodePlugin from "@labelbits/designer-plugin-qrcode";
+
+type PluginLoaderType = new (...args: never[]) => FabricObjectPlugin;
 
 /**
- * An array containing functions that asynchronously load FabricObjectPlugin implementations.
- * Each function imports a plugin module and returns a new instance of the plugin with a specified name.
+ * Labelbits configuration.
+ * This is the root configuration for the Labelbits application.
+ * It specifies the plugins to be used in the application.
  */
-const pluginLoaders: PluginLoader[] = [
+export default {
     /**
-     * Asynchronously loads the "text-plus" plugin from the "@labelbits/designer-plugin-textbox" package.
-     * @returns {Promise<FabricObjectPlugin>} A promise that resolves to the loaded plugin instance.
+     * The list of plugins to be used in the application.
+     * This list is used to load the plugins in the application.
+     * @type {PluginLoaderType[]} - The list of plugins to be used.
      */
-    async () => {
-        const { default: plugin } = await import("@labelbits/designer-plugin-textbox");
-        return new plugin("textbox");
-    },
-    /**
-     * Asynchronously loads the "barcode" plugin from the "@labelbits/designer-plugin-barcode" package.
-     * @returns {Promise<FabricObjectPlugin>} A promise that resolves to the loaded plugin instance.
-     */
-    async () => {
-        const { default: plugin } = await import("@labelbits/designer-plugin-barcode");
-        return new plugin("barcode");
-    },
-    /**
-     * Asynchronously loads the "qrcode-plus" plugin from the "@labelbits/designer-plugin-qrcode" package.
-     * @returns {Promise<FabricObjectPlugin>} A promise that resolves to the loaded plugin instance.
-     */
-    async () => {
-        const { default: plugin } = await import("@labelbits/designer-plugin-qrcode");
-        return new plugin("qrcode");
-    },
-]
+    pluginLoaders: [
+        TextboxPlugin,
+        BarcodePlugin,
+        QrcodePlugin,
 
-/**
- * This function asynchronously loads all the plugins defined in the `pluginLoaders` array.
- * It uses Promise.all to wait for all plugins to load and then returns an array containing the loaded plugins.
- * 
- * @returns {Promise<FabricObjectPlugin[]>} A promise that resolves to an array of loaded FabricObjectPlugin instances.
- */
-export async function loadPluginsAsync(): Promise<FabricObjectPlugin[]> {
-    return await Promise.all(pluginLoaders.map(async (p) => await p()));
-}
+        // Add more plugins here if needed
+    ] as PluginLoaderType[]
+};
+

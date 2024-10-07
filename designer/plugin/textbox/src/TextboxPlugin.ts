@@ -45,6 +45,8 @@ fabric.classRegistry.setClass(TextboxObject);
  * @extends {FabricObjectPlugin}
  */
 export default class TextboxPlugin extends FabricObjectPlugin {
+    public name: string = `textbox`;
+    
     /**
      * Creates a new textbox object asynchronously.
      * The object is created with the default value of the plugin.
