@@ -32,6 +32,21 @@ export default class App {
          */
         Alpine.data(`toolbox`, () => toolbox);
 
+        Alpine.data(`zoom`, () => {
+            return {
+                max: 5,
+                min: 0.01,
+                step: 0.01,
+
+                get value(): number {
+                    return labelDesigner.getZoom();
+                },
+                set value(v: number) {
+                    labelDesigner.zoomToPoint(labelDesigner.getCenterPoint(), v);
+                }
+            };
+        });
+
         /**
          * Registers the Settings instance as an Alpine.js component.
          * The Settings instance is made available to all Alpine.js contexts.

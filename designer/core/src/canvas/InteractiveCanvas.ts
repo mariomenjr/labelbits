@@ -76,7 +76,6 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
      */
     private _registerOnDrag(): void {
         this.on('mouse:down', (opt) => {
-            // const evt = opt.e as CanvasPointerEvent;
             if (opt.e.ctrlKey === true) {
 
                 this.isDragging = true;
@@ -84,8 +83,6 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
 
                 this.lastPosX = opt.viewportPoint.x;
                 this.lastPosY = opt.viewportPoint.y;
-                // this.lastPosX = evt.clientX;
-                // this.lastPosY = evt.clientY;
             }
         });
 
