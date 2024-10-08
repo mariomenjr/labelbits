@@ -24,7 +24,7 @@
         <canvas id="canvas" class="z-0 shadow-inner"></canvas>
 
         <template x-if="toggled">
-            <div :style="{ top: `${y}px`, left: `${x}px` }" @contextmenu.prevent @click.away="hide" x-transition class="absolute bg-white shadow-lg border border-gray-200 w-48 z-50 p-0 text-sm">
+            <div :style="{ top: `${y}px`, left: `${x}px` }" @contextmenu.prevent @click.away="hide" x-transition class="absolute bg-white shadow-lg border border-gray-200 w-36 z-50 p-0 text-sm">
                 <ul class="m-0 p-0">
                     <template x-for="option in options" :key="option.label">
                         <li @click="option.onClick()" class="p-2 hover:bg-gray-200 cursor-pointer">
