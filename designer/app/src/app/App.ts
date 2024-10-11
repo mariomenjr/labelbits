@@ -229,6 +229,18 @@ export default class App {
             };
         });
 
+        /**
+         * Applies the `position` directive to the given element.
+         * The directive sets the `top` and `left` CSS properties to the `x` and `y` properties of the `x-data` directive.
+         * 
+         */
+        Alpine.directive("position", (el, { expression }, { evaluate }) => {
+            const v = evaluate<{x: number, y: number}>(expression);
+
+            el.style.top = `${v.y}px`;
+            el.style.left = `${v.x}px`;
+        });
+
         // Start the Alpine.js application
         Alpine.start();
     }
