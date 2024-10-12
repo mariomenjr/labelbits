@@ -1,6 +1,7 @@
 import * as fabric from "fabric";
 
 import ObjectsLayer from "./ObjectsLayer";
+import { SelectionEventAction, SelectionEventCallback } from "@labelbits/designer-shared/fabric";
 
 /** 
  * The InteractiveCanvas class extends the ObjectsLayer class
@@ -10,6 +11,7 @@ import ObjectsLayer from "./ObjectsLayer";
  * @extends ObjectsLayer
 */
 export default abstract class InteractiveCanvas extends ObjectsLayer {
+    
     /**
      * Indicates whether a drag operation is currently in progress.
      * @type {boolean}
@@ -29,6 +31,26 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
     public lastPosY: number = 0;
 
     /**
+     * Attaches event listeners to the canvas for selection events.
+     * The selection events are used to update the settings of the label designer.
+     * 
+     * @param {SelectionEventCallback} selectionAction - The callback function to be called when a selection event occurs.
+     * @returns {void}
+     * @see SelectionEventCallback
+     */
+    public readonly selectionHandler: SelectionEventCallback = (selectionAction: SelectionEventAction): void => {
+        /**
+         * Attaches event listeners to the canvas for selection events.
+         * The selection events are used to update the settings of the label designer.
+         */
+        this.on("selection:created", selectionAction);
+        this.on("selection:updated", selectionAction);
+        this.on("selection:cleared", selectionAction);
+
+        console.debug(`Selection event listener attached.`);
+    };
+
+    /**
      * Registers canvas events for the InteractiveCanvas class.
      * This method overrides the base class method to include scroll and drag events.
      * 
@@ -38,18 +60,18 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
     protected registerEvents(): void {
         super.registerEvents();
 
-        this._registerOnDrag();
-        this._registerOnScroll();
+        this.registerOnDrag();
+        this.registerOnScroll();
     }
-
+    
     /**
-     * Registers a mouse:wheel event handler to zoom the canvas.
-     * When the user scrolls the mouse wheel while holding the Ctrl key,
-     * the canvas is zoomed in or out.
+     * Registers an event listener for the 'mouse:wheel' event.
+     * If the CTRL key is pressed, the canvas is zoomed in or out based on the wheel delta.
+     * The zoom operation is centered at the mouse position.
      * 
-     * @private
+     * @protected
      */
-    private _registerOnScroll(): void {
+    protected registerOnScroll(): void {
         this.on('mouse:wheel', (opt) => {
             if (!opt.e.ctrlKey) return;
 
@@ -65,16 +87,14 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
         });
     }
 
-
     /**
-     * Registers a mouse:down event handler to enable dragging of the canvas.
-     * If the user holds the Ctrl key and clicks, the canvas is set to a dragging mode.
-     * In this mode, moving the mouse will pan the canvas.
-     * Clicking again will exit the dragging mode and re-enable object selection.
+     * Registers an event listener for the 'mouse:down', 'mouse:move' and 'mouse:up' events.
+     * If the CTRL key is pressed, the canvas is dragged horizontally and vertically.
+     * The dragging operation is centered at the mouse position.
      * 
-     * @private
+     * @protected
      */
-    private _registerOnDrag(): void {
+    protected registerOnDrag(): void {
         this.on('mouse:down', (opt) => {
             if (opt.e.ctrlKey === true) {
 

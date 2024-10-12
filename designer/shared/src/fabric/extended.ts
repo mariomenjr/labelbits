@@ -18,16 +18,16 @@ export type SelectionEvent = Partial<fabric.TEvent<fabric.TPointerEvent>> & {
     /**
      * The array of selected fabric objects.
      * 
-     * @type {fabric.Object[]}
+     * @type {IPluginObject[]}
      */
-    selected: fabric.Object[],
+    selected: IPluginObject[],
 
     /**
      * The array of deselected fabric objects.
      * 
-     * @type {fabric.Object[]}
+     * @type {IPluginObject[]}
      */
-    deselected: fabric.Object[]
+    deselected: IPluginObject[]
 };
 
 /**

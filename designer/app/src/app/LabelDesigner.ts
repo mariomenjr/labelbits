@@ -1,6 +1,5 @@
 import InteractiveCanvas from "@labelbits/designer-core/canvas";
 import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
-import { FabricSelectionEventAction } from "@labelbits/designer-shared/fabric";
 
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
@@ -22,7 +21,20 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @type {FabricObjectPlugin[]}
      * @protected
      */
-    protected plugins: FabricObjectPlugin[] = [];
+    protected readonly plugins: FabricObjectPlugin[] = [];
+
+    /**
+     * The toolbox instance.
+     * 
+     * @type {Toolbox}
+     */
+    public readonly toolbox: Toolbox = new Toolbox();
+    /**
+     * The settings instance.
+     * 
+     * @type {Settings}
+     */
+    public readonly settings: Settings = new Settings();
 
     /**
      * Creates a new instance of LabelDesigner with the specified plugins.
@@ -33,7 +45,11 @@ export default class LabelDesigner extends InteractiveCanvas {
      */
     public static async createAsync(): Promise<LabelDesigner> {
         const ld = new LabelDesigner();
+
         await ld.loadPluginsAsync();
+        await ld.loadToolboxAsync();
+
+        console.debug(`Label designer created.`);
         return ld;
     }
 
@@ -56,32 +72,13 @@ export default class LabelDesigner extends InteractiveCanvas {
     }
 
     /**
-     * Retrieves the settings of the label designer.
-     *
-     * @returns {Settings} The settings of the label designer.
-     */
-    public getSettings(): Settings {
-        return new Settings((selectionHandler: FabricSelectionEventAction) => {
-            /**
-             * Attaches event listeners to the canvas for selection events.
-             * The selection events are used to update the settings of the label designer.
-             */
-            this.on("selection:created", selectionHandler);
-            this.on("selection:updated", selectionHandler);
-            this.on("selection:cleared", selectionHandler);
-
-            console.debug(`Selection event listener attached.`);
-        });
-    }
-
-    /**
      * Retrieves the toolbox of the label designer.
      * The toolbox provides actions for manipulating the canvas objects.
      *
      * @async
-     * @returns {Promise<Toolbox>} A promise that resolves to a Toolbox object.
+     * @returns {Promise<void>} A promise that resolves to a Toolbox object.
      */
-    public async getToolboxAsync(): Promise<Toolbox> {
+    public async loadToolboxAsync(): Promise<void> {
         /**
          * Get the actions from the plugins.
          * Actions are retrieved asynchronously using the getActionAsync method of each plugin.
@@ -94,8 +91,11 @@ export default class LabelDesigner extends InteractiveCanvas {
         const actions = await Promise.all(actionsAsync);
 
         /**
-         * Create a new Toolbox instance with the retrieved actions.
+         * Add the actions to the toolbox.
+         * The actions are added asynchronously using the push method of the toolbox.
          */
-        return new Toolbox(...actions);
+        this.toolbox.push(...actions);
+
+        console.debug(`Label designer toolbox loaded.`);
     }
 }

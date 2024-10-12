@@ -1,6 +1,5 @@
-import { Collection } from "@labelbits/designer-shared";
 import { Setting } from "@labelbits/designer-shared/setting";
-import { FabricSelectionEventCallback, IPluginObject, SelectionEvent } from "@labelbits/designer-shared/fabric";
+import { SelectionEventCallback, SelectionEvent } from "@labelbits/designer-shared/fabric";
 
 /**
  * Represents a collection of settings for the label designer.
@@ -8,51 +7,19 @@ import { FabricSelectionEventCallback, IPluginObject, SelectionEvent } from "@la
  *
  * @extends {Collection<Setting>}
  */
-export default class Settings extends Collection<Setting> {
-    /**
-     * Indicates whether there is a selection.
-     * 
-     * @type {boolean}
-     */
-    public hasSelection: boolean = false;
-    /**
-     * A callback function that sets the selection event handler.
-     * 
-     * The handler is called with the selected fabric object and the settings collection refills
-     * itself with the settings derived from the selected object.
-     * 
-     * @type {FabricSelectionEventCallback}
-     * @protected
-     */
-    protected setSettingsRefiller: FabricSelectionEventCallback;
-
-    /**
-     * Initializes the settings collection.
-     * 
-     * @param {FabricSelectionEventCallback} setSelectionHandler - A callback function that sets the selection event handler.
-     * The handler is called with the selected fabric object and the settings collection refills
-     * itself with the settings derived from the selected object.
-     */
-    constructor(setSelectionHandler: FabricSelectionEventCallback) {
-        super();
-        this.setSettingsRefiller = setSelectionHandler;
-
-        console.debug(`Settings initialized.`);
-    }
-
+export default class Settings extends Array<Setting> {
     /**
      * Starts the settings collection by attaching the selection event handler.
      * 
      * @returns {Settings} The settings collection itself.
      */
-    public start(): Settings {
+    public init(setRefiller: SelectionEventCallback): void {
         /**
          * A callback function that is called when a selection event occurs.
          * 
          * @param {SelectionEvent} e - The selection event object.
          */
-        this.setSettingsRefiller(e => this.refillSettings(e));
-        return this;
+        setRefiller(e => this.refill(e));
     }
 
     /**
@@ -62,20 +29,14 @@ export default class Settings extends Collection<Setting> {
      * 
      * @param {SelectionEvent} e - The selection event object that contains information about the event.
      */
-    protected refillSettings(e: SelectionEvent): void {
+    protected refill(e: SelectionEvent): void {
         // Clear the collection
         this.length = 0;
 
-        // Set the selection state based on the number of selected objects
-        this.hasSelection = e.selected?.length === 1;
-
-        // If no object is selected, return
-        if (!this.hasSelection) return;
+        // If there is no selection, return
+        if (e.selected?.length !== 1) return;
         
-        // Get and add the settings from the selected object
-        const object = e.selected[0] as IPluginObject;
-
         // Add the settings from the selected object
-        this.push(...object.getSettings());
+        this.push(...e.selected[0].getSettings());
     }
 }

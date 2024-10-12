@@ -1,11 +1,11 @@
-import { Action, Collection } from "@labelbits/designer-shared";
+import { Action } from "@labelbits/designer-shared";
 
 /**
  * Represents a collection of actions that can be used in the toolbox.
  * It extends the Collection class and provides a constructor to initialize the toolbox.
  * @extends {Collection<Action>}
  */
-export default class Toolbox extends Collection<Action> {
+export default class Toolbox extends Array<Action> {
 
     /**
      * Constructs a new Toolbox instance.

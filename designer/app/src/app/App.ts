@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import * as fabric from "fabric";
 
-import { IPluginObject, PluginObjectAction } from "@labelbits/designer-shared/fabric";
+import { IPluginObject, PluginObjectAction, Position } from "@labelbits/designer-shared/fabric";
 
 import LabelDesigner from "./LabelDesigner";
 
@@ -23,16 +23,13 @@ export default class App {
         // Create an instance of the LabelDesigner asynchronously
         const labelDesigner = await LabelDesigner.createAsync();
 
-        // Retrieve the Toolbox instance asynchronously
-        const toolbox = await labelDesigner.getToolboxAsync();
-
         /**
          * Registers the Toolbox instance as an Alpine.js component.
          * The component is made available to all Alpine.js contexts.
          */
-        Alpine.data(`toolbox`, () => toolbox);
+        Alpine.data(`toolbox`, () => ({ data: labelDesigner.toolbox }));
 
-        Alpine.data(`zoom`, () => {
+        Alpine.data(`slider`, () => {
             return {
                 max: 5,
                 min: 0.01,
@@ -53,25 +50,26 @@ export default class App {
          * 
          * @returns {Object} The Alpine.js component data object for settings.
          */
-        Alpine.data(`settings`, () => {
-            return {
-                /**
-                 * The Settings instance.
-                 * 
-                 * @type {Settings}
-                 */
-                data: labelDesigner.getSettings(),
+        Alpine.data(`settings`, () => ({
+            /**
+             * The Settings instance.
+             * 
+             * @type {Settings}
+             */
+            data: labelDesigner.settings,
 
-                /**
-                 * Initializes the component data.
-                 * This function is automatically called by Alpine.js when the component is initialized.
-                 * It starts the Settings instance.
-                 */
-                init(): void {
-                    this.data.start();
-                },
-            };
-        });
+            /**
+             * Initializes the component data.
+             * This function is automatically called by Alpine.js when the component is initialized.
+             * It starts the Settings instance by calling its init() method.
+             * 
+             * Note: We need to call init() on the Settings instance that's already been
+             * wrapped by Alpine's reactivity system. Otherwise, reactivity doesn't work.
+             */
+            init(): void {
+                this.data.init(labelDesigner.selectionHandler);
+            },
+        }));
 
         /**
          * Registers the ContextMenu instance as an Alpine.js component.
@@ -86,14 +84,13 @@ export default class App {
                  * 
                  * @type {number}
                  */
-                x: 0,
-
+                left: 0,
                 /**
                  * The y-coordinate of the context menu.
                  * 
                  * @type {number}
                  */
-                y: 0,
+                top: 0,
 
                 /**
                  * The uid of the target object that was right-clicked or the active object if no object was right-clicked.
@@ -198,13 +195,13 @@ export default class App {
                  * that represents the number of selected objects.
                  * Otherwise, it sets the context menu's uid to the target object's uid.
                  * 
-                 * @param {fabric.TPointerEventInfo<fabric.TPointerEvent>} event - The event that triggered the context menu.
+                 * @param {fabric.TPointerEventInfo} event - The event that triggered the context menu.
                  * @param {IPluginObject} target - The target object that was right-clicked or the active object if no object was right-clicked.
                  * @returns {void}
                  */
-                show(event: fabric.TPointerEventInfo<fabric.TPointerEvent>, target: IPluginObject): void {
-                    this.x = event.pointer.x;
-                    this.y = event.pointer.y;
+                show(event: fabric.TPointerEventInfo, target: IPluginObject): void {
+                    this.left = event.pointer.x;
+                    this.top = event.pointer.y;
 
                     this.toggled = true;
 
@@ -235,10 +232,10 @@ export default class App {
          * 
          */
         Alpine.directive("position", (el, { expression }, { evaluate }) => {
-            const v = evaluate<{x: number, y: number}>(expression);
+            const v = evaluate<Position>(expression);
 
-            el.style.top = `${v.y}px`;
-            el.style.left = `${v.x}px`;
+            el.style.top = `${v.top}px`;
+            el.style.left = `${v.left}px`;
         });
 
         // Start the Alpine.js application

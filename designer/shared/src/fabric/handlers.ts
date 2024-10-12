@@ -14,16 +14,16 @@ export type PluginObjectAction = (object: IPluginObject) => void;
  * @param {SelectionEvent} selectionEvent - The selection event object that contains information about the event.
  * @returns {void}
  */
-export type FabricSelectionEventAction = (selectionEvent: SelectionEvent) => void;
+export type SelectionEventAction = (selectionEvent: SelectionEvent) => void;
 
 /**
  * Represents a callback function that takes a `FabricSelectionEventHandler` as an argument and returns void.
  * This type is used to pass a fabric selection event handler to other functions or components.
  * 
- * @param {FabricSelectionEventAction} selectionEventHandler - The fabric selection event handler function.
+ * @param {SelectionEventAction} selectionEventHandler - The fabric selection event handler function.
  * @returns {void}
  */
-export type FabricSelectionEventCallback = (selectionEventHandler: FabricSelectionEventAction) => void;
+export type SelectionEventCallback = (selectionEventHandler: SelectionEventAction) => void;
 
 /**
  * Represents an asynchronous handler function for a plugin object.
