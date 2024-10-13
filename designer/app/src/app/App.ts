@@ -29,20 +29,19 @@ export default class App {
          */
         Alpine.data(`toolbox`, () => ({ data: labelDesigner.toolbox }));
 
-        Alpine.data(`slider`, () => {
-            return {
-                max: 5,
-                min: 0.01,
-                step: 0.01,
-
-                get value(): number {
-                    return labelDesigner.getZoom();
-                },
-                set value(v: number) {
-                    labelDesigner.zoomToPoint(labelDesigner.getCenterPoint(), v);
-                }
-            };
-        });
+        Alpine.data(`slider`, () => ({
+            data: labelDesigner.slider,
+            init(): void {
+                this.data.init({
+                    get: () => labelDesigner.getZoom(),
+                    set: (v: number) => labelDesigner.zoomToCenter(v),
+                    on: (v) => {
+                        const ref = this.$refs.slider as HTMLInputElement;
+                        ref.value = v.toString();
+                    }
+                });
+            }
+        }));
 
         /**
          * Registers the Settings instance as an Alpine.js component.

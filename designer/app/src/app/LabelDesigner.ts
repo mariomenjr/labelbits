@@ -45,7 +45,7 @@ export default class LabelDesigner extends InteractiveCanvas {
      */
     public static async createAsync(): Promise<LabelDesigner> {
         const ld = new LabelDesigner();
-
+        
         await ld.loadPluginsAsync();
         await ld.loadToolboxAsync();
 
@@ -63,7 +63,6 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @returns {Promise<void>} A promise that resolves when all plugins are loaded.
      */
     protected async loadPluginsAsync(): Promise<void> {
-
         // Load the plugins registered in the label designer configuration.
         for (let i = 0; i < config.pluginLoaders.length; i++) {
             this.plugins.push(new config.pluginLoaders[i]());

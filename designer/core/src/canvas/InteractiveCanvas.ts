@@ -3,6 +3,38 @@ import * as fabric from "fabric";
 import ObjectsLayer from "./ObjectsLayer";
 import { SelectionEventAction, SelectionEventCallback } from "@labelbits/designer-shared/fabric";
 
+export type SliderHandler = {
+    get: () => number,
+    set: (v: number) => void,
+    on: (v: number) => void
+};
+
+export class Slider {
+    public max: number = 5;
+    public min: number = 0.01;
+    public step: number = 0.01;
+    public on: ((v: number) => void) | null = null;
+
+    protected getZoom: (() => number) | null = null;
+    protected setZoom: ((v: number) => void) | null = null;
+
+    get value(): number {
+        if (!this.getZoom) throw new Error('Zoom not initialized');
+        return this.getZoom!();
+    }
+
+    set value(v: number) {
+        if (!this.setZoom) throw new Error('Zoom not initialized');
+        this.setZoom!(v);
+    }
+
+    public init(sliderHandler: SliderHandler): void {
+        this.getZoom = sliderHandler.get;
+        this.setZoom = sliderHandler.set;
+        this.on = sliderHandler.on;
+    }
+}
+
 /** 
  * The InteractiveCanvas class extends the ObjectsLayer class
  * and provides additional methods for handling mouse events.
@@ -11,7 +43,9 @@ import { SelectionEventAction, SelectionEventCallback } from "@labelbits/designe
  * @extends ObjectsLayer
 */
 export default abstract class InteractiveCanvas extends ObjectsLayer {
-    
+
+    public readonly slider: Slider = new Slider();
+
     /**
      * Indicates whether a drag operation is currently in progress.
      * @type {boolean}
@@ -63,7 +97,7 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
         this.registerOnDrag();
         this.registerOnScroll();
     }
-    
+
     /**
      * Registers an event listener for the 'mouse:wheel' event.
      * If the CTRL key is pressed, the canvas is zoomed in or out based on the wheel delta.
@@ -79,6 +113,7 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
             const point = new fabric.Point(opt.e.offsetX, opt.e.offsetY);
 
             this.zoomToPoint(point, zoom);
+            this.slider.on?.(zoom);
 
             opt.e.preventDefault();
             opt.e.stopPropagation();
@@ -144,5 +179,14 @@ export default abstract class InteractiveCanvas extends ObjectsLayer {
     protected computeZoom(delta: number): number {
         const zoom = this.getZoom() * (1 - 0.001 * delta);
         return Math.max(0.01, Math.min(20, zoom));
+    }
+
+    /**
+     * Zooms the canvas to the given zoom level centered at the current canvas center.
+     * 
+     * @param {number} value - The new zoom level.
+     */
+    public zoomToCenter(value: number): void {
+        this.zoomToPoint(this.getCenterPoint(), value);
     }
 }

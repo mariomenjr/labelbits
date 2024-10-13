@@ -45,7 +45,7 @@
 
         <!-- zoom slider -->
         <div x-data="slider" class="z-10 absolute bottom-5 left-5 mx-auto p-4">
-            <input :min="min" :max="max" :step="step" type="range" x-model.number="value"
+            <input x-ref="slider" :min="data.min" :max="data.max" :step="data.step" type="range" x-model.number="data.value"
                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
         </div>
 
