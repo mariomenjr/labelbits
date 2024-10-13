@@ -13,3 +13,5 @@ export type VoidHandler = () => void;
  * @returns {Promise<void>} A promise that resolves to void when the asynchronous operation is complete.
  */
 export type VoidHandlerAsync = () => Promise<void>;
+
+export type GenericHandler<T> = () => T;
