@@ -1,13 +1,17 @@
 import Alpine from "alpinejs";
 import * as fabric from "fabric";
 
+import LabelDesigner from "@labelbits/designer-core";
 import { IPluginObject, PluginObjectAction, Position } from "@labelbits/designer-shared/fabric";
 
-import LabelDesigner from "./LabelDesigner";
+import config from "../../labelbits.config";
 
 /**
- * Represents the main application class.
- * Provides a static method to initialize and start the Alpine.js application.
+ * The main application class.
+ * This class is responsible for starting the application, and registering the components that are used in the application.
+ * 
+ * @see https://alpinejs.dev
+ * @class
  */
 export default class App {
     /**
@@ -21,7 +25,7 @@ export default class App {
      */
     static async start(): Promise<void> {
         // Create an instance of the LabelDesigner asynchronously
-        const labelDesigner = await LabelDesigner.createAsync();
+        const labelDesigner = await LabelDesigner.createAsync(config);
 
         /**
          * Registers the Toolbox instance as an Alpine.js component.
@@ -29,13 +33,36 @@ export default class App {
          */
         Alpine.data(`toolbox`, () => ({ data: labelDesigner.toolbox }));
 
+        /**
+         * Registers the Slider instance as an Alpine.js component.
+         * The component is made available to all Alpine.js contexts.
+         */
         Alpine.data(`slider`, () => ({
+            /**
+             * The Slider instance.
+             * 
+             * @type {Slider}
+             */
             data: labelDesigner.slider,
+
+            /**
+             * Initializes the slider component.
+             * 
+             * It sets up a bridge to handle the `input` event of the HTML input element.
+             * The bridge is used to keep the HTML input element in sync with the zoom level of the LabelDesigner.
+             * When the user changes the value of the HTML input element, the bridge sets the zoom level of the LabelDesigner.
+             * When the zoom level of the LabelDesigner changes, the bridge updates the value of the HTML input element.
+             */
             init(): void {
-                this.data.init({
+                this.data.bridge({
                     get: () => labelDesigner.getZoom(),
                     set: (v: number) => labelDesigner.zoomToCenter(v),
-                    on: (v) => {
+                    /**
+                     * Sets the value of the HTML input element when the zoom level of the LabelDesigner changes.
+                     * 
+                     * @param {number} v - The new zoom level of the LabelDesigner.
+                     */
+                    on: (v: number) => {
                         const ref = this.$refs.slider as HTMLInputElement;
                         ref.value = v.toString();
                     }
@@ -46,8 +73,6 @@ export default class App {
         /**
          * Registers the Settings instance as an Alpine.js component.
          * The Settings instance is made available to all Alpine.js contexts.
-         * 
-         * @returns {Object} The Alpine.js component data object for settings.
          */
         Alpine.data(`settings`, () => ({
             /**
@@ -58,23 +83,22 @@ export default class App {
             data: labelDesigner.settings,
 
             /**
-             * Initializes the component data.
-             * This function is automatically called by Alpine.js when the component is initialized.
-             * It starts the Settings instance by calling its init() method.
+             * Initializes the settings component.
+             * It sets up the bridge to get the selection handler from the label designer.
              * 
              * Note: We need to call init() on the Settings instance that's already been
              * wrapped by Alpine's reactivity system. Otherwise, reactivity doesn't work.
              */
             init(): void {
-                this.data.init(labelDesigner.selectionHandler);
+                this.data.bridge({
+                    get: () => labelDesigner.selectionHandler
+                });
             },
         }));
 
         /**
          * Registers the ContextMenu instance as an Alpine.js component.
          * The ContextMenu instance is made available to all Alpine.js contexts.
-         * 
-         * @returns {Object} The Alpine.js component data object for the context menu.
          */
         Alpine.data('contextmenu', () => {
             return {
@@ -166,10 +190,11 @@ export default class App {
                     this.hide();
                 },
                 /**
-                 * Initializes the context menu event listener.
-                 * When the user right-clicks on the canvas, it shows the context menu.
-                 * When the user left-clicks on the canvas, it hides the context menu.
-                 * 
+                 * Initializes the context menu event handler.
+                 * It listens for the `mouse:down` event on the label designer.
+                 * When the event is triggered, it checks if the right mouse button is clicked (button 2).
+                 * If yes, it shows the context menu at the position of the event with the currently selected object.
+                 * If no, it hides the context menu.
                  * @returns {void}
                  */
                 init(): void {
@@ -226,9 +251,8 @@ export default class App {
         });
 
         /**
-         * Applies the `position` directive to the given element.
-         * The directive sets the `top` and `left` CSS properties to the `x` and `y` properties of the `x-data` directive.
-         * 
+         * Applies the `position` directive to the Alpine.js application.
+         * It sets the top and left CSS properties of the element to the position object's top and left properties.
          */
         Alpine.directive("position", (el, { expression }, { evaluate }) => {
             const v = evaluate<Position>(expression);

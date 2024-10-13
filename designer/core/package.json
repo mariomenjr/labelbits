@@ -3,13 +3,13 @@
     "version": "0.0.0",
     "private": true,
     "exports": {
-        "./canvas": {
-            "types": "./dist/src/canvas/InteractiveCanvas.d.ts",
-            "import": "./dist/src/canvas/InteractiveCanvas.js"
+        ".": {
+            "types": "./dist/src/app/LabelDesigner.d.ts",
+            "import": "./dist/src/app/LabelDesigner.js"
         },
-        "./plugin": {
-            "types": "./dist/src/plugin/index.d.ts",
-            "import": "./dist/src/plugin/index.js"
+        "./models": {
+            "types": "./dist/src/models/index.d.ts",
+            "import": "./dist/src/models/index.js"
         }
     },
     "scripts": {

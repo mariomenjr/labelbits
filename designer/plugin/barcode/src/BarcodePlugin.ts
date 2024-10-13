@@ -1,4 +1,4 @@
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/models";
 
 import { generateBarcodeAsync, getDefaults } from "./utils";
 import { BarcodeObject } from "./models";

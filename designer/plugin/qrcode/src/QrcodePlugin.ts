@@ -1,4 +1,4 @@
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
+import { FabricObjectPlugin } from "@labelbits/designer-core/models";
 
 import { generateQrcodeAsync, getDefaults } from "./utils";
 import { QrcodeObject } from "./models";

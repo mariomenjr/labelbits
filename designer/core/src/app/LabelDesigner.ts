@@ -1,10 +1,9 @@
-import InteractiveCanvas from "@labelbits/designer-core/canvas";
-import { FabricObjectPlugin } from "@labelbits/designer-core/plugin";
+import InteractiveCanvas from "../bases/InteractiveCanvas";
 
 import Settings from "./Settings";
 import Toolbox from "./Toolbox";
 
-import config from "../../labelbits.config";
+import { DesignerConfig, FabricObjectPlugin, PluginLoader } from "../models";
 
 /**
  * The LabelDesigner class represents the main label designer application.
@@ -43,10 +42,10 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @static
      * @returns {Promise<LabelDesigner>} A promise that resolves to a new instance of LabelDesigner.
      */
-    public static async createAsync(): Promise<LabelDesigner> {
+    public static async createAsync(config: DesignerConfig): Promise<LabelDesigner> {
         const ld = new LabelDesigner();
         
-        await ld.loadPluginsAsync();
+        await ld.loadPluginsAsync(config.pluginLoaders);
         await ld.loadToolboxAsync();
 
         console.debug(`Label designer created.`);
@@ -62,10 +61,10 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @protected
      * @returns {Promise<void>} A promise that resolves when all plugins are loaded.
      */
-    protected async loadPluginsAsync(): Promise<void> {
+    protected async loadPluginsAsync(pluginLoaders: PluginLoader[]): Promise<void> {
         // Load the plugins registered in the label designer configuration.
-        for (let i = 0; i < config.pluginLoaders.length; i++) {
-            this.plugins.push(new config.pluginLoaders[i]());
+        for (let i = 0; i < pluginLoaders.length; i++) {
+            this.plugins.push(new pluginLoaders[i]());
         }
         console.debug(`Label designer plugins loaded.`);
     }

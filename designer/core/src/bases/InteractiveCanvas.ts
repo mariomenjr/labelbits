@@ -1,39 +1,8 @@
 import * as fabric from "fabric";
-
-import ObjectsLayer from "./ObjectsLayer";
 import { SelectionEventAction, SelectionEventCallback } from "@labelbits/designer-shared/fabric";
 
-export type SliderHandler = {
-    get: () => number,
-    set: (v: number) => void,
-    on: (v: number) => void
-};
-
-export class Slider {
-    public max: number = 5;
-    public min: number = 0.01;
-    public step: number = 0.01;
-    public on: ((v: number) => void) | null = null;
-
-    protected getZoom: (() => number) | null = null;
-    protected setZoom: ((v: number) => void) | null = null;
-
-    get value(): number {
-        if (!this.getZoom) throw new Error('Zoom not initialized');
-        return this.getZoom!();
-    }
-
-    set value(v: number) {
-        if (!this.setZoom) throw new Error('Zoom not initialized');
-        this.setZoom!(v);
-    }
-
-    public init(sliderHandler: SliderHandler): void {
-        this.getZoom = sliderHandler.get;
-        this.setZoom = sliderHandler.set;
-        this.on = sliderHandler.on;
-    }
-}
+import ObjectsLayer from "./ObjectsLayer";
+import { Slider } from "../app/Slider";
 
 /** 
  * The InteractiveCanvas class extends the ObjectsLayer class
