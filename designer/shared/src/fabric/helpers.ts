@@ -1,6 +1,6 @@
 import * as fabric from "fabric";
 import { FabricSvg } from "./models";
-import { PluginGroup, PluginOptions } from ".";
+import { PluginSvg, PluginOptions } from ".";
 
 /**
  * Replaces the contents of the specified object with the contents of the specified fabric SVG.
@@ -10,7 +10,7 @@ import { PluginGroup, PluginOptions } from ".";
  * @param {FabricSvg} fabricSvg - The fabric SVG object to be used as the replacement.
  * @returns {T} The replaced object.
  */
-export function replaceSvg<T extends PluginGroup>(object: T, fabricSvg: FabricSvg): T {
+export function replaceSvg<T extends PluginSvg>(object: T, fabricSvg: FabricSvg): T {
 
     const { left, top, scaleX, scaleY, angle, flipX, flipY } = object;
 

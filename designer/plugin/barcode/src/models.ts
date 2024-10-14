@@ -1,16 +1,17 @@
 import { classRegistry } from "fabric";
 
 import { SettingProp } from "@labelbits/designer-shared/setting";
-import { FabricSvg, PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
+import { PluginSvg, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
 
 import { generateBarcodeAsync, getDefaults } from "./utils";
 
 /**
  * Represents a barcode object in the Fabric.js library.
- * This class extends the PluginGroup class and provides an implementation for updating the object
+ * This class extends the PluginSvg class and provides an implementation for updating the object
  * when the content of the barcode is changed.
+ * @extends {PluginSvg}
  */
-export class BarcodeObject extends PluginGroup {
+export class BarcodeObject extends PluginSvg {
     /**
      * The type of object that this represents.
      * This is a string that is used to identify the type of object.

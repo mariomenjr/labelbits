@@ -1,16 +1,16 @@
 import { classRegistry } from "fabric";
 
-import { PluginGroup, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
+import { PluginSvg, PluginOptions, replaceSvg, FabricSvg } from "@labelbits/designer-shared/fabric";
 import { SettingProp } from "@labelbits/designer-shared/setting";
 
 import { generateQrcodeAsync, getDefaults } from "./utils";
 
 /**
  * QrcodeObject class represents a Fabric.js object that is generated from a QR code SVG string.
- * It extends the PluginGroup class and provides an implementation for the updateObjectAsync method.
- * @extends {PluginGroup}
+ * It extends the PluginSvg class and provides an implementation for the updateObjectAsync method.
+ * @extends {PluginSvg}
  */
-export class QrcodeObject extends PluginGroup {
+export class QrcodeObject extends PluginSvg {
 
     /**
      * The type of the object.

@@ -168,12 +168,12 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
 }
 
 /**
- * PluginGroup class represents a group of fabric objects that is generated from an SVG string.
+ * PluginSvg class represents a group of fabric objects that is generated from an SVG string.
  * It extends the fabric.Group class and provides an implementation for the updateObjectAsync method.
  * 
  * @extends {fabric.Group}
  */
-export abstract class PluginGroup extends fabric.Group implements IPluginObject { // TODO: How to extend it from PluginMixin?
+export abstract class PluginSvg extends fabric.Group implements IPluginObject { // TODO: How to extend it from PluginMixin?
 
     /**
      * The type of the plugin object.
@@ -221,9 +221,9 @@ export abstract class PluginGroup extends fabric.Group implements IPluginObject 
      * @async
      * @param {string} propName - The name of the property that changed.
      * @param {SettingProp} prop - The new setting property value.
-     * @returns {Promise<PluginGroup>} A promise that resolves to the updated PluginGroup object.
+     * @returns {Promise<PluginSvg>} A promise that resolves to the updated PluginSvg object.
      */
-    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginGroup>;
+    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginSvg>;
 
     /**
      * Retrieves the settings of the PluginGroup object.
@@ -236,4 +236,4 @@ export abstract class PluginGroup extends fabric.Group implements IPluginObject 
     }
 }
 
-fabric.classRegistry.setClass(PluginGroup);
+fabric.classRegistry.setClass(PluginSvg);
