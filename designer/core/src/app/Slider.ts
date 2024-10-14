@@ -1,3 +1,4 @@
+import { GenericAction, GenericHandler } from "@labelbits/designer-shared";
 import IBridge, { Bridge } from "../bases/IBridge";
 
 /**
@@ -11,14 +12,19 @@ export class Slider implements IBridge<number>{
     public max: number = 5;
     public min: number = 0.01;
     public step: number = 0.01;
-    public on: ((v: number) => void) | undefined;
+    public on: GenericAction<number> | undefined;
 
+    /**
+     * Returns true if the slider is ready to be used.
+     * A slider is ready if it has an `on` event handler and `getZoom` and `setZoom` functions have been initialized.
+     * @returns {boolean} True if the slider is ready, false otherwise.
+     */
     public get ready(): boolean {
         return !!this.on && !!this.getZoom && !!this.setZoom;
     };
 
-    protected getZoom: (() => number) | undefined;
-    protected setZoom: ((v: number) => void) | undefined;
+    protected getZoom: GenericHandler<number> | undefined;
+    protected setZoom: GenericAction<number> | undefined;
 
     /**
      * The current zoom level of the label designer.

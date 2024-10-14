@@ -1,3 +1,5 @@
+import { GenericAction, GenericHandler } from "@labelbits/designer-shared";
+
 /**
  * Represents a bridge setter type.
  * 
@@ -6,7 +8,7 @@
  * @template T - The type of the bridge.
  */
 export type BridgeSetter<T> = {
-    set: (v: T) => void,
+    set: GenericAction<T>,
 };
 
 /**
@@ -17,7 +19,7 @@ export type BridgeSetter<T> = {
  * @template T - The type of the bridge.
  */
 export type BridgeGetter<T> = {
-    get: () => T,
+    get: GenericHandler<T>,
 };
 
 /**
@@ -28,7 +30,7 @@ export type BridgeGetter<T> = {
  * @template T - The type of the bridge.
  */
 export type BridgeOnner<T> = {
-    on: (v: T) => void
+    on: GenericAction<T>
 };
 
 /**

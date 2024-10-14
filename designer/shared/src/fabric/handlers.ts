@@ -1,3 +1,4 @@
+import { GenericAction } from "../main";
 import { IPluginObject, SelectionEvent } from "./extended";
 
 /**
@@ -6,7 +7,7 @@ import { IPluginObject, SelectionEvent } from "./extended";
  * @param {fabric.Object} object - The `fabric.Object` that the handler function processes.
  * @returns {void}
  */
-export type PluginObjectAction = (object: IPluginObject) => void;
+export type PluginObjectAction = GenericAction<IPluginObject>;
 
 /**
  * Represents a handler function for a selection event.
@@ -14,16 +15,16 @@ export type PluginObjectAction = (object: IPluginObject) => void;
  * @param {SelectionEvent} selectionEvent - The selection event object that contains information about the event.
  * @returns {void}
  */
-export type SelectionEventAction = (selectionEvent: SelectionEvent) => void;
+export type SelectionEventAction = GenericAction<SelectionEvent>;
 
 /**
- * Represents a callback function that takes a `FabricSelectionEventHandler` as an argument and returns void.
- * This type is used to pass a fabric selection event handler to other functions or components.
+ * Represents a callback function that takes a `SelectionEventAction` and returns a value.
+ * This function is used to call a handler function with a `SelectionEvent` object.
  * 
- * @param {SelectionEventAction} selectionEventHandler - The fabric selection event handler function.
+ * @param {SelectionEventAction} selectionEventAction - The handler function to call with the `SelectionEvent` object.
  * @returns {void}
  */
-export type SelectionEventCallback = (selectionEventHandler: SelectionEventAction) => void;
+export type SelectionEventCallback = GenericAction<SelectionEventAction>;
 
 /**
  * Represents an asynchronous handler function for a plugin object.
