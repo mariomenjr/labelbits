@@ -1,4 +1,4 @@
-import { TMat2D } from "fabric";
+import { iMatrix, TMat2D } from "fabric";
 import { GenericHandler } from "@labelbits/designer-shared";
 
 import InteractiveCanvas from "../bases/InteractiveCanvas";
@@ -122,12 +122,18 @@ export default class LabelDesigner extends InteractiveCanvas {
      * @returns {Promise<void>} A promise that resolves when the image is downloaded.
      */
     public downloadAsync(): Promise<void> {
+        /**
+         * Download the canvas as a PNG image.
+         * This code is based on the Fabric.js issue #4602
+         *  
+         * @see https://github.com/fabricjs/fabric.js/issues/4602#issuecomment-619600138 
+         */
         return new Promise((resolve, reject) => {
             // Save the current viewport transform
             const vt = this.viewportTransform;
             try {
                 // Set the viewport transform to identity
-                this.viewportTransform = LabelDesigner.DEFAULT_TRANSFORM;
+                this.viewportTransform = iMatrix.slice(0) as TMat2D;
 
                 // Create an anchor element to download the image
                 const a = document.createElement(`a`);
@@ -144,7 +150,7 @@ export default class LabelDesigner extends InteractiveCanvas {
                 a.href = this.toDataURL(ops);
                 a.download = `canvas.${Date.now()}.png`;
                 a.click();
-                
+
                 // Restore the viewport transform
                 this.viewportTransform = vt;
                 resolve();
