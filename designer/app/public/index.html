@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>designer @ labelbits</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
-    <link rel="icon" href="/svg/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/svg/favicon.svg" type="image/svg+xml">
 </head>
 
-<body>
+<body class="relative h-screen w-screen">
     <!-- toolbox -->
-    <header x-data="toolbox" class="z-10 absolute top-3 left-3 shadow-lg">
+    <header x-data="toolbox" class="absolute top-3 left-3 z-10 shadow-lg">
         <template x-for="control in data" :key="control.id">
             <button :id="`btn:${control.id}`" @click="control.onClick"
                 class="px-3 py-2 text-black bg-white hover:bg-slate-50 transition">
@@ -23,17 +23,17 @@
     </header>
 
     <!-- workspace -->
-    <main x-data="contextmenu" class="h-screen w-screen p-0">
-        <canvas id="canvas" class="z-0 shadow-inner"></canvas>
+    <main x-data="contextmenu" class="relative h-full w-full">
+        <canvas id="canvas" class="absolute inset-0 z-0 shadow-inner"></canvas>
 
         <!-- context menu -->
         <template x-if="toggled">
-            <div x-position="{top,left}" @contextmenu.prevent @click.away="hide" x-transition
-                class="absolute bg-white shadow-lg border border-gray-200 w-36 z-50 p-0 text-sm">
+            <div x-position="{ top, left }" @contextmenu.prevent @click.away="hide" x-transition
+                class="absolute bg-white shadow-lg border border-gray-200 w-36 z-50 text-sm">
                 <ul class="m-0 p-0">
                     <template x-for="option in options" :key="option.label">
-                        <li @click="option.onClick()" class="p-2 hover:bg-gray-200 cursor-pointer">
-                            <svg class="h-5 w-5 mr-2 inline align-middle">
+                        <li @click="option.onClick" class="flex items-center p-2 hover:bg-gray-200 cursor-pointer">
+                            <svg class="h-5 w-5 mr-2">
                                 <use :href="`/svg/toolbox.svg#icon-${option.icon}`"></use>
                             </svg>
                             <span x-text="option.label"></span>
@@ -44,45 +44,48 @@
         </template>
 
         <!-- zoom slider -->
-        <div x-data="slider" class="z-10 absolute bottom-5 left-5 mx-auto p-4">
-            <input x-ref="slider" :min="data.min" :max="data.max" :step="data.step" type="range"
-                x-model.number="data.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+        <div x-data="slider" class="absolute bottom-5 left-5 z-10 p-4">
+            <input x-ref="slider" type="range" x-model.number="data.value" :min="data.min" :max="data.max"
+                :step="data.step" class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
         </div>
 
         <!-- settings panel -->
-        <div x-data="settings" class="z-10 absolute bottom-5 right-5 shadow-lg smooth-scroll">
-            <template x-if="data.length > 0">
-                <div class="overflow-hidden">
+        <div x-data="settings" class="absolute bottom-5 right-5 z-10 shadow-lg overflow-hidden">
+            <template x-if="data.length">
+                <div>
                     <!-- Wrapping table header and body in overflow-hidden to prevent header from scrolling -->
-                    <table class="divide-y divide-gray-300 w-full">
+                    <table class="w-full divide-y divide-gray-300">
                         <thead class="bg-gray-100 sticky top-0 z-10">
                             <tr>
                                 <th
-                                    class="w-1/3 pt-1 pb-2 pl-2 pr-1 text-left text-gray-600 font-semibold text-xs uppercase tracking-wider">
-                                    <span class="align-middle">Setting</span>
+                                    class="w-1/3 pt-1 pb-2 pl-2 pr-1 text-left text-gray-600 text-xs font-semibold uppercase tracking-wider">
+                                    <span>Setting</span>
                                     <svg class="h-3 w-3 inline">
-                                        <use :href="`/svg/toolbox.svg#icon-cog`"></use>
+                                        <use href="/svg/toolbox.svg#icon-cog"></use>
                                     </svg>
                                 </th>
                                 <th
-                                    class="w-2/3 pt-1 pb-2 pl-2 pr-1 text-left text-gray-600 font-semibold text-xs uppercase tracking-wider">
-                                    <span class="align-middle">Value</span>
+                                    class="w-2/3 pt-1 pb-2 pl-2 pr-1 text-left text-gray-600 text-xs font-semibold uppercase tracking-wider flex items-center">
+                                    <span>Value</span>
                                     <svg class="h-3 w-3 inline">
-                                        <use :href="`/svg/toolbox.svg#icon-pencil`"></use>
+                                        <use href="/svg/toolbox.svg#icon-pencil"></use>
                                     </svg>
                                 </th>
                             </tr>
                         </thead>
                     </table>
                     <!-- Scrollable tbody -->
-                    <div class="max-h-96 overflow-y-auto"> <!-- Applying scroll only to tbody -->
+                    <!-- Applying scroll only to tbody -->
+                    <div class="max-h-96 overflow-y-auto">
                         <table class="w-full">
-                            <tbody class="bg-white divide-y">
+                            <tbody class="bg-white divide-y divide-gray-300">
                                 <template x-for="control in data" :key="control.id">
                                     <tr class="divide-x">
                                         <td class="w-1/3 py-1 pl-2 pr-1 text-sm">
-                                            <label :for="control.id" x-text="control.label"
-                                                class="block text-gray-700 text-xs font-medium mb-1 w-20 text-balance"></label>
+                                            <label :for="`setting:${control.id}`"
+                                                class="block text-gray-700 text-xs font-medium">
+                                                <span x-text="control.label"></span>
+                                            </label>
                                         </td>
                                         <td class="w-2/3 py-1 pl-1 pr-2 text-sm">
                                             <!-- checkbox case -->
@@ -92,7 +95,7 @@
                                                     <input type="checkbox" :id="`setting:${control.id}`"
                                                         :name="control.propName"
                                                         x-model.boolean.debounce="control.value" class="sr-only peer"
-                                                        x-on:click="$event.target.blur()" />
+                                                        @click="$event.target.blur()" />
                                                     <div
                                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 cursor-pointer">
                                                     </div>
@@ -100,42 +103,42 @@
                                             </template>
                                             <!-- number case -->
                                             <template x-if="control.type === 'number'">
-                                                <input :type="control.type" :id="`setting:${control.id}`"
-                                                    :name="control.propName" :placeholder="`${control.label}`"
-                                                    x-model.number.debounce="control.value"
-                                                    class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                                <input type="number" :id="`setting:${control.id}`"
+                                                    :name="control.propName" x-model.number.debounce="control.value"
+                                                    :placeholder="control.label"
+                                                    class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                                             </template>
                                             <!-- dropdown case -->
                                             <template x-if="control.type === 'select'">
                                                 <select :id="`setting:${control.id}`" :name="control.propName"
                                                     x-model.debounce="control.value"
-                                                    class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                                    class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
                                                     <template x-for="option in control.select" :key="option">
-                                                        <option :value="option" :selected="option === control.value"
-                                                            x-text="option"></option>
+                                                        <option :value="option" x-text="option"></option>
                                                     </template>
                                                 </select>
                                             </template>
                                             <!-- textarea case -->
                                             <template x-if="control.type === 'textarea'">
                                                 <textarea :id="`setting:${control.id}`" :name="control.propName"
-                                                    :placeholder="`${control.label}`" x-model.debounce="control.value"
-                                                    class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500 h-24"></textarea>
+                                                    x-model.debounce="control.value" :placeholder="control.label"
+                                                    class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 h-24"></textarea>
                                             </template>
                                             <!-- default case -->
                                             <template
                                                 x-if="!['checkbox', 'number', 'select', 'textarea'].includes(control.type)">
                                                 <input :type="control.type" :id="`setting:${control.id}`"
-                                                    :name="control.propName" :placeholder="`${control.label}`"
-                                                    x-model.debounce="control.value"
-                                                    class="shadow-sm border border-gray-300 rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                                    :name="control.propName" x-model.debounce="control.value"
+                                                    :placeholder="control.label"
+                                                    class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                                             </template>
                                         </td>
                                     </tr>
                                 </template>
                             </tbody>
                         </table>
-                    </div> <!-- End scrollable tbody -->
+                    </div>
+                    <!-- End scrollable tbody -->
                 </div>
             </template>
         </div>
