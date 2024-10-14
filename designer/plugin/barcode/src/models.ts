@@ -11,20 +11,6 @@ import { generateBarcodeAsync, getDefaults } from "./utils";
  * when the content of the barcode is changed.
  */
 export class BarcodeObject extends PluginGroup {
-
-    constructor(fabricSvg: FabricSvg) {
-        fabricSvg.options = { ...fabricSvg.options, lockScalingFlip: true };
-
-        super(fabricSvg);
-
-        this.setControlsVisibility({
-            mb: false,
-            ml: false,
-            mr: false,
-            mt: false
-        });
-    }
-
     /**
      * The type of object that this represents.
      * This is a string that is used to identify the type of object.

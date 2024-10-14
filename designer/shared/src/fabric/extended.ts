@@ -190,11 +190,21 @@ export abstract class PluginGroup extends fabric.Group implements IPluginObject 
     public readonly uid:string = uuidv4();
 
     /**
-     * Creates a new PluginGroup object from an SVG string.
-     * @param {FabricSvg} object - The SVG string to generate the group from.
+     * Constructs a new PluginGroup object from an SVG string.
+     * The `lockScalingFlip` option is set to `true` to prevent the object from being flipped when its scale is set to a negative value.
+     * The `ml`, `mr`, `mt`, and `mb` controls are hidden.
+     * @param {FabricSvg} object - The SVG string from which to construct the fabric objects.
      */
     constructor(object: FabricSvg) {
-        super(object.objects, object.options);
+        super(object.objects, { ...object.options, lockScalingFlip: true });
+
+        // Hide the ml, mr, mt, and mb controls
+        this.setControlsVisibility({
+            mb: false,
+            ml: false,
+            mr: false,
+            mt: false
+        });
     }
 
     /**
