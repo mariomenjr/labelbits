@@ -1,6 +1,6 @@
 {
   "name": "@labelbits/designer",
-  "version": "1.0.0-alpha1.0",
+  "version": "0.1.0-alpha",
   "description": "A label designer based on Fabric",
   "private": true,
   "scripts": {

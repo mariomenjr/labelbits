@@ -1,6 +1,6 @@
 {
     "name": "@labelbits/designer-plugin-textbox",
-    "version": "1.0.0-alpha1.0",
+    "version": "0.1.0-alpha",
     "description": "A label designer plugin for the creation of text objects",
     "private": true,
     "main": "dist/src/TextboxPlugin.js",
