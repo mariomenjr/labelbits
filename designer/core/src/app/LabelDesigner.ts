@@ -1,5 +1,4 @@
 import { iMatrix, TMat2D } from "fabric";
-import { GenericHandler } from "@labelbits/designer-shared";
 
 import InteractiveCanvas from "../bases/InteractiveCanvas";
 
@@ -16,15 +15,6 @@ import { DesignerConfig, FabricObjectPlugin, PluginLoader } from "../models";
  * @extends {InteractiveCanvas}
  */
 export default class LabelDesigner extends InteractiveCanvas {
-    /**
-     * The default transform matrix.
-     * 
-     * @type {TMat2D}
-     * @static
-     * @readonly
-     */
-    static readonly DEFAULT_TRANSFORM: TMat2D = [1, 0, 0, 1, 0, 0];
-
     /**
      * The list of plugins registered in the label designer.
      *
