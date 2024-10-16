@@ -27,14 +27,15 @@
     "@snowpack/plugin-typescript": "^1.2.1",
     "@types/alpinejs": "^3.13.10",
     "@types/qrcode": "^1.5.5",
-    "snowpack": "^3.2.2" 
+    "snowpack": "^3.2.2",
+    "tailwindcss": "^3.4.14"
   },
   "dependencies": {
+    "@labelbits/designer-core": "workspace:*",
     "@labelbits/designer-plugin-barcode": "workspace:*",
     "@labelbits/designer-plugin-qrcode": "workspace:*",
     "@labelbits/designer-plugin-textbox": "workspace:*",
     "@labelbits/designer-shared": "workspace:*",
-    "@labelbits/designer-core": "workspace:*",
     "alpinejs": "^3.14.1"
   }
 }
