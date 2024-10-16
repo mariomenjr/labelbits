@@ -35,7 +35,6 @@
     "@labelbits/designer-plugin-textbox": "workspace:*",
     "@labelbits/designer-shared": "workspace:*",
     "@labelbits/designer-core": "workspace:*",
-    "alpinejs": "^3.14.1",
-    "htmx.org": "^1.9.12"
+    "alpinejs": "^3.14.1"
   }
 }

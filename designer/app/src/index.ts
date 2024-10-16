@@ -1,14 +1,11 @@
-import htmx from "htmx.org"; // Import the htmx library
 import App from "./app/App"; // Import the App class from the app module
 
 /**
- * Initializes the htmx library and starts the application.
- * This function is called when the htmx library is loaded.
- *
- * @event htmx:load - The event fired by htmx when the library is loaded.
+ * Starts the application when the page is loaded.
+ * The application is started by calling the static {@link App.start} method.
  */
-htmx.on(`htmx:load`, _ => {
-    // Start the application when the htmx library is loaded
+window.onload = function() {
+    // Start the application when the page is loaded
     App.start();
-});
+};
 
