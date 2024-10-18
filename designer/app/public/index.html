@@ -114,7 +114,7 @@
                                                     x-model.debounce="control.value"
                                                     class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
                                                     <template x-for="option in control.select" :key="option">
-                                                        <option :value="option" x-text="option"></option>
+                                                        <option :value="option" :selected="option === control.value" x-text="option"></option>
                                                     </template>
                                                 </select>
                                             </template>
