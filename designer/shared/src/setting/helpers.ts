@@ -45,7 +45,7 @@ export function createSettingElement(propName: string, settingProp: SettingProp,
          * 
          * @returns {SettingType} The current value of the setting.
          */
-        get value() {
+        get value(): SettingType {
             return settingBinder.getValue();
         },
 

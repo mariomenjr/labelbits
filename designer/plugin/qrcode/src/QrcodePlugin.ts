@@ -1,4 +1,6 @@
 import { FabricObjectPlugin } from "@labelbits/designer-core/models";
+import { GenericAction } from "@labelbits/designer-shared";
+import LabelDesigner from "@labelbits/designer-core";
 
 import { generateQrcodeAsync, getDefaults } from "./utils";
 import { QrcodeObject } from "./models";
@@ -9,6 +11,16 @@ import { QrcodeObject } from "./models";
  * @extends {FabricObjectPlugin}
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
+    /**
+     * This method is called when the 'added' event on the plugin object has been invoked.
+     *
+     * @param {LabelDesigner} target - The canvas object to which the object has been added.
+     * @returns {void}
+     */
+    protected onAdded?: GenericAction<LabelDesigner> = (target: LabelDesigner): void => {
+        setTimeout(() => target.settings[0].value = target.settings[0].value)
+    };
+
     public name: string = `qrcode`;
     /**
      * Creates a new QR code object asynchronously.

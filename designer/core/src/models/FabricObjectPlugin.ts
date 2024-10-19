@@ -1,5 +1,7 @@
 import { PluginObjectAction, IPluginObject } from "@labelbits/designer-shared/fabric";
-import { Plugin, Action } from "@labelbits/designer-shared";
+import { Plugin, Action, GenericAction } from "@labelbits/designer-shared";
+
+import LabelDesigner from "../app/LabelDesigner";
 
 /**
  * Represents a plugin for objects in the Fabric.js library.
@@ -9,6 +11,14 @@ import { Plugin, Action } from "@labelbits/designer-shared";
  * @implements {Plugin<PluginObjectAction>}
  */
 export default abstract class FabricObjectPlugin implements Plugin<PluginObjectAction> {
+    /**
+     * This method is called when the 'added' event on the plugin object has been invoked.
+     *
+     * @param {LabelDesigner} target - The canvas object to which the object has been added.
+     * @returns {void}
+     */
+    protected onAdded?: GenericAction<LabelDesigner>;
+    
     /**
      * The name of the plugin.
      * 
@@ -36,7 +46,29 @@ export default abstract class FabricObjectPlugin implements Plugin<PluginObjectA
         return {
             id: this.name,
             icon: this.name,
-            onClick: async () => handler(await this.createObjectAsync())
+            onClick: async () => handler(this.attachBehavior(await this.createObjectAsync()))
         };
+    }
+
+    /**
+     * Attaches the behavior defined in the plugin to the given object.
+     * 
+     * It checks if handlers are available and if so, it attaches the behavior to the specific event of the object.
+     * The behavior is called with the target of the event as its argument.
+     * 
+     * @param {IPluginObject} o - The object to which to attach the behavior.
+     * @returns {IPluginObject} The object with the behavior attached.
+     */
+    private attachBehavior(o: IPluginObject): IPluginObject {
+        
+        // Attach behavior if handler is available
+        if (!!this.onAdded) {
+
+            // Attach behavior to the plugin object   
+            o.on('added', (e) => this.onAdded!(e.target as LabelDesigner));
+        }
+
+        // ... more events.
+        return o;
     }
 }
