@@ -10,8 +10,14 @@
 </head>
 
 <body class="relative h-screen w-screen">
+    <div id="loading" class="local-loading">
+        <span class="noise">.</span>
+        <span class="noise">.</span>
+        <span class="noise">.</span>
+    </div>
+
     <!-- toolbox -->
-    <header x-data="toolbox" class="absolute top-3 left-3 z-10 shadow-lg">
+    <header x-data="toolbox" class="absolute top-3 left-3 z-10 shadow-lg" hidden>
         <template x-for="control in data" :key="control.id">
             <button :id="`btn:${control.id}`" @click="control.onClick"
                 class="px-3 py-2 text-black bg-white hover:bg-slate-50 transition">
@@ -23,7 +29,7 @@
     </header>
 
     <!-- workspace -->
-    <main x-data="contextmenu" class="relative h-full w-full">
+    <main x-data="contextmenu" class="relative h-full w-full" hidden>
         <canvas id="canvas" class="absolute inset-0 z-0 shadow-inner"></canvas>
 
         <!-- context menu -->
@@ -114,7 +120,8 @@
                                                     x-model.debounce="control.value"
                                                     class="w-full px-2 py-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
                                                     <template x-for="option in control.select" :key="option">
-                                                        <option :value="option" :selected="option === control.value" x-text="option"></option>
+                                                        <option :value="option" :selected="option === control.value"
+                                                            x-text="option"></option>
                                                     </template>
                                                 </select>
                                             </template>
@@ -142,7 +149,52 @@
                 </div>
             </template>
         </div>
+        <style>
+            .local-loading {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 3rem;
+            }
 
+            .noise {
+                animation: noise 2s infinite;
+                margin: 0;
+                opacity: 0;
+                padding: 0;
+            }
+
+            .noise:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .noise:nth-child(2) {
+                animation-delay: 0.5s;
+            }
+
+            .noise:nth-child(3) {
+                animation-delay: 1s;
+            }
+
+            .noise:nth-child(4) {
+                animation-delay: 1.5s;
+            }
+
+            @keyframes noise {
+                0% {
+                    opacity: 0;
+                }
+
+                50% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 0;
+                }
+            }
+        </style>
         <script type="module" src="/dist/index.js"></script>
     </main>
 </body>
