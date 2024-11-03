@@ -98,7 +98,7 @@ export type PluginConstructor<T = fabric.Object> = new (...args: any[]) => T;
  * @returns {PluginMixinConstructor<U, T>} The constructor of the mixin class that extends the given fabric object class
  * with the IPluginObject interface.
  */
-export type PluginMixinConstructor<U, T extends PluginConstructor> = new (...args: ConstructorParameters<T>) => U;
+export type PluginMixinConstructor<U, T extends PluginConstructor> = new (...args: ConstructorParameters<T>) => U & InstanceType<T>;
 
 /**
  * Creates a mixin class that extends the given fabric object class with the IPluginObject interface.
