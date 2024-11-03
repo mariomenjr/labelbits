@@ -94,6 +94,10 @@ export default class LabelDesigner extends InteractiveCanvas {
             id: 'download',
             icon: 'download',
             onClick: () => this.downloadAsync()
+        }, {
+            id: 'upload',
+            icon: 'upload',
+            onClick: () => console.debug(this.toJSON())
         });
 
         /**
