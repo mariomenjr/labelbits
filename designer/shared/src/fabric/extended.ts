@@ -63,14 +63,15 @@ export interface IPluginObject extends fabric.Object {
 
     /**
      * Updates the object asynchronously.
-     * The object is updated by regenerating the SVG string based on the new setting property value.
      * 
      * @async
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} prop - The new setting property value.
      * @returns {Promise<IPluginObject>} A promise that resolves to the updated object.
      */
-    updateObjectAsync(propName: string, prop: SettingProp): Promise<IPluginObject>;
+    updateObjectAsync(): Promise<IPluginObject>;
+
+    resyncObjectAsync(): Promise<void>;
+
+    redrawObject(): void;
 
     /**
      * Retrieves the settings of the object.
@@ -146,13 +147,42 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
         public abstract plugin: PluginOptions;
 
         /**
-         * Updates the object asynchronously when a setting property is changed.
-         * The object is updated by regenerating the SVG string based on the new setting property value.
-         * @param {string} propName - The name of the setting property that changed.
-         * @param {SettingProp} prop - The new setting property value.
+         * Updates the object asynchronously.
+         * The object is updated by regenerating the SVG string or properties based on the current plugin options.
+         * 
+         * @async
+         * @throws {Error} If not implemented.
          * @returns {Promise<IPluginObject>} A promise that resolves to the updated object.
          */
-        public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<IPluginObject>;
+        public async updateObjectAsync(): Promise<IPluginObject> {
+            return new Promise((resolve) => resolve(this));
+        }
+
+        /**
+         * Refreshes the rendering of the fabric object asynchronously.
+         * The object is updated by regenerating the SVG string or properties based on the current plugin options.
+         * 
+         * @async
+         * @returns {Promise<IPluginObject>} A promise that resolves to the updated fabric object.
+         */
+        public async resyncObjectAsync(): Promise<void> {
+
+            await this.updateObjectAsync();
+            this.redrawObject();
+        }
+
+        /**
+         * Refreshes the rendering of the fabric object.
+         * 
+         * This method updates the object's coordinates, requests a render of the entire canvas,
+         * and fires a 'modified' event to notify listeners of changes to the object.
+         */
+        public redrawObject(): void {
+            
+            this.setCoords();
+            this.canvas?.requestRenderAll();
+            this.fire('modified');
+        }
 
         /**
          * Retrieves the settings of the fabric object.
@@ -161,6 +191,19 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
          */
         public getSettings(): Setting[] {
             return getBoundSettingHandlers(this);
+        }
+
+        /**
+         * Converts the object to a JSON representation.
+         * The `uid` property is replaced with a new UUID, and the `plugin` and `relationship` properties are included.
+         * @param {string[]} [propertiesToInclude] - A list of property names to include in the JSON representation.
+         * @returns {Object} - A JSON representation of the object.
+         */
+        public toObject(propertiesToInclude?: string[]): any {
+            const c = super.toObject([...propertiesToInclude ?? [], 'uid', 'plugin', 'relationship']);
+
+            c.uid = uuidv4();
+            return c;
         }
     }
 
@@ -173,21 +216,12 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
  * 
  * @extends {fabric.Group}
  */
-export abstract class PluginSvg extends fabric.Group implements IPluginObject { // TODO: How to extend it from PluginMixin?
-
+export abstract class PluginSvg extends PluginMixin(fabric.Group) {
     /**
      * The type of the plugin object.
      * @type {string}
      */
-    static type: string = 'PluginGroup';
-
-    /**
-     * The unique identifier of the fabric object.
-     * @type {string}
-     * @readonly
-     * @default uuidv4()
-     */
-    public readonly uid:string = uuidv4();
+    static type: string = 'PluginSvg';
 
     /**
      * Constructs a new PluginGroup object from an SVG string.
@@ -208,31 +242,14 @@ export abstract class PluginSvg extends fabric.Group implements IPluginObject { 
     }
 
     /**
-     * The plugin options of the PluginGroup object.
-     * This property is abstract and must be implemented by the subclasses.
-     * @type {PluginOptions}
-     */
-    public abstract plugin: PluginOptions;
-
-    /**
-     * Updates the PluginGroup object asynchronously.
-     * The object is updated based on the property name and the new value.
-     * This method is abstract and must be implemented by the subclasses.
+     * Updates the textbox object asynchronously.
+     * The object is updated by regenerating the SVG string or properties based on the current plugin options.
+     *
      * @async
-     * @param {string} propName - The name of the property that changed.
-     * @param {SettingProp} prop - The new setting property value.
-     * @returns {Promise<PluginSvg>} A promise that resolves to the updated PluginSvg object.
+     * @returns {Promise<TextboxObject>} A promise that resolves to the updated textbox object.
      */
-    public abstract updateObjectAsync(propName: string, prop: SettingProp): Promise<PluginSvg>;
-
-    /**
-     * Retrieves the settings of the PluginGroup object.
-     * The settings are derived from the properties of the object.
-     * 
-     * @returns {Setting[]} An array of `Setting` objects representing the settings of the PluginGroup object.
-     */
-    public getSettings(): Setting[] {
-        return getBoundSettingHandlers(this);
+    public async updateObjectAsync(): Promise<PluginSvg> {
+        return this; // Nothing to do here.
     }
 }
 

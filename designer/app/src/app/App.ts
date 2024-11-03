@@ -140,6 +140,17 @@ export default class App {
                 get options() {
                     return [
                         {
+                            label: `Clone`,
+                            icon: `copy`,
+                            /**
+                             * Clones the selected object and adds the clone to the canvas.
+                             * The clone is then resynchronized and the context menu is hidden.
+                             */
+                            onClick: (): void => this.perform((o) => o.clone()
+                                                                      .then(c => { o.canvas?.add(c); return c; })
+                                                                      .then(c => c.resyncObjectAsync()))
+                        },
+                        {
                             label: `Delete`,
                             icon: `delete`,
                             onClick: () => this.perform((o) => o.canvas?.remove(o))
@@ -147,16 +158,7 @@ export default class App {
                         {
                             label: `Send to back`,
                             icon: `send-backwards`,
-                            /**
-                             * Moves the object to the back of the canvas's object stack.
-                             * This affects the z-index of the object, with lower-indexed objects appearing below higher-indexed objects.
-                             * Also moves the object's clip path to the back of the stack.
-                             * @param {fabric.Object} o - The selected fabric object.
-                             */
-                            onClick: () => this.perform((o) => {
-                                o.canvas?.sendObjectToBack(o);
-                                // o.canvas?.sendObjectToBack(o.clipPath as fabric.Object);
-                            })
+                            onClick: () => this.perform((o) => o.canvas?.sendObjectToBack(o))
                         },
                         {
                             label: `Bring forward`,

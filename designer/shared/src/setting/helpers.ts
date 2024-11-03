@@ -110,10 +110,7 @@ export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setti
                     self.set(k, v);
                     self.plugin[k].value = v;
 
-                    // Update the object's coordinates and re-render the canvas.
-                    self.setCoords();
-                    self.canvas?.requestRenderAll();
-                    self.fire('modified');
+                    self.redrawObject();
                 }
             });
         }
@@ -124,12 +121,7 @@ export function getBoundSettingHandlers<T extends IPluginObject>(self: T): Setti
             setValue: async (v: SettingType) => {
                 self.plugin[k].value = v;
 
-                // Update the object asynchronously and refresh its coordinates.
-                const o = await self.updateObjectAsync(k, self.plugin[k]);
-
-                o.setCoords();
-                o.canvas?.requestRenderAll();
-                o.fire('modified');
+                await self.resyncObjectAsync();
             }
         });
     });

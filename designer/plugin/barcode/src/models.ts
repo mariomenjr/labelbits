@@ -29,13 +29,11 @@ export class BarcodeObject extends PluginSvg {
     /**
      * Updates the object asynchronously when a setting property is changed.
      * The object is updated by regenerating the barcode SVG string based on the new setting property value.
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} settingProp - The new setting property value.
+     * 
+     * @async
      * @returns {Promise<BarcodeObject>} A promise that resolves to the updated object.
      */
-    async updateObjectAsync(propName: string, settingProp: SettingProp): Promise<BarcodeObject> {
-        console.debug(`Updating object with property name: ${propName} and setting property value: ${settingProp.value}`);
-
+    public async updateObjectAsync(): Promise<BarcodeObject> {
         const value = this.plugin.text.value as string;
         const barcodeSvg = await generateBarcodeAsync(value, this.plugin);
 

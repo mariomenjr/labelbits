@@ -26,14 +26,14 @@ class TextboxObject extends PluginMixin(fabric.Textbox) {
     public plugin: PluginOptions = getDefaults();
 
     /**
-     * Updates the object asynchronously when a setting property is changed.
-     * The object is updated by using the new setting property value.
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} _ - The new setting property value.
-     * @returns {Promise<TextboxObject>} A promise that resolves to the updated object.
+     * Updates the textbox object asynchronously.
+     * The object is updated by regenerating the SVG string or properties based on the current plugin options.
+     *
+     * @async
+     * @returns {Promise<TextboxObject>} A promise that resolves to the updated textbox object.
      */
-    public async updateObjectAsync(propName: string, _: SettingProp): Promise<TextboxObject> {
-        throw new Error(`Not implemented property name ${propName} for plugin handler: ${TextboxObject.prototype.updateObjectAsync.name}`);
+    public async updateObjectAsync(): Promise<TextboxObject> {
+        return this; // Nothing to do here.
     }
 }
 

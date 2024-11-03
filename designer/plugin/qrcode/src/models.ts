@@ -1,7 +1,6 @@
 import { classRegistry } from "fabric";
 
-import { PluginSvg, PluginOptions, replaceSvg, FabricSvg } from "@labelbits/designer-shared/fabric";
-import { SettingProp } from "@labelbits/designer-shared/setting";
+import { PluginSvg, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
 
 import { generateQrcodeAsync, getDefaults } from "./utils";
 
@@ -26,17 +25,14 @@ export class QrcodeObject extends PluginSvg {
     public plugin: PluginOptions = getDefaults();
 
     /**
-     * Updates the object asynchronously when a setting property is changed.
-     * The object is updated by regenerating the QR code SVG string based on the new setting property value.
+     * Asynchronously regenerates the QR code SVG string for the object.
+     * The object is updated by generating a new QR code SVG based on the current plugin options.
      * 
      * @async
-     * @param {string} propName - The name of the setting property that changed.
-     * @param {SettingProp} settingProp - The new setting property value.
-     * @returns {Promise<QrcodeObject>} A promise that resolves to the updated object.
+     * @returns {Promise<QrcodeObject>} A promise that resolves to the updated QR code object.
      */
-    async updateObjectAsync(propName: string, settingProp: SettingProp): Promise<QrcodeObject> {
-        console.debug(`Updating object with property name: ${propName} and setting property value: ${settingProp.value}`);
-
+    public async updateObjectAsync(): Promise<QrcodeObject> {
+        
         const value = this.plugin.text.value as string;
         const qrcodeSvg = await generateQrcodeAsync(value, this.plugin);
 
