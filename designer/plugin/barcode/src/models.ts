@@ -1,9 +1,8 @@
 import { classRegistry } from "fabric";
 
-import { SettingProp } from "@labelbits/designer-shared/setting";
-import { PluginSvg, PluginOptions, replaceSvg } from "@labelbits/designer-shared/fabric";
+import { PluginSvg, replaceSvg } from "@labelbits/designer-shared/fabric";
 
-import { generateBarcodeAsync, getDefaults } from "./utils";
+import { generateBarcodeAsync } from "./utils";
 
 /**
  * Represents a barcode object in the Fabric.js library.
@@ -18,13 +17,6 @@ export class BarcodeObject extends PluginSvg {
      * @type {string}
      */
     static type: string = `BarcodeObject`;
-
-    /**
-     * The plugin options for this plugin.
-     * This is a shortcut to the plugin options that are used to generate the barcode.
-     * @type {PluginOptions}
-     */
-    public plugin: PluginOptions = getDefaults();
 
     /**
      * Updates the object asynchronously when a setting property is changed.

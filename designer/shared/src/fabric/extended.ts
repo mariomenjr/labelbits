@@ -1,7 +1,7 @@
 import * as fabric from "fabric";
 import { v4 as uuidv4 } from "uuid";
 
-import { Setting, SettingProp } from "../setting/models";
+import { Setting } from "../setting/models";
 
 import { FabricSvg, PluginOptions } from "./models";
 import { getBoundSettingHandlers } from "../setting";
@@ -200,9 +200,24 @@ export function PluginMixin<T extends PluginConstructor>(BaseObject: T): PluginM
          * @returns {Object} - A JSON representation of the object.
          */
         public toObject(propertiesToInclude?: string[]): any {
-            const c = super.toObject([...propertiesToInclude ?? [], 'uid', 'plugin', 'relationship']);
+            return super.toObject([...(propertiesToInclude ?? []), 'uid', 'plugin', 'relationship']);
+        }
 
-            c.uid = uuidv4();
+        /**
+         * Clones the fabric object.
+         * This method is overridden to include the `plugin` property in the clone.
+         * The `plugin` property is not automatically copied by fabric's `clone` method.
+         * 
+         * @async
+         * @returns {Promise<this>} A promise that resolves to a clone of the fabric object.
+         */
+        public async clone(): Promise<this> {
+            const c = await super.clone();
+
+            // For some reason, plugin is not copied correctly.
+            // This is a workaround.
+            c.plugin = JSON.parse(JSON.stringify(this.plugin));
+
             return c;
         }
     }
@@ -229,9 +244,9 @@ export abstract class PluginSvg extends PluginMixin(fabric.Group) {
      * The `ml`, `mr`, `mt`, and `mb` controls are hidden.
      * @param {FabricSvg} object - The SVG string from which to construct the fabric objects.
      */
-    constructor(object: FabricSvg) {
+    constructor(object: FabricSvg, pluginOptions: PluginOptions) {
         super(object.objects, { ...object.options, lockScalingFlip: true });
-
+        
         // Hide the ml, mr, mt, and mb controls
         this.setControlsVisibility({
             mb: false,
@@ -239,6 +254,9 @@ export abstract class PluginSvg extends PluginMixin(fabric.Group) {
             mr: false,
             mt: false
         });
+
+        // Set the plugin options
+        this.plugin = pluginOptions;
     }
 
     /**

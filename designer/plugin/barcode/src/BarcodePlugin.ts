@@ -20,12 +20,13 @@ export default class BarcodePlugin extends FabricObjectPlugin {
      * @returns {Promise<BarcodeObject>} A promise that resolves to the created barcode object.
      */
     async createObjectAsync(): Promise<BarcodeObject> {
+        // console.debug(`Creating object`);
         const defaultOptions = getDefaults();
         const defaultValue = defaultOptions.text.value as string;
 
         // Generate the barcode SVG from the default value
         const svgOutput = await generateBarcodeAsync(defaultValue, defaultOptions);
 
-        return new BarcodeObject(svgOutput);
+        return new BarcodeObject(svgOutput, defaultOptions);
     }
 }

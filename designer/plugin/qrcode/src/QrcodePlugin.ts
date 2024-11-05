@@ -39,6 +39,6 @@ export default class QrcodePlugin extends FabricObjectPlugin {
         const svgObject = await generateQrcodeAsync(defaultValue, defaultOptions);
 
         // Group SVG objects into a single group object
-        return new QrcodeObject(svgObject);
+        return new QrcodeObject(svgObject, defaultOptions);
     }
 }
