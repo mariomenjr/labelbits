@@ -39,10 +39,6 @@ export default abstract class BaseCanvas extends fabric.Canvas {
         console.debug(`Canvas initialized.`);
     }
 
-    public toObject(propertiesToInclude?: string[]) {
-        return super.toObject([...propertiesToInclude ?? [], 'uid', 'plugin', 'relationship']);
-    }
-
     /**
      * Calculates the nearest snap coordinate for the given single coordinate.
      * Rounds the given coordinate to the nearest grid size multiple.
