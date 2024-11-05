@@ -1,8 +1,6 @@
 import { PluginObjectAction, IPluginObject } from "@labelbits/designer-shared/fabric";
 import { Plugin, Action, GenericAction } from "@labelbits/designer-shared";
 
-import LabelDesigner from "../app/LabelDesigner";
-
 /**
  * Represents a plugin for objects in the Fabric.js library.
  * Provides an abstract base class for creating plugins that can be used in the application to manipulate Fabric.js objects.
@@ -12,12 +10,12 @@ import LabelDesigner from "../app/LabelDesigner";
  */
 export default abstract class FabricObjectPlugin implements Plugin<PluginObjectAction> {
     /**
-     * This method is called when the 'added' event on the plugin object has been invoked.
-     *
-     * @param {LabelDesigner} target - The canvas object to which the object has been added.
-     * @returns {void}
+     * Executed when an object is added to the canvas.
+     * 
+     * @protected
+     * @param target - The target object that was added to the canvas.
      */
-    protected onAdded?: GenericAction<LabelDesigner>;
+    protected onAdded?: GenericAction<IPluginObject>;
     
     /**
      * The name of the plugin.
@@ -46,7 +44,7 @@ export default abstract class FabricObjectPlugin implements Plugin<PluginObjectA
         return {
             id: this.name,
             icon: this.name,
-            onClick: async () => handler(this.attachBehavior(await this.createObjectAsync()))
+            onClick: async () => handler(this.attachEvents(await this.createObjectAsync()))
         };
     }
 
@@ -59,13 +57,13 @@ export default abstract class FabricObjectPlugin implements Plugin<PluginObjectA
      * @param {IPluginObject} o - The object to which to attach the behavior.
      * @returns {IPluginObject} The object with the behavior attached.
      */
-    private attachBehavior(o: IPluginObject): IPluginObject {
+    private attachEvents(o: IPluginObject): IPluginObject {
         
         // Attach behavior if handler is available
         if (!!this.onAdded) {
 
             // Attach behavior to the plugin object   
-            o.on('added', (e) => this.onAdded!(e.target as LabelDesigner));
+            o.on('added', (_) => this.onAdded!(o));
         }
 
         // ... more events.

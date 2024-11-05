@@ -1,6 +1,6 @@
 import { FabricObjectPlugin } from "@labelbits/designer-core/models";
+import { IPluginObject } from "@labelbits/designer-shared/fabric";
 import { GenericAction } from "@labelbits/designer-shared";
-import LabelDesigner from "@labelbits/designer-core";
 
 import { generateQrcodeAsync, getDefaults } from "./utils";
 import { QrcodeObject } from "./models";
@@ -12,16 +12,19 @@ import { QrcodeObject } from "./models";
  */
 export default class QrcodePlugin extends FabricObjectPlugin {
     /**
-     * This method is called when the 'added' event on the plugin object has been invoked.
-     *
-     * @param {LabelDesigner} target - The canvas object to which the object has been added.
-     * @returns {void}
+     * Executed when an object is added to the canvas.
+     * 
+     * @protected
+     * @param target - The target object that was added to the canvas.
      */
-    protected onAdded?: GenericAction<LabelDesigner> = (target: LabelDesigner): void => {
-        setTimeout(() => target.settings[0].value = target.settings[0].value)
+    protected onAdded?: GenericAction<IPluginObject> = (target: IPluginObject): void => {
+        // For some reason, the margins are not applied correctly on the first render.
+        // This is a workaround.
+        target.resyncObjectAsync(); 
     };
 
     public name: string = `qrcode`;
+
     /**
      * Creates a new QR code object asynchronously.
      * The object is created with the default value of the plugin.
