@@ -49,6 +49,17 @@
             </div>
         </template>
 
+        <!-- github link -->
+        <div x-data="ctrlkey" x-bind="behavior" class="absolute top-5 right-5 z-10 flex items-center gap-4 p-2">
+            <!-- Github Link -->
+            <a href="https://github.com/mariomenjr/labelbits" target="_blank" rel="noopener noreferrer"
+                class="text-gray-600 hover:text-gray-900 transition-colors">
+                <svg class="h-7 w-7">
+                    <use href="/svg/toolbox.svg#icon-github"></use>
+                </svg>
+            </a>
+        </div>
+
         <!-- ctrl indicator -->
         <div x-data="ctrlkey" x-bind="behavior" class="absolute bottom-5 right-5 z-10 flex items-center gap-4 p-2">
 
