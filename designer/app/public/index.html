@@ -49,8 +49,18 @@
             </div>
         </template>
 
+        <!-- ctrl indicator -->
+        <div x-data="ctrlkey" x-bind="behavior" class="absolute bottom-5 right-5 z-10 flex items-center gap-4 p-2">
+
+            <!-- Ctrl Key Indicator -->
+            <div class="border border-gray-300 rounded px-3 py-1 font-mono text-sm transition-all duration-75"
+                x-pressed="isPressed">
+                ctrl
+            </div>
+        </div>
+
         <!-- zoom slider -->
-        <div x-data="slider" class="absolute bottom-5 left-5 z-10 p-4">
+        <div x-data="slider" class="absolute bottom-5 left-5 z-10 p-2">
             <input x-ref="slider" type="range" x-model.number="data.value" :min="data.min" :max="data.max"
                 :step="data.step" class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
         </div>

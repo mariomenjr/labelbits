@@ -252,6 +252,23 @@ export default class App {
             };
         });
 
+        Alpine.data("ctrlkey", () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const isCtrl = (o: any) => o.$event.key === 'Control';
+            return {
+                isPressed: false,
+
+                behavior: {
+                    ["@keydown.window"]() {
+                        if (isCtrl(this)) this.isPressed = true;
+                    },
+                    ["@keyup.window"]() {
+                        if (isCtrl(this)) this.isPressed = false;
+                    }
+                }
+            };
+        });
+
         /**
          * Applies the `position` directive to the Alpine.js application.
          * It sets the top and left CSS properties of the element to the position object's top and left properties.
@@ -261,6 +278,26 @@ export default class App {
 
             el.style.top = `${v.top}px`;
             el.style.left = `${v.left}px`;
+        });
+
+        Alpine.directive("pressed", (el, {expression}, {evaluateLater, effect}) => {
+            const getValue = evaluateLater<boolean>(expression);
+
+            const p = " bg-gray-200 translate-y-px shadow-inner";
+            const u = " bg-white shadow-sm";
+
+            el.className += u; // Init state
+
+            effect(() => {
+                getValue(v => {
+                    // Reactivity
+                    if (v) {
+                        el.className = el.className.replace(u, p);
+                    } else {
+                        el.className = el.className.replace(p, u);
+                    }
+                });
+            });
         });
 
         // Start the Alpine.js application
