@@ -36,7 +36,7 @@ Start the development server by running `pnpm dev`.
 
 ## Authors
 
-* Mario Menjivar <mariomenjr@gmail.com>
+* Mario Menjivar [@mariomenjr](https://x.com/mariomenjr)
 
 ## Acknowledgments
 
