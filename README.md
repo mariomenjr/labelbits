@@ -30,6 +30,10 @@ Labelbits is licensed under the MIT license.
 
 Contributions are welcome! Please submit a pull request with your changes.
 
+### Development
+
+Start the development server by running `pnpm dev`.
+
 ## Authors
 
 * Mario Menjivar <mariomenjr@gmail.com>
