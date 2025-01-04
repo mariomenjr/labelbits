@@ -29,7 +29,7 @@ export default abstract class BaseCanvas extends fabric.Canvas {
     constructor() {
         super('canvas', canvasDefaults);
 
-        this.clipPath = createClipPath({ width: 750, height: 375 });
+        this.clipPath = createClipPath({ width: 812, height: 406 });
 
         this.matchViewport();
         this.registerEvents();
