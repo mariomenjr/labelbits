@@ -1,6 +1,7 @@
 packages:
   - 'designer/*'
   - 'designer/plugin/*'
+  - 'service/*'
   - 'packages/*'
   
 auto-install-peers: true

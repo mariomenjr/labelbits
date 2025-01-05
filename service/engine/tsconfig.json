@@ -1,0 +1,17 @@
+{
+    "extends": "@labelbits/tsconfig/bundler.json",
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/**/*",
+        // "tests/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

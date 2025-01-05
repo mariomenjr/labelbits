@@ -1,0 +1,26 @@
+{
+  "name": "@labelbits/service-engine",
+  "version": "0.1.0-alpha",
+  "description": "A label engine based on Fabric",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mario Menjivar <mariomenjr@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@labelbits/tsconfig": "workspace:*",
+    "@types/koa": "^2.15.0",
+    "@types/koa-router": "^7.4.8",
+    "@types/node": "^22.10.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "koa": "^2.15.3",
+    "koa-router": "^13.0.1"
+  }
+}
