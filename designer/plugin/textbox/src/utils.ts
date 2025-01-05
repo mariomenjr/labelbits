@@ -28,6 +28,14 @@ export function getDefaults(): PluginOptions {
                 type: `dropdown`
             }
         },
+        fontFamily: {
+            isNative: true,
+            value: `Helvetica`,
+            select: {
+                values: [`Helvetica`, `Arial`, `Times New Roman`],
+                type: `dropdown`
+            }
+        },
         fontSize: { isNative: true, value: 16 },
         fontStyle: {
             isNative: true,

@@ -2,7 +2,7 @@ import * as fabric from "fabric";
 
 import { FabricObjectPlugin } from "@labelbits/designer-core/models";
 import { PluginOptions, PluginMixin } from "@labelbits/designer-shared/fabric";
-import { SettingProp } from "@labelbits/designer-shared/setting";
+
 import { getDefaults } from "./utils";
 
 /**
